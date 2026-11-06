@@ -1,0 +1,63 @@
+rules_version = '2';
+// Éanna Hub security rules. Paste into Firebase console › Firestore › Rules.
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Moderators are signed-in Google accounts with a document in /admins/{email}:
+    //   { role: "owner" | "moderator", perms: { sheets, fixtures, rosters, underage, carousel, settings } }
+    // Owners (Milo + backup admin) can do everything, including adding and removing moderators.
+    function me() { return get(/databases/$(database)/documents/admins/$(request.auth.token.email)).data; }
+    function isAdmin() {
+      return request.auth != null && request.auth.token.email_verified == true
+        && exists(/databases/$(database)/documents/admins/$(request.auth.token.email));
+    }
+    function isOwner() { return isAdmin() && me().role == 'owner'; }
+    function can(p) { return isAdmin() && (me().role == 'owner' || (('perms' in me()) && me().perms.get(p, false) == true)); }
+    function clubCode() { return get(/databases/$(database)/documents/private/club).data.code; }
+
+    match /admins/{email} {
+      allow read: if isAdmin() || (request.auth != null && request.auth.token.email == email);
+      allow write: if isOwner();
+    }
+
+    // Public settings (underage display rules)
+    match /settings/{id} {
+      allow read: if true;
+      allow write: if can('underage');
+    }
+
+    // The club code
+    match /private/{id} {
+      allow read, write: if can('settings');
+    }
+
+    // Rosters: players' names and "hide" flags. Approving a sheet also updates the roster.
+    match /rosters/{team} {
+      allow read: if isAdmin();
+      allow write: if can('rosters') || can('sheets');
+    }
+
+    // Score-sheets: anyone with the club code can send one (always "pending")
+    match /submissions/{id} {
+      allow create: if request.resource.data.status == 'pending'
+        && request.resource.data.code == clubCode()
+        && request.resource.data.lines is list
+        && request.resource.data.lines.size() <= 30
+        && (!('photo' in request.resource.data) || request.resource.data.photo.size() < 700000);
+      allow read: if isAdmin();
+      allow update, delete: if can('sheets');
+    }
+
+    // Published box scores (already filtered for underage rules). Public read.
+    match /boxscores/{key} {
+      allow read: if true;
+      allow write: if can('sheets') || can('rosters') || can('underage');
+    }
+
+    // Fixture changes and added games. Public read.
+    match /fixtures/{key} {
+      allow read: if true;
+      allow write: if can('fixtures');
+    }
+  }
+}

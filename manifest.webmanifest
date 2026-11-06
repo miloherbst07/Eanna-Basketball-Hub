@@ -1,0 +1,13 @@
+{
+  "name": "Éanna Hub",
+  "short_name": "Éanna Hub",
+  "description": "Results, fixtures, teams and top performers for every Éanna Basketball team.",
+  "start_url": "./#home",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#2B2763",
+  "icons": [
+    { "src": "assets/icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "assets/icon-512.png", "sizes": "512x512", "type": "image/png" }
+  ]
+}

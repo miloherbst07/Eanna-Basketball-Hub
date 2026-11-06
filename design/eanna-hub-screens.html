@@ -1,0 +1,1899 @@
+<meta charset="utf-8">
+<title>Éanna Hub Screens</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Montserrat:ital,wght@0,400;0,500;0,700;0,800;0,900;1,800;1,900&family=Source+Sans+3:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+/* Layout: matchday-graphic walkthrough. Hero styled like the club's IG posts (sponsor bar, gradient caps, purple swoosh). Each section = notes + questions on the left, a live phone on the right. Layering: texture -> court lines -> subject -> light -> grain. */
+:root{
+  --navy:#1C1B60; --midnight:#0E083E; --orange:#D0653C; --orange-dk:#B65016;
+  --indigo:#2B2763; --purple:#5B4799; --violet:#7656A3; --orchid:#A367AF; --mist:#DFDBE7; --kit:#110E12; --pink:#E0457B;
+  --grad:linear-gradient(100deg,#2B2763 0%,#5B4799 52%,#A367AF 100%);
+  --grad-v:linear-gradient(160deg,#2B2763 0%,#5B4799 55%,#A367AF 100%);
+  /* page (theme-aware) */
+  --bg:#ffffff; --bg2:#f4f2f9; --ink:#15143a; --muted:#5d5b7d; --line:#dedbec; --card:#ffffff; --accent:#C25A31; --head:#2B2763;
+  --show-lt:block; --show-dk:none;
+  /* app (fixed light, like the club graphics) */
+  --a-bg:#ffffff; --a-ink:#14133a; --a-mut:#6c6a8a; --a-line:#e8e5f3; --a-soft:#f5f3fb;
+  --ok:#1d7a4c; --okbg:#e2f4ea; --warn:#8d5400; --warnbg:#fff0d6; --no:#a4243a; --nobg:#fbe5ea;
+  --display:"Montserrat",system-ui,sans-serif; --num:"Anton","Impact",system-ui,sans-serif; --body:"Source Sans 3",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --grain:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 .55 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  --grain-w:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 .5 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  --court:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 300 160'%3E%3Cg fill='none' stroke='%23fff' stroke-opacity='.16' stroke-width='1.4'%3E%3Ccircle cx='150' cy='80' r='30'/%3E%3Ccircle cx='150' cy='80' r='9'/%3E%3Cpath d='M150 0v160M0 46h56v68H0M300 46h-56v68h56'/%3E%3Cpath d='M0 8a118 72 0 0 1 0 144M300 8a118 72 0 0 0 0 144'/%3E%3C/g%3E%3C/svg%3E");
+  --waves:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 300 620' preserveAspectRatio='none'%3E%3Cpath d='M300 300C200 360 236 520 110 620H300Z' fill='%23DFDBE7' fill-opacity='.65'/%3E%3Cpath d='M300 410C236 466 252 560 186 620H300Z' fill='%23A367AF' fill-opacity='.16'/%3E%3Cpath d='M0 0C40 30 20 70 0 90Z' fill='%23DFDBE7' fill-opacity='.5'/%3E%3C/svg%3E");
+  --seams:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Cg fill='none' stroke='%233b1606' stroke-opacity='.75' stroke-width='1.3'%3E%3Cpath d='M20 0v40M0 20h40M7 5c8 8 8 22 0 30M33 5c-8 8-8 22 0 30'/%3E%3C/g%3E%3C/svg%3E");
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0b0820;--bg2:#120e2e;--ink:#eeecfa;--muted:#aaa7cc;--line:#2c2856;--card:#171338;--accent:#F08A5D;--head:#c9bff5;--show-lt:none;--show-dk:block;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#0b0820;--bg2:#120e2e;--ink:#eeecfa;--muted:#aaa7cc;--line:#2c2856;--card:#171338;--accent:#F08A5D;--head:#c9bff5;--show-lt:none;--show-dk:block;color-scheme:dark}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:16px;line-height:1.55}
+button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:pointer}
+button:focus-visible,textarea:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid var(--orange);outline-offset:2px}
+.lt{display:var(--show-lt)} .dk{display:var(--show-dk)}
+.grain{position:absolute;inset:0;background-image:var(--grain);opacity:.22;mix-blend-mode:multiply;pointer-events:none}
+.grain.w{background-image:var(--grain-w);opacity:.14;mix-blend-mode:screen}
+
+/* ---------- hero ---------- */
+.hero{position:relative;overflow:hidden;background:var(--bg);border-bottom:1px solid var(--line)}
+.hero::before{content:"";position:absolute;inset:0;background:radial-gradient(60% 80% at 100% 30%,rgba(163,103,175,.22),transparent 70%),var(--bg)}
+.swoosh{position:absolute;right:-6%;top:-10%;width:58%;height:130%;pointer-events:none}
+.hero-in{position:relative;max-width:1240px;margin:0 auto;padding-block:22px 46px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.spons{display:flex;align-items:center;justify-content:space-between;gap:16px;max-width:620px}
+.spons img{height:46px;width:auto}
+.spons .crest{height:84px}
+.hero h1{margin:26px 0 4px;font-family:var(--display);font-weight:900;font-size:clamp(46px,9vw,104px);line-height:.92;letter-spacing:-.02em;text-transform:uppercase;background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent;max-width:12ch}
+.wide{font-family:var(--display);font-weight:500;letter-spacing:.34em;text-transform:uppercase;font-size:clamp(13px,1.8vw,18px);color:var(--head)}
+.rule{height:2px;width:min(520px,80%);background:var(--grad);margin:14px 0 16px;border-radius:2px}
+.hero p{max-width:56ch;margin:0;color:var(--muted);font-size:17px}
+.hero .ex{display:inline-flex;gap:8px;align-items:center;margin-top:16px;font-size:13px;color:var(--muted);background:var(--bg2);border:1px solid var(--line);border-radius:999px;padding:5px 12px}
+.hero .ex b{color:var(--accent)}
+
+/* ---------- nav ---------- */
+@media (max-width:700px){.swoosh{opacity:.3;width:80%}}
+.nav{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:var(--bg);background:color-mix(in srgb,var(--bg) 88%,transparent);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:21;background:var(--bg)}
+.nav-in{max-width:1240px;margin:0 auto;display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;padding-block:10px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.nav-in::-webkit-scrollbar{display:none}
+.nav a{flex:none;font-family:var(--display);font-weight:700;font-size:12.5px;text-decoration:none;color:var(--ink);padding:6px 11px;border-radius:999px;border:1px solid var(--line);background:var(--card);white-space:nowrap}
+.nav a b{color:var(--accent);margin-right:5px}
+.nav a:hover{border-color:var(--orange)}
+
+/* ---------- sections ---------- */
+.page{max-width:1240px;margin:0 auto;padding-block:10px 120px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+section.s{display:grid;grid-template-columns:minmax(0,380px) minmax(0,1fr);gap:40px;padding-block:56px 8px;border-bottom:1px solid var(--line);scroll-margin-top:60px}
+.notes{min-width:0}
+.kick{display:flex;align-items:center;gap:10px;font-family:var(--display);font-weight:500;letter-spacing:.3em;font-size:12px;text-transform:uppercase;color:var(--muted)}
+.kick .n{font-family:var(--num);font-size:30px;letter-spacing:0;line-height:1;background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
+.notes h2{font-family:var(--display);font-weight:900;text-transform:uppercase;font-size:clamp(28px,3.4vw,40px);line-height:1;margin:6px 0 14px;letter-spacing:-.01em;color:var(--head);text-wrap:balance}
+.notes p{margin:0 0 12px;max-width:52ch}
+.notes ul{margin:0 0 16px;padding-left:18px}
+.notes li{margin:4px 0}
+.notes li::marker{color:var(--orange)}
+.rulebox{position:relative;overflow:hidden;border-radius:14px;padding:14px 16px;margin:0 0 16px;color:#fff;background:var(--grad-v)}
+.rulebox b{display:block;font-family:var(--display);font-weight:800;font-size:11px;letter-spacing:.2em;text-transform:uppercase;opacity:.85;margin-bottom:2px}
+.rulebox p{margin:0;position:relative}
+.qs{border:1px solid var(--line);background:var(--card);border-radius:14px;padding:14px 16px}
+.qs h3{margin:0 0 8px;font-family:var(--display);font-weight:800;font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--accent)}
+.qs label{display:block;margin:0 0 12px}
+.qs label:last-child{margin-bottom:0}
+.qs label span{display:block;font-weight:600;font-size:15px;margin-bottom:4px}
+.qs textarea{width:100%;min-height:44px;resize:vertical;border:1px solid var(--line);border-radius:10px;background:var(--bg2);color:var(--ink);font:inherit;font-size:15px;padding:8px 10px}
+.stage{min-width:0;display:flex;flex-wrap:wrap;gap:28px;align-items:flex-start}
+.unit{display:grid;gap:12px;justify-items:center}
+.chips{display:flex;flex-wrap:wrap;justify-content:center;gap:6px;max-width:320px}
+.chips button{font-family:var(--display);font-weight:700;font-size:11.5px;padding:5px 10px;border-radius:999px;border:1px solid var(--line);background:var(--card);color:var(--muted)}
+.chips button.on{background:var(--grad);color:#fff;border-color:transparent}
+.unit .cap{font-size:13px;color:var(--muted);text-align:center;max-width:300px}
+.tip{font-size:13px;color:var(--muted);display:flex;gap:6px;align-items:center}
+.tip::before{content:"";width:8px;height:8px;border-radius:50%;background:var(--orange);box-shadow:0 0 0 4px rgba(208,101,60,.2);animation:pulse 1.8s infinite}
+@keyframes pulse{50%{box-shadow:0 0 0 7px rgba(208,101,60,0)}}
+
+/* ---------- phone ---------- */
+.ph{width:300px;max-width:100%;height:624px;border-radius:46px;padding:9px;background:linear-gradient(145deg,#2a2847,#07061a 40%,#1c1a36);box-shadow:0 1px 0 1px rgba(255,255,255,.08) inset,0 30px 60px -20px rgba(28,27,96,.55),0 12px 24px -12px rgba(0,0,0,.4);position:relative;flex:none}
+.scrn{position:relative;width:100%;height:100%;border-radius:38px;overflow:hidden;background:var(--a-bg);color:var(--a-ink);font-family:var(--body);font-size:12.5px;line-height:1.35}
+.scrn::before{content:"";position:absolute;inset:0;background:var(--waves) no-repeat center/100% 100%}
+.island{position:absolute;top:8px;left:50%;transform:translateX(-50%);width:84px;height:24px;border-radius:14px;background:#000;z-index:30}
+.scr{position:absolute;inset:0;display:flex;flex-direction:column;opacity:0;visibility:hidden;transform:translateX(14px);transition:opacity .28s ease,transform .28s ease,visibility 0s .28s}
+.scr.on{opacity:1;visibility:visible;transform:none;transition:opacity .28s ease,transform .28s ease}
+.sb{height:40px;flex:none;display:flex;justify-content:space-between;align-items:center;padding:4px 24px 0;font-size:11.5px;font-weight:700;position:relative;z-index:2}
+.top{position:relative;flex:none;color:#fff;overflow:hidden;background:var(--grad-v)}
+.top::before{content:"";position:absolute;inset:0;background:var(--court) center/150% auto no-repeat}
+.top::after{content:"";position:absolute;inset:0;background:radial-gradient(80% 90% at 85% 0%,rgba(255,255,255,.22),transparent 60%)}
+.top .sb{color:#fff}
+.ah{position:relative;z-index:2;display:flex;align-items:center;gap:9px;padding:2px 14px 12px}
+.ah .crest{width:36px;height:36px;object-fit:contain;filter:drop-shadow(0 2px 3px rgba(0,0,0,.35))}
+.ah .t{flex:1;min-width:0;font-family:var(--display);font-weight:900;font-size:15px;line-height:1.05;text-transform:uppercase;letter-spacing:.01em}
+.ah .t small{display:block;font-family:var(--display);font-weight:500;font-size:9.5px;letter-spacing:.22em;opacity:.8;margin-top:3px}
+.ah .back{width:26px;height:26px;border-radius:50%;background:rgba(255,255,255,.16);display:grid;place-items:center;font-size:14px;font-weight:700}
+.bell{position:relative;width:28px;height:28px;border-radius:50%;background:rgba(255,255,255,.16);display:grid;place-items:center}
+.bell svg{width:14px;height:14px}
+.bell i{position:absolute;top:-3px;right:-4px;background:var(--orange);color:#fff;font-style:normal;font-size:9px;font-weight:800;border-radius:999px;padding:0 4px;line-height:14px;box-shadow:0 0 0 2px #3b2f7c}
+.bd{position:relative;z-index:1;flex:1;overflow-y:auto;overflow-x:hidden;padding:12px;display:flex;flex-direction:column;gap:9px;scrollbar-width:none}
+.bd::-webkit-scrollbar{display:none}
+.tb{position:relative;z-index:2;flex:none;display:grid;grid-template-columns:repeat(5,1fr);background:rgba(255,255,255,.92);backdrop-filter:blur(8px);border-top:1px solid var(--a-line);padding:7px 4px 16px}
+.tb span{display:grid;justify-items:center;gap:3px;font-size:9px;font-weight:700;color:var(--a-mut)}
+.tb svg{width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:1.8}
+.tb span.on{color:var(--orange)}
+
+/* app components */
+.cd{position:relative;background:#fff;border:1px solid var(--a-line);border-radius:14px;padding:10px 11px;box-shadow:0 1px 0 rgba(255,255,255,.8) inset,0 6px 14px -10px rgba(43,39,99,.35)}
+.lbl{font-family:var(--display);font-weight:800;font-size:9px;letter-spacing:.16em;text-transform:uppercase;color:var(--a-mut)}
+.gt{font-family:var(--display);font-weight:900;text-transform:uppercase;background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
+.h{font-family:var(--display);font-weight:800;font-size:14px;line-height:1.15}
+.mut{color:var(--a-mut)} .sm{font-size:11px}
+.row{display:flex;align-items:center;gap:8px;min-width:0}
+.row>.f{flex:1;min-width:0}
+.sp{justify-content:space-between}
+.n{font-family:var(--num);font-weight:400;letter-spacing:.01em;font-variant-numeric:tabular-nums}
+.pill{display:inline-block;font-size:9.5px;font-weight:700;border-radius:999px;padding:2px 8px;white-space:nowrap;font-family:var(--body)}
+.p-ok{background:var(--okbg);color:var(--ok)} .p-warn{background:var(--warnbg);color:var(--warn)} .p-no{background:var(--nobg);color:var(--no)}
+.p-pu{background:#ece6fb;color:var(--purple)} .p-or{background:#fde7dc;color:#9c3f18} .p-nv{background:#e7e6f5;color:var(--navy)}
+.p-gr{background:var(--grad);color:#fff}
+.btn{display:block;width:100%;text-align:center;font-family:var(--display);font-weight:800;font-size:11.5px;letter-spacing:.04em;text-transform:uppercase;border-radius:999px;padding:10px;background:var(--grad);color:#fff;box-shadow:0 8px 16px -10px rgba(43,39,99,.9),0 1px 0 rgba(255,255,255,.3) inset;transition:transform .12s}
+.btn:active{transform:scale(.97)}
+.btn.or{background:linear-gradient(180deg,#e07a4e,#c2562b)}
+.btn.g{background:#fff;color:var(--a-ink);border:1px solid var(--a-line);box-shadow:none}
+.btn.r{background:var(--nobg);color:var(--no);box-shadow:none}
+.btns{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.btns .btn{padding:8px 6px;font-size:10.5px}
+.fld{display:block;background:var(--a-soft);border:1px solid var(--a-line);border-radius:11px;padding:6px 9px}
+.fld>span{display:block;font-size:9.5px;color:var(--a-mut);font-weight:600}
+.fld input,.fld select,.fld textarea{width:100%;border:0;background:transparent;font:inherit;font-size:12.5px;color:var(--a-ink);padding:1px 0;outline:none;resize:none}
+.fld:focus-within{border-color:var(--purple);box-shadow:0 0 0 3px rgba(91,71,153,.15)}
+.err{color:var(--no);font-size:11px;font-weight:600}
+.tog{width:34px;height:20px;border-radius:999px;background:#d9d6e8;position:relative;flex:none;transition:background .2s}
+.tog::after{content:"";position:absolute;top:2px;left:2px;width:16px;height:16px;border-radius:50%;background:#fff;box-shadow:0 1px 3px rgba(0,0,0,.25);transition:left .2s}
+.tog.on{background:var(--ok)}
+.tog.on::after{left:16px}
+.trow{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:3px 0}
+.seg{display:flex;background:var(--a-soft);border:1px solid var(--a-line);border-radius:999px;padding:3px;gap:2px}
+.seg button{flex:1;font-size:10.5px;font-weight:700;padding:5px 2px;border-radius:999px;color:var(--a-mut);white-space:nowrap}
+.seg button.on{background:var(--grad);color:#fff;box-shadow:0 3px 8px -4px rgba(43,39,99,.8)}
+.banner{border-radius:11px;padding:8px 10px;font-size:11px;line-height:1.35}
+.b-warn{background:var(--warnbg);color:var(--warn)} .b-pu{background:#efe9fb;color:var(--purple)} .b-ok{background:var(--okbg);color:var(--ok)} .b-no{background:var(--nobg);color:var(--no)}
+.rx{display:inline-flex;gap:4px;align-items:center;background:var(--a-soft);border:1px solid var(--a-line);border-radius:999px;padding:2px 8px;font-size:11px;transition:transform .15s}
+.rx.on{background:#fde7dc;border-color:#f3c3ab;color:#9c3f18}
+.rx.pop{transform:scale(1.18)}
+.rxs{display:flex;gap:5px;flex-wrap:wrap}
+
+/* crests & matches */
+.cr{width:30px;height:30px;object-fit:contain;flex:none}
+.oi{width:30px;height:30px;border-radius:50%;flex:none;display:grid;place-items:center;font-family:var(--display);font-weight:900;font-size:10px;color:var(--navy);background:radial-gradient(circle at 35% 30%,#fff,#e4e1f1);border:1px solid var(--a-line)}
+.vs{font-family:var(--display);font-style:italic;font-weight:900;font-size:13px;background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent;padding:0 1px}
+.mt{display:grid;grid-template-columns:auto auto auto minmax(0,1fr) auto;align-items:center;gap:5px;padding:7px 0;border-bottom:1px solid var(--a-line);text-align:left;width:100%}
+.mt:last-child{border-bottom:0}
+.mt .who{min-width:0;padding-left:3px}
+.mt .who b{display:block;font-size:11.5px;line-height:1.15;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.mt .who span{font-size:10px;color:var(--a-mut);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;display:block}
+.sc{font-family:var(--num);font-size:15px;text-align:right;line-height:1}
+.sc small{display:block;font-family:var(--display);font-weight:800;font-size:8.5px;letter-spacing:.12em}
+.w{color:var(--ok)} .l{color:var(--no)}
+button.mt:hover{background:var(--a-soft)}
+.chev{color:var(--a-mut);font-weight:700}
+
+/* jersey avatar & ball */
+.jy{width:30px;height:33px;flex:none;filter:drop-shadow(0 2px 2px rgba(0,0,0,.25))}
+.ball{width:30px;height:30px;border-radius:50%;flex:none;display:grid;place-items:center;font-family:var(--display);font-weight:900;font-size:10px;color:#fff;text-shadow:0 1px 2px rgba(0,0,0,.5);background:var(--seams) center/100% 100%,radial-gradient(circle at 34% 28%,#f6a676,#D0653C 46%,#B65016 78%,#7d330c)}
+
+/* trading card */
+.tc{position:relative;overflow:hidden;border-radius:16px;color:#fff;padding:12px;background:radial-gradient(90% 70% at 15% 0%,rgba(163,103,175,.55),transparent 60%),linear-gradient(160deg,#1a1730,#110E12 60%);box-shadow:0 14px 26px -14px rgba(17,14,18,.9)}
+.tc::before{content:"";position:absolute;right:-30px;bottom:-30px;width:150px;height:150px;background:url("assets/crest-dark.png") center/contain no-repeat;opacity:.1;transform:rotate(-12deg)}
+.tc::after{content:"";position:absolute;top:0;bottom:0;right:16px;width:10px;background:linear-gradient(180deg,#2B2763,#A367AF);opacity:.85;box-shadow:-14px 0 0 -2px rgba(224,69,123,.55)}
+.tc>*{position:relative;z-index:1}
+.tc .lbl{color:rgba(255,255,255,.7)}
+.perf{display:flex;align-items:center;gap:10px;padding:7px 0;border-top:1px solid rgba(255,255,255,.1)}
+.perf:first-of-type{border-top:0}
+.perf .f{flex:1;min-width:0}
+.perf b{font-family:var(--display);font-weight:800;font-size:12.5px;display:block}
+.perf span{font-size:10.5px;opacity:.75}
+.perf .n{font-size:28px;line-height:.9;color:#fff;text-shadow:0 0 18px rgba(208,101,60,.6)}
+.perf .n small{display:block;font-family:var(--display);font-size:8px;letter-spacing:.2em;text-align:right;opacity:.7}
+
+/* hardwood header */
+.wood{position:relative;flex:none;overflow:hidden;color:#fff;background:repeating-linear-gradient(90deg,#c48a53 0 22px,#a8703d 22px 23px,#cf975f 23px 45px,#b47944 45px 46px,#c9905a 46px 68px,#a36b39 68px 69px)}
+.wood::before{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(14,8,62,.25),rgba(14,8,62,.92)),url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 300 160'%3E%3Cg fill='none' stroke='%23D0653C' stroke-width='3' stroke-opacity='.7'%3E%3Cpath d='M-10 150a160 110 0 0 1 320 0'/%3E%3Crect x='100' y='70' width='100' height='100'/%3E%3C/g%3E%3C/svg%3E") center bottom/100% auto no-repeat}
+.wood .sb{color:#fff}
+.wood .in{position:relative;z-index:2;padding:6px 14px 14px;display:flex;align-items:flex-end;gap:10px}
+.wood .in img{width:54px;height:54px;object-fit:contain;filter:drop-shadow(0 4px 6px rgba(0,0,0,.5))}
+
+.stat3{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
+.stat3>div{background:#fff;border:1px solid var(--a-line);border-radius:12px;padding:7px 4px;text-align:center;box-shadow:0 6px 12px -10px rgba(43,39,99,.4)}
+.stat3 .n{font-size:21px;line-height:1;display:block;color:var(--navy)}
+.stat3 span{font-size:9.5px;color:var(--a-mut);font-weight:600}
+table.bx{width:100%;border-collapse:collapse;font-size:11.5px}
+table.bx th{font-family:var(--display);font-size:8.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--a-mut);text-align:left;font-weight:800;padding:4px 2px;border-bottom:1px solid var(--a-line)}
+table.bx td{padding:5px 2px;border-bottom:1px solid var(--a-line);vertical-align:middle}
+table.bx tr:last-child td{border-bottom:0}
+table.bx .r{text-align:right}
+table.bx .nn{font-family:var(--num);font-size:13px}
+.bar{height:7px;border-radius:4px;background:var(--a-soft);overflow:hidden;margin-top:3px}
+.bar i{display:block;height:100%;border-radius:4px;background:linear-gradient(90deg,#B65016,#D0653C,#f29a6b);transition:width .5s ease}
+.form{display:flex;gap:4px}
+.form span{width:20px;height:20px;border-radius:6px;display:grid;place-items:center;font-family:var(--display);font-weight:900;font-size:9.5px;color:#fff}
+.form .W{background:var(--ok)} .form .L{background:var(--no)}
+
+/* carousel slide */
+.slide{position:relative;aspect-ratio:4/5;max-width:100%;border-radius:12px;overflow:hidden;background:#fff;box-shadow:0 14px 26px -14px rgba(43,39,99,.7)}
+.slide .sw{position:absolute;inset:0;background:radial-gradient(70% 60% at 100% 100%,#A367AF,transparent 70%),linear-gradient(150deg,transparent 45%,#5B4799 45.5%,#2B2763 100%)}
+.slide .sw2{position:absolute;inset:0;background:var(--court) right bottom/160% auto no-repeat;opacity:.9}
+.slide .gr{position:absolute;inset:0;background-image:var(--grain);opacity:.25;mix-blend-mode:multiply}
+.slide .sbar{position:relative;display:flex;justify-content:space-between;align-items:center;padding:8px 10px 0}
+.slide .sbar img{height:20px;width:auto}
+.slide .sbar .c{height:34px}
+.slide .body{position:relative;padding:4px 12px}
+.slide .tt{font-family:var(--display);font-weight:900;font-size:21px;line-height:.95;text-transform:uppercase;background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
+.slide .wd{font-family:var(--display);font-weight:500;font-size:7.5px;letter-spacing:.3em;color:var(--navy);margin-top:4px}
+.slide .big{position:absolute;right:12px;bottom:16px;text-align:right;color:#fff}
+.slide .big .n{font-size:64px;line-height:.85;display:block;text-shadow:0 6px 18px rgba(0,0,0,.35)}
+.slide .big small{font-family:var(--display);font-weight:800;font-size:8px;letter-spacing:.25em}
+.slide .who{position:absolute;left:12px;bottom:16px;color:#fff;max-width:55%}
+.slide .who b{display:block;font-family:var(--display);font-weight:900;font-size:13px;text-transform:uppercase;line-height:1}
+.slide .who span{font-size:9.5px;opacity:.85}
+.slide .jbig{position:absolute;left:10px;top:86px;width:86px;height:95px;filter:drop-shadow(0 10px 14px rgba(0,0,0,.35))}
+.slide .match{position:absolute;left:104px;top:108px;display:flex;align-items:center;gap:4px}
+.slide .match img{width:30px;height:30px;object-fit:contain}
+.dots{display:flex;gap:5px;justify-content:center}
+.dots i{width:6px;height:6px;border-radius:50%;background:var(--a-line)}
+.dots i.on{background:var(--orange);width:16px;border-radius:3px}
+
+/* upload */
+.sheetimg{position:relative;height:150px;border-radius:10px;overflow:hidden;border:1px solid var(--a-line);background:repeating-linear-gradient(0deg,#fff 0 11px,#eceef6 11px 12px),#fff;transform:rotate(-1.2deg)}
+.sheetimg::before{content:"SCORESHEET · BASKETBALL IRELAND";position:absolute;top:6px;left:8px;font-family:var(--display);font-weight:800;font-size:7.5px;letter-spacing:.18em;color:#9aa0b8}
+.sheetimg .cols{position:absolute;inset:22px 8px 8px;display:grid;grid-template-columns:1.4fr 1fr;gap:6px}
+.sheetimg .cols div{border:1px solid #cfd3e2;border-radius:3px;background:repeating-linear-gradient(90deg,transparent 0 14px,#e3e6f0 14px 15px)}
+.sheetimg .ink{position:absolute;font-family:"Segoe Print","Bradley Hand","Comic Sans MS",cursive;color:#2639a6;font-size:11px;transform:rotate(-3deg)}
+.scanline{position:absolute;left:0;right:0;height:26px;background:linear-gradient(180deg,transparent,rgba(208,101,60,.35),transparent);border-bottom:2px solid var(--orange);top:-30px;animation:scan 1.4s ease-in-out infinite}
+@keyframes scan{to{top:150px}}
+.step{display:inline-flex;align-items:center;gap:2px}
+.step button{width:20px;height:20px;border-radius:6px;background:var(--a-soft);border:1px solid var(--a-line);font-weight:800;line-height:1}
+.step .n{min-width:22px;text-align:center;font-size:13px}
+tr.flag td{background:#fff5e8}
+
+/* photos */
+.ph-img{border-radius:10px;position:relative;overflow:hidden;background:linear-gradient(135deg,#2B2763,#A367AF)}
+.ph-img::after{content:"";position:absolute;inset:0;background-image:var(--grain-w);opacity:.25;mix-blend-mode:screen}
+.ph-img.o{background:radial-gradient(circle at 70% 30%,#f6a676,#D0653C 50%,#7d330c)}
+.ph-img.m{background:linear-gradient(135deg,#DFDBE7,#A367AF)}
+.ph-img.k{background:linear-gradient(160deg,#3a3550,#110E12)}
+.ph-img.cr::before{content:"";position:absolute;inset:22%;background:url("assets/crest-dark.png") center/contain no-repeat;opacity:.9;z-index:1}
+.gal{display:grid;grid-template-columns:repeat(3,1fr);gap:4px}
+.gal .ph-img{aspect-ratio:1}
+.tags{display:flex;flex-wrap:wrap;gap:5px}
+.tags button{font-size:10.5px;font-weight:700;border-radius:999px;padding:3px 9px;background:var(--a-soft);border:1px solid var(--a-line);color:var(--a-mut)}
+.tags button.on{background:var(--grad);color:#fff;border-color:transparent}
+
+/* community & chat */
+.qhero{position:relative;overflow:hidden;border-radius:16px;padding:12px;color:#fff;background:var(--grad-v)}
+.qhero::before{content:"";position:absolute;inset:0;background:var(--court) center/170% auto no-repeat}
+.qhero>*{position:relative}
+.qhero .lbl{color:rgba(255,255,255,.75)}
+.qhero .h{font-size:15px;margin:3px 0 5px}
+.ava{width:28px;height:28px;border-radius:50%;flex:none;display:grid;place-items:center;font-family:var(--display);font-weight:900;font-size:10px;color:#fff;background:var(--grad)}
+.ava.o{background:linear-gradient(135deg,#e07a4e,#B65016)} .ava.k{background:linear-gradient(135deg,#3a3550,#110E12)} .ava.c{background:linear-gradient(135deg,#A367AF,#7656A3)}
+.bub{max-width:86%;background:#fff;border:1px solid var(--a-line);border-radius:14px 14px 14px 4px;padding:7px 9px;box-shadow:0 4px 10px -8px rgba(43,39,99,.4)}
+.bub.me{align-self:flex-end;background:var(--grad);color:#fff;border:0;border-radius:14px 14px 4px 14px}
+.bub b{display:block;font-size:10px;color:var(--purple)}
+.bub.me b{color:rgba(255,255,255,.8)}
+.compose{display:flex;gap:6px;align-items:center}
+.compose .fld{flex:1}
+.send{width:34px;height:34px;border-radius:50%;background:var(--grad);color:#fff;display:grid;place-items:center;flex:none;font-weight:900}
+.reps{border-left:2px solid var(--a-line);margin-left:12px;padding-left:9px;display:grid;gap:5px}
+
+/* overlays */
+.dim{position:absolute;inset:0;z-index:20;background:rgba(14,8,62,.5);opacity:0;visibility:hidden;transition:.25s}
+.sheet{position:absolute;left:0;right:0;bottom:0;z-index:21;background:#fff;border-radius:22px 22px 0 0;padding:14px 14px 22px;display:grid;gap:7px;transform:translateY(105%);transition:transform .3s cubic-bezier(.2,.8,.2,1);box-shadow:0 -14px 30px rgba(0,0,0,.2)}
+.sheet::before{content:"";justify-self:center;width:36px;height:4px;border-radius:2px;background:var(--a-line)}
+.open .dim{opacity:1;visibility:visible}
+.open .sheet{transform:none}
+.toast{position:absolute;left:14px;right:14px;bottom:78px;z-index:40;background:var(--midnight);color:#fff;border-radius:12px;padding:9px 12px;font-size:11.5px;font-weight:600;opacity:0;transform:translateY(10px);transition:.25s;pointer-events:none;display:flex;gap:8px;align-items:center}
+.toast::before{content:"✓";width:18px;height:18px;border-radius:50%;background:var(--ok);display:grid;place-items:center;font-size:11px;flex:none}
+.toast.show{opacity:1;transform:none}
+.push{position:absolute;left:10px;right:10px;top:-90px;z-index:45;background:rgba(255,255,255,.95);backdrop-filter:blur(10px);border-radius:16px;padding:9px 11px;display:flex;gap:9px;align-items:center;box-shadow:0 12px 26px -8px rgba(0,0,0,.35);transition:top .4s cubic-bezier(.2,.9,.3,1.2)}
+.push.show{top:42px}
+.push img{width:30px;height:30px;object-fit:contain;flex:none}
+.push b{font-size:11px;display:block}
+.push p{margin:0;font-size:11.5px}
+
+/* lock screen */
+.lock{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;color:#fff;background:radial-gradient(60% 40% at 50% 30%,rgba(208,101,60,.35),transparent 70%),var(--grad-v);overflow:hidden}
+.lock::before{content:"";position:absolute;inset:0;background:var(--court) center 70%/220% auto no-repeat}
+.lock>*{position:relative}
+.lock .tm{font-family:var(--display);font-weight:500;font-size:58px;line-height:1;letter-spacing:-.03em;margin-top:6px}
+.lock .dt{font-family:var(--display);font-weight:500;font-size:12px;margin-top:6px;opacity:.85}
+.lock .crest{width:64px;margin:10px 0 4px;opacity:.95}
+.nt{width:calc(100% - 20px);background:rgba(255,255,255,.88);backdrop-filter:blur(10px);color:var(--a-ink);border-radius:16px;padding:8px 10px;display:flex;gap:8px;align-items:center;margin-top:7px;animation:drop .5s both}
+.nt:nth-of-type(2){animation-delay:.15s}.nt:nth-of-type(3){animation-delay:.3s}
+@keyframes drop{from{opacity:0;transform:translateY(-10px)}}
+.nt img{width:28px;height:28px;object-fit:contain;flex:none}
+.nt b{font-size:10.5px;display:block}
+.nt p{margin:0;font-size:11px}
+
+/* choice cards */
+.choice{display:block;width:100%;text-align:left;border:2px solid var(--a-line);border-radius:14px;padding:10px;background:#fff;transition:.2s}
+.choice.on{border-color:var(--purple);box-shadow:0 0 0 4px rgba(91,71,153,.12)}
+.choice b{font-family:var(--display);font-weight:800;font-size:12.5px;display:block}
+.badge{display:inline-flex;align-items:center;gap:4px;font-size:10px;font-weight:700;border-radius:999px;padding:2px 8px;background:var(--a-soft);border:1px solid var(--a-line)}
+.qitem{display:block;width:100%;text-align:left;border-left:4px solid var(--a-line)}
+.qitem.report{border-left-color:var(--no)} .qitem.sheet{border-left-color:var(--orange)} .qitem.post{border-left-color:var(--purple)} .qitem.user,.qitem.role{border-left-color:var(--navy)}
+.logi{font-size:11px;padding:6px 0;border-bottom:1px solid var(--a-line)}
+.logi:last-child{border:0}
+.empty{text-align:center;color:var(--a-mut);padding:16px 6px}
+.empty b{display:block;font-family:var(--display);color:var(--a-ink);font-size:13px;margin-bottom:3px}
+
+/* copy answers */
+.fab{position:fixed;z-index:30;right:max(16px,calc(env(safe-area-inset-right,0px) + 16px));bottom:calc(env(safe-area-inset-bottom,0px) + 16px);display:flex;align-items:center;gap:8px;font-family:var(--display);font-weight:800;font-size:12.5px;letter-spacing:.03em;text-transform:uppercase;color:#fff;background:var(--grad);border-radius:999px;padding:12px 18px;box-shadow:0 14px 30px -10px rgba(43,39,99,.8)}
+.fab .c{background:#fff;color:var(--purple);border-radius:999px;font-size:11px;padding:1px 7px}
+.modal{position:fixed;inset:0;z-index:50;background:rgba(14,8,62,.6);display:grid;place-items:center;padding:16px}
+.modal .box{background:var(--card);color:var(--ink);border-radius:16px;padding:16px;width:min(560px,100%);display:grid;gap:10px}
+.modal textarea{width:100%;height:260px;border:1px solid var(--line);border-radius:10px;background:var(--bg2);color:var(--ink);font:inherit;font-size:14px;padding:10px}
+.modal .acts{display:flex;gap:8px;justify-content:flex-end}
+.modal .acts button{font-family:var(--display);font-weight:800;font-size:12px;border-radius:999px;padding:8px 14px;border:1px solid var(--line)}
+.modal .acts .pri{background:var(--grad);color:#fff;border:0}
+
+/* ---------- new: browser window (Media Calendar) ---------- */
+.flow{display:flex;align-items:center;gap:10px;flex-wrap:wrap;width:100%}
+.flow .site{flex:1;min-width:150px;border:1px solid var(--line);background:var(--card);border-radius:12px;padding:10px 12px;display:flex;gap:10px;align-items:center}
+.flow .site img{width:34px;height:34px;object-fit:contain}
+.flow .site b{display:block;font-family:var(--display);font-size:13px}
+.flow .site span{font-size:12.5px;color:var(--muted)}
+.flow .arrow{flex:none;font-family:var(--display);font-weight:800;font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);display:grid;justify-items:center}
+.flow .arrow i{font-style:normal;font-size:22px;line-height:1;color:var(--orange);letter-spacing:0}
+.win{width:min(500px,100%);border-radius:14px;overflow:hidden;background:#F3F4F9;color:#15173D;box-shadow:0 30px 60px -24px rgba(18,11,80,.55);font-family:"Barlow",var(--body);font-size:13px;flex:none}
+.win .bar{display:flex;align-items:center;gap:6px;padding:8px 10px;background:#e4e6f1}
+.win .bar i{width:10px;height:10px;border-radius:50%;background:#c6cae0}
+.win .bar i:nth-child(1){background:#ff6058}.win .bar i:nth-child(2){background:#ffbd2e}.win .bar i:nth-child(3){background:#28c940}
+.win .url{flex:1;margin-left:8px;background:#fff;border-radius:6px;padding:3px 10px;font-size:11.5px;color:#5E6389;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.win .mh{background:#120B50;color:#fff;padding:12px 14px 0;position:relative;overflow:hidden}
+.win .mh::after{content:"";position:absolute;inset:0;background-image:var(--grain-w);opacity:.12;pointer-events:none}
+.win .mh h4{margin:0;font-family:"Barlow Condensed",var(--display);font-weight:800;font-style:italic;font-size:22px;text-transform:uppercase;letter-spacing:.01em}
+.win .mh h4 span{color:#FF5A00}
+.win .tabsr{display:flex;gap:2px;margin-top:10px;overflow-x:auto;scrollbar-width:none}
+.win .tabsr span{flex:none;padding:6px 9px;font-weight:600;font-size:12px;opacity:.7;border-bottom:3px solid transparent}
+.win .tabsr span.on{opacity:1;border-bottom-color:#FF5A00}
+.win .tabsr em{font-style:normal;background:#FF5A00;border-radius:999px;font-size:10px;padding:0 6px;margin-left:4px}
+.win .wb{padding:12px 14px 16px;display:grid;gap:8px;min-height:300px}
+.win .grp{font-family:"Barlow Condensed",var(--display);font-weight:700;font-size:13px;text-transform:uppercase;letter-spacing:.06em;color:#5E6389;display:flex;gap:6px;align-items:center}
+.win .it{background:#fff;border:1px solid #DDE0EE;border-radius:10px;padding:8px 10px;display:flex;gap:10px;align-items:center;animation:drop .4s both}
+.win .it .th{width:40px;height:50px;border-radius:6px;flex:none;background:var(--grad-v);position:relative;overflow:hidden}
+.win .it .th::after{content:"";position:absolute;inset:18%;background:url("assets/crest-dark.png") center/contain no-repeat}
+.win .it b{display:block;font-weight:700}
+.win .it .k{font-size:11px;color:#5E6389}
+.win .chip{font-size:10.5px;font-weight:700;border-radius:999px;padding:1px 8px;background:#FFF1E8;color:#C4520F;white-space:nowrap}
+.win .mb{font-weight:700;font-size:11.5px;border-radius:8px;padding:5px 10px;background:#1C2070;color:#fff}
+.win .mb.ok{background:#16A34A}
+.win .emp{border:2px dashed #C6CAE0;border-radius:12px;padding:22px 14px;text-align:center;color:#5E6389}
+.win .emp b{display:block;color:#15173D;font-size:14px;margin-bottom:2px}
+.pk{display:flex;align-items:center;gap:9px;padding:7px 0;border-bottom:1px solid var(--a-line)}
+.pk:last-child{border-bottom:0}
+.pk .th{width:34px;height:42px;border-radius:7px;flex:none;position:relative;overflow:hidden;background:var(--grad-v)}
+.pk .th.o{background:radial-gradient(circle at 60% 30%,#f6a676,#D0653C 55%,#7d330c)}
+.pk .th.k{background:linear-gradient(160deg,#3a3550,#110E12)}
+.pk .th::after{content:"";position:absolute;inset:20%;background:url("assets/crest-dark.png") center/contain no-repeat}
+.ck{width:20px;height:20px;border-radius:6px;border:2px solid var(--a-line);flex:none;display:grid;place-items:center;color:#fff;font-weight:900;font-size:11px}
+.ck.on{background:var(--grad);border-color:transparent}
+.ck.on::after{content:"✓"}
+
+/* game day */
+.gdh{position:relative;flex:none;overflow:hidden;color:#fff;background:radial-gradient(70% 60% at 50% 0%,rgba(208,101,60,.45),transparent 70%),var(--grad-v)}
+.gdh::before{content:"";position:absolute;inset:0;background:var(--court) center 30%/190% auto no-repeat}
+.gdh .in{position:relative;z-index:2;padding:4px 14px 16px;text-align:center}
+.gdh .crs{display:flex;align-items:center;justify-content:center;gap:10px;margin:6px 0}
+.gdh .crs img{width:64px;height:64px;object-fit:contain;filter:drop-shadow(0 6px 10px rgba(0,0,0,.45))}
+.gdh .crs .vs{font-size:24px;background:linear-gradient(180deg,#fff,#DFDBE7);-webkit-background-clip:text;background-clip:text}
+.cdn{display:flex;justify-content:center;gap:6px;margin-top:8px}
+.cdn div{background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.2);border-radius:10px;padding:5px 8px;min-width:50px}
+.cdn .n{font-size:22px;line-height:1;display:block}
+.cdn span{font-family:var(--display);font-size:7.5px;letter-spacing:.2em;font-weight:700;opacity:.8}
+.info{display:flex;gap:10px;align-items:center;padding:8px 0;border-bottom:1px solid var(--a-line)}
+.info:last-child{border-bottom:0}
+.info .ic{width:30px;height:30px;border-radius:9px;flex:none;display:grid;place-items:center;background:var(--a-soft);color:var(--purple);font-size:14px}
+.zap{display:flex;align-items:center;justify-content:center;gap:8px;text-decoration:none;font-family:var(--display);font-weight:800;font-size:11.5px;letter-spacing:.04em;text-transform:uppercase;color:#fff;border-radius:999px;padding:10px;background:linear-gradient(180deg,#e07a4e,#c2562b);box-shadow:0 8px 16px -10px rgba(194,86,43,.9)}
+.zap small{font-family:var(--body);text-transform:none;letter-spacing:0;font-weight:600;opacity:.85}
+
+/* fixtures */
+.cal{display:grid;grid-template-columns:repeat(7,1fr);gap:3px;text-align:center}
+.cal .dh{font-family:var(--display);font-size:8.5px;font-weight:800;letter-spacing:.1em;color:var(--a-mut);padding-bottom:2px}
+.cal button{aspect-ratio:1;border-radius:9px;font-size:11.5px;font-weight:600;position:relative;display:grid;place-items:center;color:var(--a-ink)}
+.cal button.x{color:#c3c0d6}
+.cal button.today{box-shadow:inset 0 0 0 2px var(--orange)}
+.cal button.sel{background:var(--grad);color:#fff}
+.cal button .dots{position:absolute;bottom:3px;left:0;right:0;display:flex;gap:2px;justify-content:center}
+.cal button .dots i{width:4px;height:4px;border-radius:50%;background:var(--orange)}
+.cal button.sel .dots i{background:#fff}
+.src{font-size:8.5px;font-weight:800;letter-spacing:.06em;border-radius:4px;padding:1px 5px;background:#e7e6f5;color:var(--navy);white-space:nowrap}
+.src.bi{background:#e2f4ea;color:var(--ok)} .src.dl{background:#fbe5f0;color:#a0276a}
+.dayh{font-family:var(--display);font-weight:800;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--purple);margin:4px 0 -2px}
+
+/* events */
+.ev{display:flex;gap:10px;align-items:stretch;text-align:left;width:100%}
+.ev .dt{width:46px;flex:none;border-radius:11px;color:#fff;display:grid;place-items:center;align-content:center;background:var(--grad-v);position:relative;overflow:hidden;padding:6px 0}
+.ev .dt::after{content:"";position:absolute;inset:0;background-image:var(--grain-w);opacity:.18}
+.ev .dt b{font-family:var(--num);font-size:20px;line-height:1;font-weight:400}
+.ev .dt span{font-family:var(--display);font-size:8px;font-weight:800;letter-spacing:.16em}
+.ev .dt.o{background:linear-gradient(160deg,#e07a4e,#9b3c13)}
+.ev .dt.k{background:linear-gradient(160deg,#3a3550,#110E12)}
+.places{height:8px;border-radius:4px;background:var(--a-soft);overflow:hidden}
+.places i{display:block;height:100%;background:var(--grad);transition:width .4s}
+.shift{display:flex;align-items:center;gap:8px;padding:6px 0;border-bottom:1px solid var(--a-line)}
+.shift:last-child{border-bottom:0}
+.shift .btn{width:auto;padding:5px 10px;font-size:9.5px}
+
+/* laptop dashboard */
+.lap{width:min(720px,100%);flex:none;position:relative}
+.lap .lid{background:linear-gradient(145deg,#2a2847,#07061a);border-radius:16px 16px 6px 6px;padding:10px 10px 12px;box-shadow:0 30px 60px -24px rgba(28,27,96,.6)}
+.lap .base{height:14px;margin:0 -4%;background:linear-gradient(180deg,#c9c7d8,#8f8ca6);border-radius:0 0 14px 14px;position:relative}
+.lap .base::before{content:"";position:absolute;left:42%;right:42%;top:0;height:5px;border-radius:0 0 6px 6px;background:#77748f}
+.dash{position:relative;background:#f6f5fb;border-radius:6px;overflow:hidden;color:var(--a-ink);font-family:var(--body);font-size:12.5px}
+.dash::before{content:"";position:absolute;inset:0;background:var(--waves) no-repeat right bottom/60% 100%;opacity:.8;pointer-events:none}
+.dash .dh{position:relative;display:flex;align-items:center;gap:10px;padding:10px 14px;color:#fff;background:var(--grad);overflow:hidden;flex-wrap:wrap}
+.dash .dh::before{content:"";position:absolute;inset:0;background:var(--court) right center/50% auto no-repeat}
+.dash .dh>*{position:relative}
+.dash .dh img{width:32px;height:32px;object-fit:contain}
+.dash .dh b{font-family:var(--display);font-weight:900;text-transform:uppercase;font-size:14px;flex:1;min-width:140px}
+.dash .dh b small{display:block;font-weight:500;font-size:9px;letter-spacing:.22em;opacity:.8}
+.dash .dh .seg{background:rgba(255,255,255,.14);border-color:rgba(255,255,255,.2);width:200px}
+.dash .dh .seg button{color:rgba(255,255,255,.8)}
+.dash .dh .seg button.on{background:#fff;color:var(--navy)}
+.dash .db{position:relative;padding:12px 14px 16px;display:grid;gap:10px}
+.kpis{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
+.kpi{background:#fff;border:1px solid var(--a-line);border-radius:12px;padding:9px 10px;box-shadow:0 8px 16px -14px rgba(43,39,99,.5)}
+.kpi .n{font-size:24px;line-height:1;display:block;color:var(--navy);margin-top:3px}
+.kpi .d{font-size:10.5px;font-weight:700}
+.up{color:var(--ok)} .dn{color:var(--no)}
+.dgrid{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(0,1fr);gap:10px}
+.dgrid>div{min-width:0}
+.chart svg{width:100%;height:auto;display:block}
+.hb{display:grid;grid-template-columns:86px minmax(0,1fr) 34px;gap:6px;align-items:center;font-size:11px;margin:5px 0}
+.hb .bar{margin:0;height:9px}
+.hb .bar i{background:var(--grad)}
+.hb b{text-align:right;font-family:var(--num);font-weight:400;font-size:12.5px}
+table.up-t{width:100%;border-collapse:collapse;font-size:11.5px}
+table.up-t td,table.up-t th{padding:5px 4px;border-bottom:1px solid var(--a-line);text-align:left}
+table.up-t th{font-family:var(--display);font-size:8.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--a-mut)}
+table.up-t tr:last-child td{border-bottom:0}
+.lap .toast{bottom:20px;left:auto;right:20px;width:auto}
+@media (max-width:640px){.kpis{grid-template-columns:repeat(2,minmax(0,1fr))}.dgrid{grid-template-columns:minmax(0,1fr)}}
+
+@media (max-width:920px){section.s{grid-template-columns:minmax(0,1fr);gap:24px}.stage{justify-content:center}}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
+</style>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <linearGradient id="jpan" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2B2763"/><stop offset=".6" stop-color="#5B4799"/><stop offset="1" stop-color="#A367AF"/></linearGradient>
+    <linearGradient id="jpanw" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#A367AF"/><stop offset="1" stop-color="#E0457B"/></linearGradient>
+    <radialGradient id="jsh" cx=".35" cy=".2" r=".9"><stop offset="0" stop-color="#3a3550"/><stop offset=".6" stop-color="#110E12"/></radialGradient>
+    <symbol id="jsy" viewBox="0 0 40 44"><path d="M12 2Q20 8 28 2L38 7 35.5 17 31 15.5V42H9V15.5L4.5 17 2 7Z" fill="url(#jsh)"/><path d="M9 17h3.2v25H9zM27.8 17H31v25h-3.2z" fill="url(#jpan)"/><path d="M12 2Q20 9.5 28 2" fill="none" stroke="#E0457B" stroke-width="1.8"/></symbol>
+    <symbol id="jsyw" viewBox="0 0 40 44"><path d="M12 2Q20 8 28 2L38 7 35.5 17 31 15.5V42H9V15.5L4.5 17 2 7Z" fill="url(#jsh)"/><path d="M9 17h3.2v25H9zM27.8 17H31v25h-3.2z" fill="url(#jpanw)"/><path d="M12 2Q20 9.5 28 2" fill="none" stroke="#A367AF" stroke-width="1.8"/></symbol>
+  </defs>
+</svg>
+
+<header class="hero">
+  <svg class="swoosh" viewBox="0 0 400 600" preserveAspectRatio="none" aria-hidden="true">
+    <defs><linearGradient id="sw" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#2B2763"/><stop offset=".55" stop-color="#5B4799"/><stop offset="1" stop-color="#A367AF"/></linearGradient></defs>
+    <path d="M400 0H230C330 120 200 300 300 420C350 480 330 560 280 600H400Z" fill="url(#sw)" opacity=".95"/>
+    <path d="M400 60C320 160 380 300 330 400C300 470 340 540 400 580Z" fill="#A367AF" opacity=".35"/>
+  </svg>
+  <div class="grain"></div>
+  <div class="hero-in">
+    <div class="spons">
+      <img class="lt" src="assets/griffith-college-black.png" alt="Griffith College">
+      <img class="dk" src="assets/griffith-college-white.png" alt="Griffith College">
+      <img class="crest lt" src="assets/crest.png" alt="Éanna Basketball crest">
+      <img class="crest dk" src="assets/crest-dark.png" alt="Éanna Basketball crest">
+      <img class="lt" src="assets/upmc-ssc-colour.png" alt="UPMC Sports Surgery Clinic">
+      <img class="dk" src="assets/upmc-ssc-white.png" alt="UPMC Sports Surgery Clinic">
+    </div>
+    <h1>Éanna Hub</h1>
+    <div class="wide">App walkthrough</div>
+    <div class="rule"></div>
+    <p>Every screen of the club hub, section by section. Tap around: the phones work. Write your answers in each section, then press <b>Copy my answers</b> and paste them back to me.</p>
+    <div class="ex"><b>Example data.</b> Senior men's names and numbers are the real roster. Scores and everyone else are made up.</div>
+  </div>
+</header>
+
+<nav class="nav" aria-label="Sections"><div class="nav-in">
+  <a href="#s1"><b>1</b>Home</a><a href="#s2"><b>2</b>Results</a><a href="#s3"><b>3</b>Teams</a><a href="#s4"><b>4</b>Score-sheets</a><a href="#s5"><b>5</b>News</a><a href="#s6"><b>6</b>Community</a><a href="#s7"><b>7</b>Staff rooms</a><a href="#s8"><b>8</b>Sign-up</a><a href="#s9"><b>9</b>Notifications</a><a href="#s10"><b>10</b>Moderation</a><a href="#s11"><b>11</b>Admin</a><a href="#s12"><b>12</b>Content pack</a><a href="#s13"><b>13</b>Game day</a><a href="#s14"><b>14</b>Fixtures</a><a href="#s15"><b>15</b>Events</a><a href="#s16"><b>16</b>Club dashboard</a>
+</div></nav>
+
+<div class="page">
+
+<!-- ===== 1 HOME ===== -->
+<section class="s" id="s1">
+  <div class="notes">
+    <div class="kick"><span class="n">01</span>Section</div>
+    <h2>Home</h2>
+    <p>The first screen everyone sees, with or without an account.</p>
+    <ul><li>This week's top performers as a trading card</li><li>Every result, crest v crest, like the matchday graphics</li><li>Latest news and the weekly question</li><li>The carousel builder makes the weekly post in one tap</li></ul>
+    <div class="qs"><h3>Your answers</h3>
+      <label><span>Top performers: highest scorer from each game, or the top 3 across the whole club?</span><textarea class="ans" id="q1a" data-q="1 Home · Top performers: per game or top 3 club-wide?"></textarea></label>
+      <label><span>Anything else you want on the home screen?</span><textarea class="ans" id="q1b" data-q="1 Home · Anything else on the home screen?"></textarea></label>
+    </div>
+  </div>
+  <div class="stage">
+    <div class="unit">
+      <div class="ph" id="p1"><div class="scrn"><div class="island"></div>
+        <div class="scr on" data-s="home">
+          <div class="top"><div class="sb"><span>9:41</span><span>5G ▮▮▮</span></div>
+            <div class="ah"><img class="crest" src="assets/crest-dark.png" alt=""><div class="t">Éanna Hub<small>Week 10 · 3–9 Nov</small></div><div class="bell"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M6 8a6 6 0 1 1 12 0c0 7 3 8 3 8H3s3-1 3-8M10 20a2 2 0 0 0 4 0"/></svg><i>3</i></div></div>
+            <div class="grain w"></div></div>
+          <div class="bd">
+            <button class="tc" data-go="top" style="text-align:left">
+              <div class="row sp"><span class="lbl">Top performers · Week 10</span><span class="pill p-gr">See all ›</span></div>
+              <div class="perf"><svg class="jy"><use href="#jsy"/><text x="20" y="33" text-anchor="middle" font-family="Anton" font-size="14" fill="#fff">5</text></svg><div class="f"><b>Dean Kiernan</b><span>Super League Men · v Killester</span></div><div class="n">27<small>PTS</small></div></div>
+              <div class="perf"><svg class="jy"><use href="#jsyw"/><text x="20" y="33" text-anchor="middle" font-family="Anton" font-size="14" fill="#fff">11</text></svg><div class="f"><b>Aoife M.</b><span>Women's BIDL · v Brunell</span></div><div class="n">22<small>PTS</small></div></div>
+            </button>
+            <div class="cd">
+              <div class="row sp"><span class="lbl">Results this week</span><button class="sm" style="color:var(--purple);font-weight:700" data-ph="p2" data-go="week" data-scroll="s2">All 6 ›</button></div>
+              <div id="homeRes"></div>
+            </div>
+            <div class="cd row"><div class="ph-img o" style="width:46px;height:46px;flex:none"></div><div class="f"><div class="lbl">Club news</div><b>U14 Boys win the Dublin blitz</b><div class="sm mut">2h · 41 reactions</div></div></div>
+            <div class="qhero"><div class="lbl">Question of the week</div><div class="h">What's the hardest part about underage basketball?</div><div class="sm" style="opacity:.8">48 answers</div></div>
+          </div>
+          <div class="tb" data-tab="0"></div>
+        </div>
+        <div class="scr" data-s="top">
+          <div class="top"><div class="sb"><span>9:41</span><span>5G ▮▮▮</span></div>
+            <div class="ah"><button class="back" data-go="home" aria-label="Back">‹</button><div class="t">Top performers<small>Week 10 · 3–9 Nov</small></div></div><div class="grain w"></div></div>
+          <div class="bd">
+            <div class="seg" data-seg="tp"><button class="on" data-v="m">Men &amp; boys</button><button data-v="w">Women &amp; girls</button></div>
+            <div id="topList" style="display:grid;gap:7px"></div>
+            <div class="banner b-pu">Under-13s aren't listed. That's set in Admin › Underage settings.</div>
+            <button class="btn or" data-go="car">Make this week's carousel</button>
+          </div>
+          <div class="tb" data-tab="0"></div>
+        </div>
+        <div class="scr" data-s="car">
+          <div class="top"><div class="sb"><span>9:41</span><span>5G ▮▮▮</span></div>
+            <div class="ah"><button class="back" data-go="top" aria-label="Back">‹</button><div class="t">Carousel<small>Instagram · 4:5</small></div><span class="pill p-gr">Media team</span></div><div class="grain w"></div></div>
+          <div class="bd">
+            <div id="slide"></div>
+            <div class="row sp"><button class="btn g" style="width:auto;padding:7px 14px" data-act="slide" data-d="-1">‹ Back</button><div class="dots" id="dots"></div><button class="btn g" style="width:auto;padding:7px 14px" data-act="slide" data-d="1">Next ›</button></div>
+            <button class="btn" data-act="toast" data-msg="Sent to the Media Calendar for approval">Send to Media Calendar</button>
+          </div>
+        </div>
+        <div class="toast"></div>
+      </div></div>
+      <div class="chips" data-for="p1"><button class="on" data-go="home">Home</button><button data-go="top">Top performers</button><button data-go="car">Carousel builder</button></div>
+      <div class="tip">Tap the trading card, then make the carousel</div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== 2 RESULTS ===== -->
+<section class="s" id="s2">
+  <div class="notes">
+    <div class="kick"><span class="n">02</span>Section</div>
+    <h2>Results &amp; stats</h2>
+    <div class="rulebox"><div class="grain w"></div><b>Real results</b><p>The week view now shows every Éanna result from the DMBB and DLBB sites. The board sites only have team scores, so points for each player still come from score-sheet uploads. The example box score and leaderboards show what that adds.</p></div>
+    <ul><li>Flick between weeks with the arrows</li><li>Tap a game for the score, venue and competition</li><li>Senior games show every player. Underage games hide zeros.</li><li>Season leaderboards, men and women, three ways</li></ul>
+    <div class="qs"><h3>Your answers</h3>
+      <label><span>Show the score by quarter too (it's on the sheet)?</span><textarea class="ans" id="q2a" data-q="2 Results · Show quarter scores?"></textarea></label>
+      <label><span>Leaderboards: total points, points per game, best game, or all three?</span><textarea class="ans" id="q2b" data-q="2 Results · Which leaderboards?"></textarea></label>
+    </div>
+  </div>
+  <div class="stage">
+    <div class="unit">
+      <div class="ph" id="p2"><div class="scrn"><div class="island"></div>
+        <div class="scr on" data-s="week">
+          <div class="top"><div class="sb"><span>9:41</span><span>5G ▮▮▮</span></div>
+            <div class="ah"><img class="crest" src="assets/crest-dark.png" alt=""><div class="t">Results<small>2026/27 season</small></div></div><div class="grain w"></div></div>
+          <div class="bd">
+            <div class="cd row sp" style="padding:6px 8px"><button class="btn g" style="width:auto;padding:4px 10px" data-act="wk" data-d="-1">‹</button><b class="h" id="wkLabel" style="font-size:12.5px"></b><button class="btn g" style="width:auto;padding:4px 10px" data-act="wk" data-d="1">›</button></div>
+            <div id="wkList" style="display:grid;gap:9px"></div>
+          </div>
+          <div class="tb" data-tab="1"></div>
+        </div>
+        <div class="scr" data-s="game">
+          <div class="top"><div class="sb"><span>9:41</span><span>5G ▮▮▮</span></div>
+            <div class="ah"><button class="back" data-go="week" aria-label="Back">‹</button><div class="t" id="gTitle">Game</div></div><div class="grain w"></div></div>
+          <div class="bd" id="gBody"></div>
+          <div class="tb" data-tab="1"></div>
+        </div>
+        <div class="scr" data-s="lead">
+          <div class="top"><div class="sb"><span>9:41</span><span>5G ▮▮▮</span></div>
+            <div class="ah"><img class="crest" src="assets/crest-dark.png" alt=""><div class="t">Leaderboards<small>Season so far</small></div></div><div class="grain w"></div></div>
+          <div class="bd">
+            <div class="seg" data-seg="lg"><button class="on" data-v="m">Men</button><button data-v="w">Women</button></div>
+            <div class="seg" data-seg="lm"><button class="on" data-v="t">Total</button><button data-v="p">Per game</button><button data-v="b">Best game</button></div>
+            <div class="cd" id="leadList" style="display:grid;gap:9px"></div>
+          </div>
+          <div class="tb" data-tab="1"></div>
+        </div>
+        <div class="toast"></div>
+      </div></div>
+      <div class="chips" data-for="p2"><button class="on" data-go="week">Week (real)</button><button data-go="game" data-act="openGame" data-g="sl10">Example box score</button><button data-go="lead">Leaderboards</button></div>
+      <div class="tip">These are this season's real results. Flick back through the weeks.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== 3 TEAMS ===== -->
+<section class="s" id="s3">
+  <div class="notes">
+    <div class="kick"><span class="n">03</span>Section</div>
+    <h2>Teams &amp; players</h2>
+    <ul><li>Team page with record, form, top scorers, next game</li><li>Player page with season numbers and game log</li><li>Underage teams can be "results only" or hidden</li></ul>
+    <div class="qs"><h3>Your answers</h3>
+      <label><span>Should underage players have their own player pages, or senior only?</span><textarea class="ans" id="q3a" data-q="3 Teams · Underage player pages?"></textarea></label>
+      <label><span>Fixtures (upcoming games) on team pages?</span><textarea class="ans" id="q3b" data-q="3 Teams · Fixtures on team pages?"></textarea></label>
+    </div>
+  </div>
+  <div class="stage">
+    <div class="unit">
+      <div class="ph" id="p3"><div class="scrn"><div class="island"></div>
+        <div class="scr on" data-s="team">
+          <div class="wood"><div class="sb"><span>9:41</span><span>5G ▮▮▮</span></div>
+            <div class="in"><img src="assets/crest-dark.png" alt=""><div class="f"><div class="lbl" style="color:rgba(255,255,255,.75)">Griffith College Éanna</div><div class="h" style="font-size:17px;font-weight:900;text-transform:uppercase">Super League Men</div></div><img src="assets/mens-super-league.png" alt="Men's Super League" style="width:46px;height:auto"></div><div class="grain w"></div></div>
+          <div class="bd">
+            <div class="stat3"><div><span class="n">6–2</span><span>Record</span></div><div><span class="n">84.1</span><span>Pts for</span></div><div><span class="n">77.6</span><span>Pts against</span></div></div>
+            <div class="cd row sp"><span class="lbl">Last 5</span><span class="form"><span class="W">W</span><span class="W">W</span><span class="L">L</span><span class="W">W</span><span class="W">W</span></span></div>
+            <div class="cd">
+              <div class="lbl">Top scorers · pts per game</div>
+              <button class="row" style="width:100%;padding:6px 0;border-bottom:1px solid var(--a-line)" data-go="player"><svg class="jy"><use href="#jsy"/><text x="20" y="33" text-anchor="middle" font-family="Anton" font-size="14" fill="#fff">5</text></svg><b class="f" style="text-align:left">Dean Kiernan</b><span class="n" style="font-size:16px">20.5</span><span class="chev">›</span></button>
+              <div class="row" style="padding:6px 0;border-bottom:1px solid var(--a-line)"><svg class="jy"><use href="#jsy"/><text x="20" y="33" text-anchor="middle" font-family="Anton" font-size="14" fill="#fff">2</text></svg><b class="f">Cathal O'Sullivan</b><span class="n" style="font-size:16px">17.6</span></div>
+              <div class="row" style="padding:6px 0"><svg class="jy"><use href="#jsy"/><text x="20" y="33" text-anchor="middle" font-family="Anton" font-size="14" fill="#fff">9</text></svg><b class="f">Neil Lynch</b><span class="n" style="font-size:16px">14.6</span></div>
+            </div>
+            <div class="cd"><div class="lbl">Next game</div><div class="row" style="margin-top:5px"><img class="cr" src="assets/crest.png" alt=""><span class="vs">VS</span><img class="cr" src="assets/ucd-marian.png" alt="UCD Marian"><div class="f"><b>UCD Marian</b><div class="sm mut">Sat 15 Nov · 7:30pm · Away</div></div></div></div>
+          </div>
+          <div class="tb" data-tab="2"></div>
+        </div>
+        <div class="scr" data-s="player">
+          <div class="top" style="background:radial-gradient(80% 70% at 20% 0%,rgba(163,103,175,.6),transparent 60%),linear-gradient(160deg,#1a1730,#110E12)"><div class="sb"><span>9:41</span><span>5G ▮▮▮</span></div>
+            <div class="ah"><button class="back" data-go="team" aria-label="Back">‹</button><div class="t">Player</div></div>
+            <div class="row" style="position:relative;z-index:2;padding:0 16px 16px;gap:12px"><svg style="width:70px;height:77px;filter:drop-shadow(0 8px 12px rgba(0,0,0,.5))"><use href="#jsy"/><text x="20" y="33" text-anchor="middle" font-family="Anton" font-size="14" fill="#fff">5</text></svg><div class="f"><div class="h" style="font-size:19px;font-weight:900;text-transform:uppercase;line-height:1">Dean<br>Kiernan</div><div class="sm" style="opacity:.75;margin-top:4px">Super League Men · Guard</div><span class="badge" style="margin-top:6px;background:rgba(255,255,255,.12);border-color:rgba(255,255,255,.2);color:#fff">Member since 2015</span></div></div>
+            <div class="grain w"></div></div>
+          <div class="bd">
+            <div class="stat3"><div><span class="n">8</span><span>Games</span></div><div><span class="n">20.5</span><span>Pts/game</span></div><div><span class="n">31</span><span>Season high</span></div></div>
+            <div class="cd"><div class="lbl">Game log</div>
+              <table class="bx"><thead><tr><th>Date</th><th>Opponent</th><th class="r">Pts</th></tr></thead><tbody>
+                <tr><td>8 Nov</td><td><div class="row" style="gap:5px"><img src="assets/killester.png" alt="" style="width:18px;height:18px;object-fit:contain">Killester <span class="w">W</span></div></td><td class="r nn">27</td></tr>
+                <tr><td>1 Nov</td><td><div class="row" style="gap:5px"><img src="assets/neptune.png" alt="" style="width:18px;height:18px;object-fit:contain">Neptune <span class="w">W</span></div></td><td class="r nn">18</td></tr>
+                <tr><td>25 Oct</td><td><div class="row" style="gap:5px"><img src="assets/tralee-warriors.png" alt="" style="width:18px;height:18px;object-fit:contain">Tralee <span class="l">L</span></div></td><td class="r nn">31</td></tr>
+                <tr><td>18 Oct</td><td><div class="row" style="gap:5px"><img src="assets/belfast-star.png" alt="" style="width:18px;height:18px;object-fit:contain">Belfast Star <span class="w">W</span></div></td><td class="r nn">14</td></tr>
+              </tbody></table></div>
+            <div class="cd sm"><span class="lbl">Favourite player</span><br>Stephen Curry</div>
+          </div>
+          <div class="tb" data-tab="2"></div>
+        </div>
+        <div class="scr" data-s="clubteams">
+          <div class="top"><div class="sb"><span>9:41</span><span>5G ▮▮▮</span></div>
+            <div class="ah"><img class="crest" src="assets/crest-dark.png" alt=""><div class="t">Club teams<small id="ctSub">From DMBB &amp; DLBB</small></div></div><div class="grain w"></div></div>
+          <div class="bd">
+            <div class="seg" data-seg="ct"><button class="on" data-v="all">All</button><button data-v="m">Men &amp; boys</button><button data-v="w">Women &amp; girls</button></div>
+            <div id="ctList" style="display:grid;gap:9px"><div class="empty"><b>Loading teams…</b></div></div>
+          </div>
+          <div class="tb" data-tab="2"></div>
+        </div>
+        <div class="scr" data-s="rteam">
+          <div class="wood"><div class="sb"><span>9:41</span><span>5G ▮▮▮</span></div>
+            <div class="in"><button class="back" data-go="clubteams" aria-label="Back" style="width:26px;height:26px;border-radius:50%;background:rgba(255,255,255,.18);font-weight:800;align-self:flex-start">‹</button><img src="assets/crest-dark.png" alt=""><div class="f"><div class="lbl" style="color:rgba(255,255,255,.75)" id="rtComp">DMBB</div><div class="h" style="font-size:17px;font-weight:900;text-transform:uppercase" id="rtName">Team</div></div></div><div class="grain w"></div></div>
+          <div class="bd" id="rtBody"></div>
+          <div class="tb" data-tab="2"></div>
+        </div>
+        <div class="scr" data-s="u12">
+          <div class="wood"><div class="sb"><span>9:41</span><span>5G ▮▮▮</span></div>
+            <div class="in"><img src="assets/crest-dark.png" alt=""><div class="f"><div class="lbl" style="color:rgba(255,255,255,.75)">Girls underage</div><div class="h" style="font-size:17px;font-weight:900;text-transform:uppercase">U12 Girls</div></div></div><div class="grain w"></div></div>
+          <div class="bd">
+            <div class="banner b-pu"><b>Results only.</b> This age group shows team results, not individual stats.</div>
+            <div class="stat3"><div><span class="n">4–3</span><span>Record</span></div><div><span class="n">7</span><span>Games</span></div><div><span class="n">2</span><span>Blitzes</span></div></div>
+            <div class="cd"><div class="lbl">Results</div>
+              <div class="mt"><img class="cr" src="assets/crest.png" alt=""><span class="vs">VS</span><span class="oi">LU</span><div class="who"><b>Lucan</b><span>1 Nov · Home</span></div><div class="sc w">24–18<small>WIN</small></div></div>
+              <div class="mt"><img class="cr" src="assets/crest.png" alt=""><span class="vs">VS</span><span class="oi">TE</span><div class="who"><b>Templeogue</b><span>25 Oct · Away</span></div><div class="sc l">16–22<small>LOSS</small></div></div>
+            </div>
+            <div class="cd row"><div class="ph-img m cr" style="width:46px;height:46px;flex:none"></div><div class="f"><div class="lbl">Team news · members only</div><b>Great effort at the Swords blitz</b></div></div>
+          </div>
+          <div class="tb" data-tab="2"></div>
+        </div>
+        <div class="toast"></div>
+      </div></div>
+      <div class="chips" data-for="p3"><button data-go="clubteams">All club teams</button><button class="on" data-go="team">Super League</button><button data-go="player">Player</button><button data-go="u12">Underage team</button></div>
+      <div class="tip">Open All club teams: these are the real 43 teams</div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== 4 UPLOAD ===== -->
+<section class="s" id="s4">
+  <div class="notes">
+    <div class="kick"><span class="n">04</span>Section</div>
+    <h2>Score-sheet upload</h2>
+    <p>Coaches and managers only. It takes about 30 seconds.</p>
+    <ul><li>Pick the game, snap the sheet, add the final score</li><li>The hub reads it and checks the points add up</li><li>Unclear numbers show in orange to fix</li><li>Then it waits for a moderator</li></ul>
+    <div class="qs"><h3>Your answers</h3>
+      <label><span>Should the coach check the points, or only the moderator?</span><textarea class="ans" id="q4a" data-q="4 Score-sheets · Who checks the points?"></textarea></label>
+      <label><span>Add a "player of the game" pick here?</span><textarea class="ans" id="q4b" data-q="4 Score-sheets · Player of the game pick?"></textarea></label>
+    </div>
+  </div>
+  <div class="stage">
+    <div class="unit">
+      <div class="ph" id="p4"><div class="scrn"><div class="island"></div>
+        <div class="scr on" data-s="snap">
+          <div class="top"><div class="sb"><span>9:41</span><span>5G ▮▮▮</span></div>
+            <div class="ah"><img class="crest" src="assets/crest-dark.png" alt=""><div class="t">Upload score-sheet<small>Step 1 of 2</small></div></div><div class="grain w"></div></div>
+          <div class="bd">
+            <label class="fld"><span>Team</span><select id="upTeam"><option>U18 Boys</option><option>Super League Men</option><option>U16 Girls</option></select></label>
+            <div class="cd row" style="padding:8px"><img class="cr" src="assets/crest.png" alt=""><span class="vs">VS</span><img class="cr" src="assets/st-vincents.png" alt="St Vincent's"><div class="f"><b>St Vincent's</b><div class="sm mut">Sat 8 Nov · Home</div></div></div>
+            <div class="sheetimg"><div class="cols"><div></div><div></div></div><span class="ink" style="left:24px;top:40px">7 · 4 · 12 · 9</span><span class="ink" style="left:150px;top:60px">70 – 58</span><span class="ink" style="left:30px;top:96px">15 · 5 · 4 · 7</span></div>
+            <div class="row" style="gap:6px"><label class="fld f"><span>Éanna</span><input id="usA" value="70" inputmode="numeric"></label><label class="fld f"><span>St Vincent's</span><input id="usB" value="58" inputmode="numeric"></label></div>
+            <div class="cd row sm"><div class="ph-img k" style="width:30px;height:30px;flex:none"></div><span class="f">Team photos (optional)</span><span class="pill p-pu">2 added</span></div>
+            <button class="btn" data-go="scan">Read score-sheet</button>
+          </div>
+        </div>
+        <div class="scr" data-s="scan">
+          <div class="top"><div class="sb"><span>9:41</span><span>5G ▮▮▮</span></div>
+            <div class="ah"><img class="crest" src="assets/crest-dark.png" alt=""><div class="t">Reading…<small>Usually 5 seconds</small></div></div><div class="grain w"></div></div>
+          <div class="bd" style="justify-content:center">
+            <div class="sheetimg" style="transform:none"><div class="cols"><div></div><div></div></div><span class="ink" style="left:24px;top:40px">7 · 4 · 12 · 9</span><span class="ink" style="left:150px;top:60px">70 – 58</span><div class="scanline"></div></div>
+            <div style="text-align:center"><b class="h">Matching shirt numbers to the U18 Boys roster</b><div class="sm mut">Counting baskets in the running score</div></div>
+          </div>
+        </div>
+        <div class="scr" data-s="check">
+          <div class="top"><div class="sb"><span>9:41</span><span>5G ▮▮▮</span></div>
+            <div class="ah"><button class="back" data-go="snap" aria-label="Back">‹</button><div class="t">Check the points<small>Step 2 of 2</small></div></div><div class="grain w"></div></div>
+          <div class="bd">
+            <div id="chkBanner" class="banner"></div>
+            <div class="cd"><table class="bx"><thead><tr><th>#</th><th>Player</th><th class="r">Pts</th></tr></thead><tbody id="chkRows"></tbody></table></div>
+            <div class="sm mut">Orange means the handwriting was unclear. Use − and + to fix it.</div>
+            <button class="btn" id="chkSend" data-act="sendSheet">Send for checking</button>
+          </div>
+        </div>
+        <div class="scr" data-s="sent">
+          <div class="top"><div class="sb"><span>9:41</span><span>5G ▮▮▮</span></div>
+            <div class="ah"><img class="crest" src="assets/crest-dark.png" alt=""><div class="t">Upload score-sheet</div></div><div class="grain w"></div></div>
+          <div class="bd" style="justify-content:center;text-align:center;gap:12px">
+            <div class="ball" style="width:66px;height:66px;margin:0 auto;font-size:26px">✓</div>
+            <div class="h" style="font-size:17px;text-transform:uppercase;font-weight:900"><span class="gt">Sent for checking</span></div>
+            <p class="mut" style="margin:0">A moderator will check it, usually within a day. You'll get a notification when it's live.</p>
+            <div class="cd" style="text-align:left"><div class="row sp"><b>U18 Boys v St Vincent's</b><span class="pill p-warn">Waiting</span></div><div class="sm mut">Sent by Coach Mark ✓ · it's now in the moderation queue (section 10)</div></div>
+            <button class="btn g" data-go="snap">Upload another</button>
+          </div>
+        </div>
+        <div class="toast"></div>
+      </div></div>
+      <div class="chips" data-for="p4"><button class="on" data-go="snap">1 · Snap</button><button data-go="scan">Reading</button><button data-go="check">2 · Check</button><button data-go="sent">Done</button></div>
+      <div class="tip">Press Read, then fix the orange number until it adds up to 70</div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== 5 NEWS ===== -->
+<section class="s" id="s5">
+  <div class="notes">
+    <div class="kick"><span class="n">05</span>Section</div>
+    <h2>News &amp; photos</h2>
+    <ul><li>A club feed and a feed for each team</li><li>Birthdays, exams, milestones, wins, welcomes</li><li>Reactions only, no comments</li><li>Every post is approved first. Underage photos can be members only.</li></ul>
+    <div class="qs"><h3>Your answers</h3>
+      <label><span>Which reactions (up to 4)?</span><textarea class="ans" id="q5a" data-q="5 News · Which reactions?"></textarea></label>
+      <label><span>Should the media team post without approval?</span><textarea class="ans" id="q5b" data-q="5 News · Media team skips approval?"></textarea></label>
+    </div>
+  </div>
+  <div class="stage">
+    <div class="unit">
+      <div class="ph" id="p5"><div class="scrn"><div class="island"></div>
+        <div class="scr on" data-s="feed">
+          <div class="top"><div class="sb"><span>9:41</span><span>5G ▮▮▮</span></div>
+            <div class="ah"><img class="crest" src="assets/crest-dark.png" alt=""><div class="t">News<small>Club &amp; teams</small></div><button class="back" data-go="new" aria-label="New post" style="font-size:18px">＋</button></div><div class="grain w"></div></div>
+          <div class="bd">
+            <div class="seg" data-seg="nf"><button class="on" data-v="c">Club</button><button data-v="t">My teams</button><button data-v="p">Photos</button></div>
+            <div data-pane="nf:c" style="display:grid;gap:9px">
+              <div class="cd" style="display:grid;gap:7px">
+                <div class="row"><div class="ava c">GM</div><div class="f"><b>Gráinne</b> <span class="pill p-ok">Coach ✓</span><div class="sm mut">U16 Girls · 2h</div></div><span class="pill p-pu">Birthday</span></div>
+                <div>Happy 16th birthday to Ciara! Have a great day.</div>
+                <div class="rxs"><button class="rx" data-c="24">🎉 <b>24</b></button><button class="rx" data-c="9">👏 <b>9</b></button><button class="rx" data-c="4">🏀 <b>4</b></button></div>
+              </div>
+              <div class="cd" style="display:grid;gap:7px">
+                <div class="row"><img src="assets/crest.png" alt="" style="width:28px;height:28px;object-fit:contain"><div class="f"><b>Éanna Basketball</b> <span class="pill p-gr">Admin</span><div class="sm mut">Club · Yesterday</div></div><span class="pill p-or">Milestone</span></div>
+                <div class="ph-img cr" style="height:96px"></div>
+                <div>Dean Kiernan passes 1,000 Super League points</div>
+                <div class="rxs"><button class="rx" data-c="61">👏 <b>61</b></button><button class="rx" data-c="33">🏀 <b>33</b></button><button class="rx" data-c="12">🔥 <b>12</b></button></div>
+              </div>
+            </div>
+            <div data-pane="nf:t" hidden style="display:grid;gap:9px">
+              <div class="cd" style="display:grid;gap:7px"><div class="row"><div class="ava o">RB</div><div class="f"><b>coach_rob</b> <span class="pill p-ok">Coach ✓</span><div class="sm mut">U14 Boys · 5h</div></div><span class="pill p-ok">Win</span></div><div>Back-to-back wins for the U14s. Defence was brilliant.</div><div class="rxs"><button class="rx" data-c="18">👏 <b>18</b></button><button class="rx" data-c="5">🏀 <b>5</b></button></div></div>
+            </div>
+            <div data-pane="nf:p" hidden>
+              <div class="lbl" style="margin-bottom:5px">v Killester · 8 Nov</div>
+              <div class="gal"><div class="ph-img"></div><div class="ph-img o"></div><div class="ph-img k cr"></div><div class="ph-img m"></div><div class="ph-img"></div><div class="ph-img o"></div></div>
+            </div>
+          </div>
+          <div class="tb" data-tab="3"></div>
+        </div>
+        <div class="scr" data-s="new">
+          <div class="top"><div class="sb"><span>9:41</span><span>5G ▮▮▮</span></div>
+            <div class="ah"><button class="back" data-go="feed" aria-label="Back">‹</button><div class="t">New post</div></div><div class="grain w"></div></div>
+          <div class="bd">
+            <label class="fld"><span>Team</span><select id="npTeam"><option>U14 Boys</option><option>U16 Girls</option><option>Super League Men</option><option>Whole club</option></select></label>
+            <div class="tags" id="npTags"><button data-act="tag">Birthday</button><button class="on" data-act="tag">Achievement</button><button data-act="tag">Milestone</button><button data-act="tag">Win</button><button data-act="tag">Welcome</button></div>
+            <label class="fld"><span>Your post</span><textarea id="npText" rows="3">Huge congrats to the lads who passed their Junior Cert maths with flying colours</textarea></label>
+            <div class="gal"><div class="ph-img o"></div><div class="ph-img"></div><div class="cd" style="display:grid;place-items:center;padding:0;font-size:20px;color:var(--a-mut)">＋</div></div>
+            <div class="banner b-warn">Underage photo: tick to confirm everyone in it has photo consent.</div>
+            <div class="trow"><span>Everyone in the photo has consent</span><button class="tog on" data-t="consent" aria-label="Consent"></button></div>
+            <div class="trow"><span>Members only (hide from public)</span><button class="tog on" data-t="mo" aria-label="Members only"></button></div>
+            <button class="btn" data-act="post">Send for approval</button>
+          </div>
+        </div>
+        <div class="scr" data-s="posted">
+          <div class="top"><div class="sb"><span>9:41</span><span>5G ▮▮▮</span></div>
+            <div class="ah"><img class="crest" src="assets/crest-dark.png" alt=""><div class="t">New post</div></div><div class="grain w"></div></div>
+          <div class="bd" style="justify-content:center;text-align:center;gap:12px">
+            <div class="ball" style="width:66px;height:66px;margin:0 auto;font-size:26px">✓</div>
+            <div class="h" style="font-size:17px;text-transform:uppercase;font-weight:900"><span class="gt">Sent for approval</span></div>
+            <p class="mut" style="margin:0">It's now in the moderation queue (section 10). Approve it there and it goes live.</p>
+            <button class="btn g" data-go="feed">Back to news</button>
+          </div>
+        </div>
+        <div class="toast"></div>
+      </div></div>
+      <div class="chips" data-for="p5"><button class="on" data-go="feed">Feed</button><button data-go="new">Write a post</button><button data-go="posted">Sent</button></div>
+      <div class="tip">Tap a reaction, then write a post</div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== 6 COMMUNITY ===== -->
+<section class="s" id="s6">
+  <div class="notes">
+    <div class="kick"><span class="n">06</span>Section</div>
+    <h2>Community</h2>
+    <ul><li>You set one question a week</li><li>Adults board: answers and replies</li><li>Under-18 board: answers only, held for approval, open 8am–10pm</li><li>Supporters (non-members) can use the adults board</li><li>Badges show team and role</li></ul>
+    <div class="qs"><h3>Your answers</h3>
+      <label><span>More than one question a week?</span><textarea class="ans" id="q6a" data-q="6 Community · More than one question a week?"></textarea></label>
+      <label><span>Best answer each week goes on socials?</span><textarea class="ans" id="q6b" data-q="6 Community · Best answer on socials?"></textarea></label>
+    </div>
+  </div>
+  <div class="stage">
+    <div class="unit">
+      <div class="ph" id="p6"><div class="scrn"><div class="island"></div>
+        <div class="scr on" data-s="adult">
+          <div class="top"><div class="sb"><span>9:41</span><span>5G ▮▮▮</span></div>
+            <div class="ah"><img class="crest" src="assets/crest-dark.png" alt=""><div class="t">Community<small>Adults board</small></div></div><div class="grain w"></div></div>
+          <div class="bd">
+            <div class="qhero"><div class="lbl">Question of the week</div><div class="h">What's the hardest part about underage basketball?</div><div class="row sm" style="opacity:.85"><img src="assets/crest-dark.png" alt="" style="width:16px;height:16px;object-fit:contain">Asked by Milo · Moderator</div></div>
+            <div class="compose"><label class="fld"><span>Your answer</span><input id="ansA" placeholder="Write an answer…"></label><button class="send" data-act="answer" data-b="a" aria-label="Post answer">↑</button></div>
+            <div id="ansListA" style="display:grid;gap:9px">
+              <div class="cd" style="display:grid;gap:6px">
+                <div class="row"><div class="ava o">TK</div><div class="f"><b>tom_k</b> <span class="badge">Parent · U12 Boys</span></div><span class="pill p-pu">Pinned</span></div>
+                <div>Early Saturday games in January. Getting them out of bed is the real workout.</div>
+                <div class="row sp"><div class="rxs"><button class="rx" data-c="31">👏 <b>31</b></button><button class="rx" data-c="6">🏀 <b>6</b></button></div><button class="sm" style="color:var(--purple);font-weight:700" data-act="reps">2 replies</button></div>
+                <div class="reps" hidden><div class="sm"><b>coach_rob</b> <span class="pill p-ok">Coach ✓</span> Ha, the coaches too.</div><div class="sm"><b>sineadk</b> <span class="badge">Supporter</span> Every single week!</div></div>
+              </div>
+              <div class="cd" style="display:grid;gap:6px">
+                <div class="row"><div class="ava">CR</div><div class="f"><b>coach_rob</b> <span class="pill p-ok">Coach ✓ · U14 Boys</span></div></div>
+                <div>Getting minutes for everyone while still trying to win.</div>
+                <div class="rxs"><button class="rx" data-c="18">👏 <b>18</b></button></div>
+              </div>
+            </div>
+          </div>
+          <div class="tb" data-tab="3"></div>
+        </div>
+        <div class="scr" data-s="u18">
+          <div class="top"><div class="sb"><span>9:41</span><span>5G ▮▮▮</span></div>
+            <div class="ah"><img class="crest" src="assets/crest-dark.png" alt=""><div class="t">Community<small>Under-18 board</small></div><span class="pill p-gr">Open till 10pm</span></div><div class="grain w"></div></div>
+          <div class="bd">
+            <div class="qhero"><div class="lbl">Question of the week</div><div class="h">What's your pre-game ritual?</div></div>
+            <div class="banner b-pu">Answers are checked before they appear. You can react, but replies are off on this board.</div>
+            <div class="compose"><label class="fld"><span>Your answer</span><input id="ansU" placeholder="Write an answer…"></label><button class="send" data-act="answer" data-b="u" aria-label="Post answer">↑</button></div>
+            <div id="ansListU" style="display:grid;gap:9px">
+              <div class="cd" style="display:grid;gap:5px"><div class="row"><div class="ava c">HQ</div><b class="f">hoopsqueen</b><span class="badge">U16 Girls</span></div><div>Same playlist every time, no changes allowed.</div><div class="rxs"><button class="rx" data-c="12">🎉 <b>12</b></button></div></div>
+              <div class="cd" style="display:grid;gap:5px"><div class="row"><div class="ava k">B7</div><b class="f">baller_07</b><span class="badge">U14 Boys</span></div><div>Left shoe on first. Always.</div><div class="rxs"><button class="rx" data-c="8">🏀 <b>8</b></button></div></div>
+            </div>
+          </div>
+          <div class="tb" data-tab="3"></div>
+        </div>
+        <div class="toast"></div>
+      </div></div>
+      <div class="chips" data-for="p6"><button class="on" data-go="adult">Adults board</button><button data-go="u18">Under-18 board</button></div>
+      <div class="tip">Post an answer on each board and see what happens</div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== 7 STAFF ===== -->
+<section class="s" id="s7">
+  <div class="notes">
+    <div class="kick"><span class="n">07</span>Section</div>
+    <h2>Staff rooms</h2>
+    <ul><li>Only verified adults that you approve</li><li>Coaches, Team managers, Committee, Moderators, All staff</li><li>Pinned files, threads, announcements</li><li>Messages post instantly</li></ul>
+    <div class="qs"><h3>Your answers</h3>
+      <label><span>Any other rooms (Media team, Super League staff)?</span><textarea class="ans" id="q7a" data-q="7 Staff rooms · Other rooms?"></textarea></label>
+      <label><span>Should the committee room be read-only for everyone except committee members?</span><textarea class="ans" id="q7b" data-q="7 Staff rooms · Committee room read-only for others?"></textarea></label>
+    </div>
+  </div>
+  <div class="stage">
+    <div class="unit">
+      <div class="ph" id="p7"><div class="scrn"><div class="island"></div>
+        <div class="scr on" data-s="rooms">
+          <div class="top"><div class="sb"><span>9:41</span><span>5G ▮▮▮</span></div>
+            <div class="ah"><img class="crest" src="assets/crest-dark.png" alt=""><div class="t">Staff rooms<small>Verified staff only</small></div></div><div class="grain w"></div></div>
+          <div class="bd">
+            <button class="cd row" data-go="room" style="text-align:left"><div class="ball">CO</div><div class="f"><b>Coaches</b><div class="sm mut">Rob: Anyone free to drive Saturday?</div></div><span class="pill p-or">4</span></button>
+            <div class="cd row"><div class="ava">TM</div><div class="f"><b>Team managers</b><div class="sm mut">Saturday refs confirmed</div></div><span class="pill p-or">1</span></div>
+            <div class="cd row"><div class="ava k">CM</div><div class="f"><b>Committee</b><div class="sm mut">Agenda for Tuesday</div></div></div>
+            <div class="cd row"><div class="ava c">MD</div><div class="f"><b>Moderators</b><div class="sm mut">2 posts reported today</div></div><span class="pill p-or">2</span></div>
+            <div class="cd row"><img src="assets/crest.png" alt="" style="width:28px;height:28px;object-fit:contain"><div class="f"><b>All staff</b> <span class="pill p-nv">Announcements</span><div class="sm mut">Christmas camp volunteers needed</div></div></div>
+          </div>
+          <div class="tb" data-tab="3"></div>
+        </div>
+        <div class="scr" data-s="room">
+          <div class="top"><div class="sb"><span>9:41</span><span>5G ▮▮▮</span></div>
+            <div class="ah"><button class="back" data-go="rooms" aria-label="Back">‹</button><div class="t">Coaches<small>23 members</small></div></div><div class="grain w"></div></div>
+          <div class="bd" id="chat">
+            <div class="banner b-pu">📌 Training times 2026/27.pdf</div>
+            <div class="lbl" style="text-align:center">Thread · U14 Boys away game Sat</div>
+            <div class="bub"><b>Rob · U14 Boys</b>Anyone free to drive 3 lads to Kilcock Saturday?</div>
+            <div class="bub"><b>Gráinne · U16 Girls</b>I can take two, we're there anyway.</div>
+          </div>
+          <div class="compose" style="padding:8px 12px 18px;position:relative;z-index:2;background:#fff;border-top:1px solid var(--a-line)"><label class="fld"><span>Message Coaches</span><input id="msg" value="I'll take the third. Leaving the school at 9."></label><button class="send" data-act="chat" aria-label="Send">↑</button></div>
+        </div>
+        <div class="toast"></div>
+      </div></div>
+      <div class="chips" data-for="p7"><button class="on" data-go="rooms">Rooms</button><button data-go="room">Inside a room</button></div>
+      <div class="tip">Open Coaches and send the message</div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== 8 SIGN-UP ===== -->
+<section class="s" id="s8">
+  <div class="notes">
+    <div class="kick"><span class="n">08</span>Section</div>
+    <h2>Sign-up &amp; profile</h2>
+    <ul><li>Members join with the club code (try <b>EANNA26</b>). Supporters join without one.</li><li>Google, Apple or email link, with no passwords</li><li>Profile: username, role, team, section, member since, favourite player, interests</li><li>Under-16s need a parent to approve. Parents control their child's stats.</li></ul>
+    <div class="qs"><h3>Your answers</h3>
+      <label><span>Should supporters get a different badge colour?</span><textarea class="ans" id="q8a" data-q="8 Sign-up · Supporter badge colour?"></textarea></label>
+      <label><span>Anything missing from the profile?</span><textarea class="ans" id="q8b" data-q="8 Sign-up · Anything missing from profile?"></textarea></label>
+    </div>
+  </div>
+  <div class="stage">
+    <div class="unit">
+      <div class="ph" id="p8"><div class="scrn"><div class="island"></div>
+        <div class="scr on" data-s="join">
+          <div class="top" style="padding-bottom:16px"><div class="sb"><span>9:41</span><span>5G ▮▮▮</span></div>
+            <div style="position:relative;z-index:2;text-align:center;padding:0 16px"><img src="assets/crest-dark.png" alt="Éanna crest" style="width:74px;height:74px;object-fit:contain;filter:drop-shadow(0 6px 10px rgba(0,0,0,.4))"><div class="h" style="font-size:18px;font-weight:900;text-transform:uppercase;margin-top:4px">Join the Éanna Hub</div><div class="sm" style="opacity:.8">Anyone can look around without joining</div></div><div class="grain w"></div></div>
+          <div class="bd">
+            <button class="choice on" data-act="pick" data-v="member"><b>I'm in the club</b><span class="sm mut">Player, parent, coach, volunteer or committee</span></button>
+            <label class="fld" id="codeFld"><span>Club code</span><input id="code" placeholder="From your team's WhatsApp" autocomplete="off"></label>
+            <div class="err" id="codeErr" hidden>That code doesn't match. Ask your coach for the club code.</div>
+            <button class="choice" data-act="pick" data-v="supporter"><b>I'm a supporter</b><span class="sm mut">Fans, old players, family. 18+ only. No code needed.</span></button>
+            <button class="btn" data-act="join">Continue with Google</button>
+            <button class="btn g" data-act="join">Continue with Apple</button>
+          </div>
+        </div>
+        <div class="scr" data-s="prof">
+          <div class="top"><div class="sb"><span>9:41</span><span>5G ▮▮▮</span></div>
+            <div class="ah"><button class="back" data-go="join" aria-label="Back">‹</button><div class="t">Your profile<small id="profStep">Member · Step 2 of 3</small></div></div><div class="grain w"></div></div>
+          <div class="bd" style="gap:6px">
+            <label class="fld"><span>Username</span><input id="pfUser" value="tom_k"></label>
+            <label class="fld" id="pfRoleF"><span>Role</span><select id="pfRole"><option>Parent / Guardian</option><option>Player</option><option>Coach</option><option>Team manager</option><option>Committee</option><option>Volunteer</option><option>Table official</option><option>Former player</option></select></label>
+            <label class="fld"><span>Team(s)</span><select id="pfTeam"><option>U12 Boys, U16 Girls</option><option>Super League Men</option><option>Women's BIDL</option><option>U14 Boys</option></select></label>
+            <label class="fld"><span>Section</span><select id="pfSec"><option>Boys' &amp; girls' underage</option><option>Men's</option><option>Women's</option></select></label>
+            <div class="seg" data-seg="age"><button data-v="u">Under 18</button><button class="on" data-v="a">18+</button></div>
+            <div class="row" style="gap:6px"><label class="fld f"><span>Member since</span><input id="pfSince" value="2019" inputmode="numeric"></label><label class="fld f"><span>Favourite player/team</span><input id="pfFav" value="Boston Celtics"></label></div>
+            <label class="fld"><span>Notify me about</span><input id="pfInt" value="U12 Boys, U16 Girls, Super League"></label>
+            <button class="btn" data-act="finish">Finish</button>
+          </div>
+        </div>
+        <div class="scr" data-s="me">
+          <div class="top"><div class="sb"><span>9:41</span><span>5G ▮▮▮</span></div>
+            <div style="position:relative;z-index:2;text-align:center;padding:4px 16px 16px"><div class="ava o" style="width:60px;height:60px;font-size:20px;margin:0 auto;box-shadow:0 0 0 3px rgba(255,255,255,.5)" id="meAva">TK</div><div class="h" style="font-size:17px;margin-top:6px" id="meName">tom_k</div><div id="meBadges" style="display:flex;gap:5px;justify-content:center;flex-wrap:wrap;margin-top:6px"></div></div><div class="grain w"></div></div>
+          <div class="bd">
+            <div class="cd" style="display:grid;gap:6px" id="meInfo"></div>
+            <button class="btn g" data-go="parent" id="meParent">Link my child</button>
+          </div>
+          <div class="tb" data-tab="4"></div>
+        </div>
+        <div class="scr" data-s="parent">
+          <div class="top"><div class="sb"><span>9:41</span><span>5G ▮▮▮</span></div>
+            <div class="ah"><button class="back" data-go="me" aria-label="Back">‹</button><div class="t">Parent approval</div></div><div class="grain w"></div></div>
+          <div class="bd">
+            <div class="cd" style="display:grid;gap:7px">
+              <div class="lbl">Request</div>
+              <div class="row"><div class="ava c">HQ</div><div class="f"><b>hoopsqueen</b><div class="sm mut">U16 Girls · Player · Under 18</div></div></div>
+              <div class="sm">wants to join and says you're their parent or guardian.</div>
+              <div class="btns"><button class="btn" data-act="approveKid">Approve</button><button class="btn g" data-act="toast" data-msg="Request declined and flagged to a moderator">Not my child</button></div>
+            </div>
+            <div class="cd" style="display:grid;gap:4px">
+              <div class="lbl">Ciara's settings · you control these</div>
+              <div class="trow"><span>Show her points publicly</span><button class="tog" data-t="kidpts" aria-label="Show points"></button></div>
+              <div class="trow"><span>Can answer weekly question</span><button class="tog on" data-t="kidq" aria-label="Weekly question"></button></div>
+              <div class="trow"><span>Notifications</span><button class="tog on" data-t="kidn" aria-label="Notifications"></button></div>
+              <div class="banner b-pu" id="kidPrev">Public sees: <b>U16 Girls won 54–41</b>, with no player points.</div>
+            </div>
+            <button class="btn r" data-act="toast" data-msg="Ciara's account and posts deleted">Delete Ciara's account</button>
+          </div>
+        </div>
+        <div class="toast"></div>
+      </div></div>
+      <div class="chips" data-for="p8"><button class="on" data-go="join">Join</button><button data-go="prof">Profile</button><button data-go="me">My profile</button><button data-go="parent">Parent controls</button></div>
+      <div class="tip">Type a wrong code first, then EANNA26</div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== 9 NOTIFICATIONS ===== -->
+<section class="s" id="s9">
+  <div class="notes">
+    <div class="kick"><span class="n">09</span>Section</div>
+    <h2>App &amp; notifications</h2>
+    <ul><li>Installs from the browser on iPhone and Android, with the crest as its icon</li><li>On iPhone, notifications need it added to the Home Screen</li><li>Pick notifications by type and team</li><li>Quiet hours 10pm–8am, always on for under-18s</li></ul>
+    <div class="qs"><h3>Your answers</h3>
+      <label><span>Which notifications should be on by default?</span><textarea class="ans" id="q9a" data-q="9 Notifications · Defaults?"></textarea></label>
+      <label><span>App Store and Google Play apps later?</span><textarea class="ans" id="q9b" data-q="9 Notifications · Store apps later?"></textarea></label>
+    </div>
+  </div>
+  <div class="stage">
+    <div class="unit">
+      <div class="ph" id="p9"><div class="scrn"><div class="island"></div>
+        <div class="push" id="push"><img src="assets/crest.png" alt=""><div class="f"><b>ÉANNA HUB · now</b><p id="pushTxt">Super League Men won 88–79 v Killester</p></div></div>
+        <div class="scr on" data-s="lock">
+          <div class="lock"><div class="sb" style="width:100%;color:#fff"><span>9:41</span><span>5G ▮▮▮</span></div>
+            <div class="dt">Saturday 8 November</div><div class="tm">21:14</div><img class="crest" src="assets/crest-dark.png" alt="">
+            <div class="nt"><img src="assets/crest.png" alt=""><div class="f"><b>ÉANNA HUB · 2m ago</b><p>Super League Men won 88–79 v Killester 🏀</p></div></div>
+            <div class="nt"><img src="assets/crest.png" alt=""><div class="f"><b>ÉANNA HUB · 1h ago</b><p>This week's Top Performers are out</p></div></div>
+            <div class="nt"><img src="assets/crest.png" alt=""><div class="f"><b>ÉANNA HUB · U16 Girls</b><p>New photos from today's game</p></div></div>
+            <div class="grain w"></div>
+          </div>
+        </div>
+        <div class="scr" data-s="set">
+          <div class="top"><div class="sb"><span>9:41</span><span>5G ▮▮▮</span></div>
+            <div class="ah"><img class="crest" src="assets/crest-dark.png" alt=""><div class="t">Notifications</div></div><div class="grain w"></div></div>
+          <div class="bd" style="gap:7px">
+            <div class="cd" style="display:grid;gap:1px">
+              <div class="lbl">What</div>
+              <div class="trow"><span>Results</span><button class="tog on" data-t="n1" aria-label="Results"></button></div>
+              <div class="trow"><span>Weekly top performers</span><button class="tog on" data-t="n2" aria-label="Top performers"></button></div>
+              <div class="trow"><span>Team news &amp; photos</span><button class="tog on" data-t="n3" aria-label="News"></button></div>
+              <div class="trow"><span>Weekly question</span><button class="tog on" data-t="n4" aria-label="Weekly question"></button></div>
+              <div class="trow"><span>Reactions to my posts</span><button class="tog" data-t="n5" aria-label="Reactions"></button></div>
+            </div>
+            <div class="cd"><div class="lbl" style="margin-bottom:5px">Teams</div><div class="tags"><button class="on" data-act="tag">U12 Boys</button><button class="on" data-act="tag">U16 Girls</button><button class="on" data-act="tag">Super League</button><button data-act="tag">Women's BIDL</button></div></div>
+            <div class="cd trow"><span><b>Quiet hours</b><br><span class="sm mut">10pm – 8am</span></span><button class="tog on" data-t="qh" aria-label="Quiet hours"></button></div>
+            <button class="btn or" data-act="ping">Send me a test notification</button>
+          </div>
+          <div class="tb" data-tab="4"></div>
+        </div>
+        <div class="scr" data-s="ios">
+          <div class="top"><div class="sb"><span>9:41</span><span>5G ▮▮▮</span></div>
+            <div class="ah"><img class="crest" src="assets/crest-dark.png" alt=""><div class="t">Éanna Hub</div></div><div class="grain w"></div></div>
+          <div class="bd" style="opacity:.4"><div class="tc" style="height:130px"></div><div class="cd" style="height:110px"></div></div>
+          <div class="dim" style="opacity:1;visibility:visible"></div>
+          <div class="sheet" style="transform:none">
+            <div class="row"><img src="assets/crest.png" alt="" style="width:44px;height:44px;object-fit:contain;border-radius:10px;background:#fff;box-shadow:0 4px 10px rgba(0,0,0,.15)"><div class="f"><div class="h">Get notifications on iPhone</div><div class="sm mut">Add the hub to your Home Screen. It takes 10 seconds.</div></div></div>
+            <div class="row"><span class="pill p-gr">1</span><span class="f">Tap <b>Share</b> at the bottom of Safari</span></div>
+            <div class="row"><span class="pill p-gr">2</span><span class="f">Tap <b>Add to Home Screen</b></span></div>
+            <div class="row"><span class="pill p-gr">3</span><span class="f">Open it from the new crest icon and turn on notifications</span></div>
+            <button class="btn g" data-go="set">Maybe later</button>
+          </div>
+        </div>
+        <div class="toast"></div>
+      </div></div>
+      <div class="chips" data-for="p9"><button class="on" data-go="lock">Lock screen</button><button data-go="set">Settings</button><button data-go="ios">iPhone install</button></div>
+      <div class="tip">Open Settings and send yourself a test</div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== 10 MODERATION ===== -->
+<section class="s" id="s10">
+  <div class="notes">
+    <div class="kick"><span class="n">10</span>Section</div>
+    <h2>Moderation</h2>
+    <div class="rulebox"><div class="grain w"></div><b>New rule</b><p>Moderators can edit everything: posts, answers, photos, score-sheets, stats, results, rosters, team pages and profiles. Every change is logged.</p></div>
+    <ul><li>One queue for everything waiting</li><li>Approve, edit, hide, warn, mute, ban</li><li>Edit any game's stats after it's live</li><li>Posts you send in sections 4–6 land here</li></ul>
+    <div class="qs"><h3>Your answers</h3>
+      <label><span>Can moderators ban, or only you?</span><textarea class="ans" id="q10a" data-q="10 Moderation · Who can ban?"></textarea></label>
+      <label><span>Should moderators see stats hidden by parents (needed to fix mistakes)?</span><textarea class="ans" id="q10b" data-q="10 Moderation · Mods see hidden stats?"></textarea></label>
+    </div>
+  </div>
+  <div class="stage">
+    <div class="unit">
+      <div class="ph" id="p10"><div class="scrn"><div class="island"></div>
+        <div class="scr on" data-s="queue">
+          <div class="top"><div class="sb"><span>9:41</span><span>5G ▮▮▮</span></div>
+            <div class="ah"><img class="crest" src="assets/crest-dark.png" alt=""><div class="t">Moderation<small id="qCount">5 waiting</small></div></div><div class="grain w"></div></div>
+          <div class="bd">
+            <div class="seg" data-seg="qf"><button class="on" data-v="all">All</button><button data-v="sheet">Sheets</button><button data-v="post">Posts</button><button data-v="report">Reports</button></div>
+            <div id="qList" style="display:grid;gap:8px"></div>
+          </div>
+          <div class="dim" data-act="closeSheet"></div>
+          <div class="sheet" id="modSheet">
+            <div class="row"><div class="ava k" id="msAva">RW</div><div class="f"><div class="h" id="msTitle">Item</div><div class="sm mut" id="msWho"></div></div></div>
+            <div class="banner b-pu" id="msText"></div>
+            <div class="btns"><button class="btn g" data-act="mod" data-a="Approved">Approve</button><button class="btn g" data-act="mod" data-a="Edited and approved">Edit</button></div>
+            <div class="btns"><button class="btn g" data-act="mod" data-a="Hidden">Hide</button><button class="btn g" data-act="mod" data-a="Hidden and warned">Warn</button></div>
+            <div class="btns"><button class="btn g" data-act="mod" data-a="Muted for 7 days">Mute 7 days</button><button class="btn r" data-act="mod" data-a="Banned">Ban</button></div>
+            <label class="fld"><span>Reason (saved to the log)</span><input id="msReason" value="Criticising referees, second time"></label>
+          </div>
+        </div>
+        <div class="scr" data-s="edit">
+          <div class="top"><div class="sb"><span>9:41</span><span>5G ▮▮▮</span></div>
+            <div class="ah"><img class="crest" src="assets/crest-dark.png" alt=""><div class="t">Edit game<small>U18 Boys v St Vincent's · Live</small></div></div><div class="grain w"></div></div>
+          <div class="bd">
+            <div id="edBanner" class="banner"></div>
+            <div class="cd"><table class="bx"><thead><tr><th>#</th><th>Player</th><th class="r">Pts</th><th class="r">Public</th></tr></thead><tbody id="edRows"></tbody></table></div>
+            <div class="sm mut">Moderators see every player, including ones hidden by a parent.</div>
+            <button class="btn" data-act="saveEdit">Save changes</button>
+          </div>
+        </div>
+        <div class="scr" data-s="log">
+          <div class="top"><div class="sb"><span>9:41</span><span>5G ▮▮▮</span></div>
+            <div class="ah"><img class="crest" src="assets/crest-dark.png" alt=""><div class="t">Action log<small>Every change, by everyone</small></div></div><div class="grain w"></div></div>
+          <div class="bd"><div class="cd" id="logList"></div></div>
+        </div>
+        <div class="toast"></div>
+      </div></div>
+      <div class="chips" data-for="p10"><button class="on" data-go="queue">Queue</button><button data-go="edit">Edit a game</button><button data-go="log">Action log</button></div>
+      <div class="tip">Tap the reported answer and choose an action</div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== 11 ADMIN ===== -->
+<section class="s" id="s11">
+  <div class="notes">
+    <div class="kick"><span class="n">11</span>Section</div>
+    <h2>Admin</h2>
+    <div class="rulebox"><div class="grain w"></div><b>New rule</b><p>Only you can make someone a moderator. You send the invite, they accept. Nobody else can add or remove moderators.</p></div>
+    <ul><li>Invite from the members list, choose what they can do</li><li>The left phone is you. The right phone is the person you invite.</li><li>Approve staff roles, set underage visibility, change the club code</li></ul>
+    <div class="qs"><h3>Your answers</h3>
+      <label><span>A backup admin in case you lose your phone or leave the club (e.g. club secretary)?</span><textarea class="ans" id="q11a" data-q="11 Admin · Backup admin?"></textarea></label>
+      <label><span>Can moderators approve coach and manager roles, or only you?</span><textarea class="ans" id="q11b" data-q="11 Admin · Who approves staff roles?"></textarea></label>
+    </div>
+  </div>
+  <div class="stage">
+    <div class="unit">
+      <div class="ph" id="p11"><div class="scrn"><div class="island"></div>
+        <div class="scr on" data-s="mods">
+          <div class="top"><div class="sb"><span>9:41</span><span>5G ▮▮▮</span></div>
+            <div class="ah"><img class="crest" src="assets/crest-dark.png" alt=""><div class="t">Moderators<small>Only you can change this</small></div></div><div class="grain w"></div></div>
+          <div class="bd">
+            <div id="modList" style="display:grid;gap:7px"></div>
+            <div class="cd" style="display:grid;gap:5px">
+              <div class="lbl">Invite a moderator</div>
+              <label class="fld"><span>Choose a member</span><select id="invWho"><option>Gráinne · Coach ✓ · U16 Girls</option><option>Clyde · Media team</option><option>Rob · Coach ✓ · U14 Boys</option><option>Sinéad · Committee ✓</option></select></label>
+              <div class="trow sm"><span>Can ban users</span><button class="tog" data-t="invBan" aria-label="Can ban"></button></div>
+              <div class="trow sm"><span>Can moderate under-18 board</span><button class="tog on" data-t="invU18" aria-label="Under-18 board"></button></div>
+              <div class="sm mut">Under-18 board moderators should be Garda vetted.</div>
+              <button class="btn" data-act="invite">Send invite</button>
+            </div>
+          </div>
+          <div class="tb" data-tab="4"></div>
+        </div>
+        <div class="scr" data-s="ages">
+          <div class="top"><div class="sb"><span>9:41</span><span>5G ▮▮▮</span></div>
+            <div class="ah"><img class="crest" src="assets/crest-dark.png" alt=""><div class="t">Underage settings<small>Admin only</small></div></div><div class="grain w"></div></div>
+          <div class="bd" style="gap:7px" id="ageList"></div>
+          <div class="tb" data-tab="4"></div>
+        </div>
+        <div class="toast"></div>
+      </div></div>
+      <div class="chips" data-for="p11"><button class="on" data-go="mods">Moderators</button><button data-go="ages">Underage settings</button></div>
+      <div class="cap">Your phone (admin)</div>
+    </div>
+    <div class="unit">
+      <div class="ph" id="p12"><div class="scrn"><div class="island"></div>
+        <div class="scr on" data-s="wait">
+          <div class="top"><div class="sb"><span>9:41</span><span>5G ▮▮▮</span></div>
+            <div class="ah"><img class="crest" src="assets/crest-dark.png" alt=""><div class="t">Éanna Hub</div></div><div class="grain w"></div></div>
+          <div class="bd" style="justify-content:center"><div class="empty"><b>No invitation yet</b>Send one from the admin phone on the left.</div></div>
+          <div class="tb" data-tab="0"></div>
+        </div>
+        <div class="scr" data-s="inv">
+          <div class="top" style="padding-bottom:18px"><div class="sb"><span>9:41</span><span>5G ▮▮▮</span></div>
+            <div style="position:relative;z-index:2;text-align:center;padding:4px 16px"><img src="assets/crest-dark.png" alt="" style="width:70px;height:70px;object-fit:contain;filter:drop-shadow(0 6px 10px rgba(0,0,0,.4))"><div class="lbl" style="color:rgba(255,255,255,.75);margin-top:6px">Invitation</div><div class="h" style="font-size:16px;font-weight:900;text-transform:uppercase" id="invHead">Milo invited you to be a moderator</div></div><div class="grain w"></div></div>
+          <div class="bd">
+            <p class="mut" style="margin:0">You'll be able to approve and edit posts, photos, score-sheets and stats, and deal with reports. Every action you take is logged.</p>
+            <div class="cd sm" id="invPerms"></div>
+            <div class="cd sm">By accepting, you agree to the club's moderator rules and safeguarding policy.</div>
+            <button class="btn" data-act="accept">Accept</button>
+            <button class="btn g" data-act="decline">Decline</button>
+          </div>
+        </div>
+        <div class="scr" data-s="welcome">
+          <div class="top"><div class="sb"><span>9:41</span><span>5G ▮▮▮</span></div>
+            <div class="ah"><img class="crest" src="assets/crest-dark.png" alt=""><div class="t">You're a moderator</div></div><div class="grain w"></div></div>
+          <div class="bd" style="justify-content:center;text-align:center;gap:10px">
+            <div class="ball" style="width:66px;height:66px;margin:0 auto;font-size:26px">✓</div>
+            <div class="h" style="font-size:16px;text-transform:uppercase;font-weight:900"><span class="gt">Welcome to the team</span></div>
+            <p class="mut" style="margin:0">You now have a Moderation tab and access to the Moderators staff room.</p>
+          </div>
+        </div>
+        <div class="toast"></div>
+      </div></div>
+      <div class="cap">The invited person's phone</div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== 12 CONTENT PACK ===== -->
+<section class="s" id="s12">
+  <div class="notes">
+    <div class="kick"><span class="n">12</span>Section</div>
+    <h2>Weekly content pack</h2>
+    <div class="rulebox"><div class="grain w"></div><b>Two separate sites</b><p>The Éanna Hub is public, for the whole club. The Éanna Media Calendar stays private, for the media team only. They have different addresses and logins. The only connection is one way: the hub drops the weekly pack into the calendar's For approval tab.</p></div>
+    <ul><li>Every Monday the hub builds the pack: carousel, results graphics, best answer, top photos, milestones</li><li>You choose what goes, then send</li><li>Nothing in the Media Calendar ever appears on the hub</li><li>Underage photos only go if consent was ticked</li></ul>
+    <div class="qs"><h3>Your answers</h3>
+      <label><span>Which day should the pack arrive?</span><textarea class="ans" id="q12a" data-q="12 Content pack · Which day?"></textarea></label>
+      <label><span>Anything else it should include (e.g. fixtures graphic for the week ahead)?</span><textarea class="ans" id="q12b" data-q="12 Content pack · Anything else to include?"></textarea></label>
+    </div>
+  </div>
+  <div class="stage" style="flex-direction:column;align-items:stretch">
+    <div class="flow">
+      <div class="site"><img src="assets/crest.png" alt=""><div><b>Éanna Hub</b><span>Public · everyone in the club</span></div></div>
+      <div class="arrow"><i>→</i>Weekly pack · one way</div>
+      <div class="site"><img src="assets/crest.png" alt="" style="filter:grayscale(.2)"><div><b>Éanna Media Calendar</b><span>Private · Milo, Anna, Clyde</span></div></div>
+    </div>
+    <div style="display:flex;flex-wrap:wrap;gap:28px;align-items:flex-start">
+    <div class="unit">
+      <div class="ph" id="p13"><div class="scrn"><div class="island"></div>
+        <div class="scr on" data-s="pack">
+          <div class="top"><div class="sb"><span>9:41</span><span>5G ▮▮▮</span></div>
+            <div class="ah"><img class="crest" src="assets/crest-dark.png" alt=""><div class="t">Content pack<small>Week 10 · Ready Mon 10 Nov</small></div><span class="pill p-gr">Media team</span></div><div class="grain w"></div></div>
+          <div class="bd">
+            <div class="banner b-pu">Built automatically from this week's results, posts and photos. Untick anything you don't want sent.</div>
+            <div class="cd" id="packList"></div>
+            <button class="btn or" data-act="sendPack" id="packBtn">Send 6 items to Media Calendar</button>
+          </div>
+          <div class="tb" data-tab="4"></div>
+        </div>
+        <div class="toast"></div>
+      </div></div>
+      <div class="cap">Hub · media team view</div>
+    </div>
+    <div class="unit" style="flex:1 1 380px;min-width:0">
+      <div class="win">
+        <div class="bar"><i></i><i></i><i></i><div class="url">🔒 Éanna Media Calendar · team login</div></div>
+        <div class="mh"><h4>Éanna <span>Media</span> Calendar</h4>
+          <div class="tabsr"><span>Calendar</span><span>Ideas</span><span>Drafts</span><span>Tasks</span><span class="on">For approval<em id="mcCount">0</em></span><span>Videos shot</span><span>Stats</span></div></div>
+        <div class="wb" id="mcBody"><div class="emp"><b>Nothing from the hub yet</b>When the weekly pack is sent, it lands here for approval.</div></div>
+      </div>
+      <div class="cap">The separate Media Calendar receiving the pack</div>
+    </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== 13 GAME DAY ===== -->
+<section class="s" id="s13">
+  <div class="notes">
+    <div class="kick"><span class="n">13</span>Section</div>
+    <h2>Game day page</h2>
+    <ul><li>Team managers fill in opponent, date, tip-off, venue and links</li><li>The hub builds a game day page with a countdown</li><li>Tickets button goes to the club's ClubZap shop</li><li>Followers get a notification on the day</li></ul>
+    <div class="banner b-pu" style="margin:0 0 14px;font-size:14px;border-radius:12px;padding:10px 12px;background:var(--bg2);color:var(--ink);border:1px solid var(--line)"><b>About ClubZap:</b> the button can always link to the right ClubZap page, so that part is easy. Showing ticket sales or "sold out" inside the hub would need ClubZap to give us access to their system. That's something to ask them, so I've not promised it here.</div>
+    <div class="qs"><h3>Your answers</h3>
+      <label><span>Which teams get game day pages (Super League and BIDL only, or every team)?</span><textarea class="ans" id="q13a" data-q="13 Game day · Which teams?"></textarea></label>
+      <label><span>Is there a livestream link you use (e.g. YouTube, Clubforce TV)?</span><textarea class="ans" id="q13b" data-q="13 Game day · Livestream link?"></textarea></label>
+    </div>
+  </div>
+  <div class="stage">
+    <div class="unit">
+      <div class="ph" id="p14"><div class="scrn"><div class="island"></div>
+        <div class="scr on" data-s="form">
+          <div class="top"><div class="sb"><span>9:41</span><span>5G ▮▮▮</span></div>
+            <div class="ah"><img class="crest" src="assets/crest-dark.png" alt=""><div class="t">New game day<small>Team manager</small></div></div><div class="grain w"></div></div>
+          <div class="bd" style="gap:6px">
+            <label class="fld"><span>Team</span><select id="gdTeam"><option>Super League Men</option><option>Women's BIDL</option><option>U18 Boys</option></select></label>
+            <div class="row" style="gap:6px"><img class="cr" id="gdCrest" src="assets/tralee-warriors.png" alt="" style="width:36px;height:36px"><label class="fld f"><span>Opponent</span><select id="gdOpp"><option value="tralee-warriors">Tralee Warriors</option><option value="ucd-marian">UCD Marian</option><option value="belfast-star">Belfast Star</option><option value="neptune">Neptune</option><option value="killester">Killester</option></select></label></div>
+            <div class="row" style="gap:6px"><label class="fld f"><span>Date</span><input id="gdDate" type="date" value="2026-11-22"></label><label class="fld" style="width:96px"><span>Tip-off</span><input id="gdTime" type="time" value="19:30"></label></div>
+            <label class="fld"><span>Venue</span><select id="gdVenue"><option>Home · Éanna home court, Rathfarnham</option><option>Away · opponent's venue</option></select></label>
+            <div class="trow"><span>Tickets on ClubZap</span><button class="tog on" data-t="gdTix" aria-label="Tickets"></button></div>
+            <label class="fld" id="gdTixF"><span>ClubZap link</span><input id="gdLink" value="eannabasketball.clubzap.com/products"></label>
+            <label class="fld"><span>Livestream link (optional)</span><input id="gdStream" placeholder="Paste a link"></label>
+            <label class="fld"><span>Note for fans</span><input id="gdNote" value="Family day. Kids' half-time shootout."></label>
+            <button class="btn" data-act="gdPublish">Publish game day page</button>
+          </div>
+        </div>
+        <div class="scr" data-s="page">
+          <div class="gdh"><div class="sb"><span>9:41</span><span>5G ▮▮▮</span></div>
+            <div class="in"><div class="lbl" style="color:rgba(255,255,255,.8)" id="gdLbl">Super League · Home</div>
+              <div class="crs"><img src="assets/crest-dark.png" alt="Éanna"><span class="vs">VS</span><img id="gdOppImg" src="assets/tralee-warriors.png" alt=""></div>
+              <div class="h" style="font-size:16px;font-weight:900;text-transform:uppercase" id="gdTitle">Éanna v Tralee Warriors</div>
+              <div class="cdn" id="gdCount"></div></div><div class="grain w"></div></div>
+          <div class="bd">
+            <div class="cd">
+              <div class="info"><span class="ic">📅</span><div class="f"><b id="gdWhen">Sat 22 Nov · 7:30pm</b><div class="sm mut">Doors open 45 minutes before</div></div></div>
+              <div class="info"><span class="ic">📍</span><div class="f"><b id="gdWhere">Éanna home court, Rathfarnham</b><div class="sm mut">Tap for directions</div></div></div>
+              <div class="info" id="gdNoteRow"><span class="ic">★</span><div class="f"><b id="gdNoteTxt">Family day</b></div></div>
+            </div>
+            <a class="zap" id="gdZap" href="https://eannabasketball.clubzap.com/products" target="_blank" rel="noopener">Buy tickets <small>on ClubZap</small></a>
+            <div class="btns"><button class="btn g" data-act="toast" data-msg="Added to your calendar">Add to calendar</button><button class="btn g" data-act="toast" data-msg="You'll get a reminder 2 hours before">Remind me</button></div>
+            <div class="cd row sp" style="padding:8px 10px"><img src="assets/griffith-college-black.png" alt="Griffith College" style="height:24px"><img src="assets/mens-super-league.png" alt="Men's Super League" style="height:22px"><img src="assets/upmc-ssc-colour.png" alt="UPMC SSC" style="height:24px"></div>
+          </div>
+          <div class="tb" data-tab="1"></div>
+        </div>
+        <div class="toast"></div>
+      </div></div>
+      <div class="chips" data-for="p14"><button class="on" data-go="form">Manager fills in</button><button data-go="page">Public game day page</button></div>
+      <div class="tip">Change the opponent and date, then publish</div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== 14 FIXTURES ===== -->
+<section class="s" id="s14">
+  <div class="notes">
+    <div class="kick"><span class="n">14</span>Section</div>
+    <h2>Fixtures calendar</h2>
+    <div class="rulebox"><div class="grain w"></div><b>Real fixtures</b><p id="realNote">Every Éanna team's league and cup games, taken from the DMBB and DLBB websites on 6 November 2026.</p></div>
+    <ul><li>Every team's games in one calendar, October to April</li><li>Dublin leagues and cups from DMBB and DLBB, plus national games from Basketball Ireland (Super League, National Cups)</li><li><b>My competitions:</b> choose which leagues and cups show in your schedule, including national ones Éanna isn't in</li><li><b>Add a game:</b> coaches add friendlies, blitzes and tournaments that aren't on any website</li><li>Subscribe once and games appear in your phone's calendar</li></ul>
+    <div class="qs"><h3>Your answers</h3>
+      <label><span>Do the team names look right (e.g. is "Men's D1" what the club calls that team)?</span><textarea class="ans" id="q14a" data-q="14 Fixtures · Team names right?"></textarea></label>
+      <label><span>Should training sessions show in the calendar too?</span><textarea class="ans" id="q14b" data-q="14 Fixtures · Show training?"></textarea></label>
+    </div>
+  </div>
+  <div class="stage">
+    <div class="unit">
+      <div class="ph" id="p15"><div class="scrn"><div class="island"></div>
+        <div class="scr on" data-s="month">
+          <div class="top"><div class="sb"><span>9:41</span><span>5G ▮▮▮</span></div>
+            <div class="ah"><img class="crest" src="assets/crest-dark.png" alt=""><div class="t">Fixtures<small id="monSub">All Éanna teams</small></div></div><div class="grain w"></div></div>
+          <div class="bd">
+            <div class="seg" data-seg="fx"><button class="on" data-v="all">All</button><button data-v="m">Men &amp; boys</button><button data-v="w">Women &amp; girls</button><button data-v="sen">Senior</button></div>
+            <label class="fld"><span>Team</span><select id="fxTeam"><option value="">All Éanna teams</option></select></label>
+            <div class="cd" style="padding:8px"><div class="row sp" style="margin-bottom:6px"><button class="btn g" style="width:auto;padding:3px 10px" data-act="mon" data-d="-1" aria-label="Previous month">‹</button><b class="h" id="monLabel" style="font-size:12.5px">November 2026</b><button class="btn g" style="width:auto;padding:3px 10px" data-act="mon" data-d="1" aria-label="Next month">›</button></div><div class="cal" id="calGrid"></div></div>
+            <div id="dayList" style="display:grid;gap:7px"></div>
+            <button class="btn g" data-act="toast" data-msg="Subscribed. Games will appear in your phone's calendar">Subscribe in my phone's calendar</button>
+          </div>
+          <div class="tb" data-tab="1"></div>
+        </div>
+        <div class="scr" data-s="list">
+          <div class="top"><div class="sb"><span>9:41</span><span>5G ▮▮▮</span></div>
+            <div class="ah"><img class="crest" src="assets/crest-dark.png" alt=""><div class="t">Upcoming<small>Next 14 days</small></div></div><div class="grain w"></div></div>
+          <div class="bd" id="fxList"></div>
+          <div class="tb" data-tab="1"></div>
+        </div>
+        <div class="scr" data-s="follow">
+          <div class="top"><div class="sb"><span>9:41</span><span>5G ▮▮▮</span></div>
+            <div class="ah"><img class="crest" src="assets/crest-dark.png" alt=""><div class="t">My competitions<small>What shows in my schedule</small></div></div><div class="grain w"></div></div>
+          <div class="bd">
+            <div class="cd" style="display:grid;gap:2px"><div class="lbl">Dublin leagues &amp; cups</div>
+              <div class="trow"><span><b>DMBB</b> · men's &amp; boys'<br><span class="sm mut">All Éanna teams</span></span><button class="tog on" data-t="fol-DMBB" aria-label="DMBB"></button></div>
+              <div class="trow"><span><b>DLBB</b> · women's &amp; girls'<br><span class="sm mut">All Éanna teams</span></span><button class="tog on" data-t="fol-DLBB" aria-label="DLBB"></button></div></div>
+            <div class="cd" style="display:grid;gap:2px"><div class="row sp"><div class="lbl">National · Basketball Ireland</div><img src="assets/basketball-ireland.png" alt="Basketball Ireland" style="height:16px;filter:invert(1) brightness(.35)"></div><div id="natList"></div></div>
+            <div class="banner b-pu">Switching a competition off hides its games from your calendar and notifications. It doesn't change anything for anyone else.</div>
+          </div>
+          <div class="tb" data-tab="1"></div>
+        </div>
+        <div class="scr" data-s="addg">
+          <div class="top"><div class="sb"><span>9:41</span><span>5G ▮▮▮</span></div>
+            <div class="ah"><img class="crest" src="assets/crest-dark.png" alt=""><div class="t">Add a game<small>Friendlies, blitzes, tournaments</small></div></div><div class="grain w"></div></div>
+          <div class="bd" style="gap:6px">
+            <label class="fld"><span>Team</span><select id="agTeam"></select></label>
+            <label class="fld"><span>Type</span><select id="agType"><option>Friendly</option><option>Blitz</option><option>Tournament</option><option>National Cup</option><option>Schools game</option><option>Other</option></select></label>
+            <label class="fld"><span>Opponent or event name</span><input id="agOpp" value="Templeogue (friendly)"></label>
+            <div class="row" style="gap:6px"><label class="fld f"><span>Date</span><input id="agDate" type="date" value="2026-11-21"></label><label class="fld" style="width:96px"><span>Time</span><input id="agTime" type="time" value="11:00"></label></div>
+            <label class="fld"><span>Venue</span><input id="agVenue" value="Colaiste Eanna"></label>
+            <div class="seg" data-seg="agHA"><button class="on" data-v="1">Home</button><button data-v="0">Away</button></div>
+            <div class="trow"><span>Share with the whole team<br><span class="sm mut">A moderator checks it first</span></span><button class="tog on" data-t="agShare" aria-label="Share with team"></button></div>
+            <button class="btn" data-act="addGame">Add to schedule</button>
+          </div>
+        </div>
+        <div class="toast"></div>
+      </div></div>
+      <div class="chips" data-for="p15"><button class="on" data-go="month">Month</button><button data-go="list">List</button><button data-go="follow">My competitions</button><button data-go="addg">Add a game</button></div>
+      <div class="tip">Switch a competition off, or add a friendly, then check the calendar</div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== 15 EVENTS ===== -->
+<section class="s" id="s15">
+  <div class="notes">
+    <div class="kick"><span class="n">15</span>Section</div>
+    <h2>Events</h2>
+    <ul><li>Camps, fundraisers, club nights, family days, the AGM</li><li>"I'm going", places left, and payment links to ClubZap</li><li>Volunteer shifts people can sign up to</li><li>Events can be members only (e.g. the AGM)</li></ul>
+    <div class="qs"><h3>Your answers</h3>
+      <label><span>Who can create events (committee only, or coaches too)?</span><textarea class="ans" id="q15a" data-q="15 Events · Who creates events?"></textarea></label>
+      <label><span>Which events happen every year that we should set up first?</span><textarea class="ans" id="q15b" data-q="15 Events · Yearly events to set up?"></textarea></label>
+    </div>
+  </div>
+  <div class="stage">
+    <div class="unit">
+      <div class="ph" id="p16"><div class="scrn"><div class="island"></div>
+        <div class="scr on" data-s="evs">
+          <div class="top"><div class="sb"><span>9:41</span><span>5G ▮▮▮</span></div>
+            <div class="ah"><img class="crest" src="assets/crest-dark.png" alt=""><div class="t">Events<small>What's on at Éanna</small></div></div><div class="grain w"></div></div>
+          <div class="bd">
+            <button class="cd ev" data-go="camp"><div class="dt o"><b>22</b><span>DEC</span></div><div class="f"><b>Christmas Camp</b><div class="sm mut">22–23 Dec · Ages 8–16 · €40</div><div class="places" style="margin-top:6px"><i id="campBar" style="width:70%"></i></div><div class="sm mut" style="margin-top:3px"><span id="campLeft">18</span> of 60 places left</div></div><span class="chev">›</span></button>
+            <div class="cd ev"><div class="dt"><b>22</b><span>NOV</span></div><div class="f"><b>Super League family day</b><div class="sm mut">v Tralee Warriors · half-time shootout</div><div class="row" style="margin-top:6px;gap:6px"><button class="rx" data-c="86">🙋 <b>86</b></button><span class="sm mut">going</span></div></div></div>
+            <div class="cd ev"><div class="dt k"><b>13</b><span>DEC</span></div><div class="f"><b>Bag-pack fundraiser</b><div class="sm mut">Supermarket, Rathfarnham</div><span class="pill p-warn" style="margin-top:5px">6 of 12 volunteers</span></div></div>
+            <div class="cd ev"><div class="dt"><b>2</b><span>DEC</span></div><div class="f"><b>Club AGM</b> <span class="pill p-nv">Members only</span><div class="sm mut">7:30pm · Clubhouse</div></div></div>
+          </div>
+          <div class="tb" data-tab="3"></div>
+        </div>
+        <div class="scr" data-s="camp">
+          <div class="gdh" style="background:radial-gradient(70% 60% at 30% 0%,rgba(246,166,118,.5),transparent 70%),linear-gradient(160deg,#e07a4e,#9b3c13 60%,#2B2763)"><div class="sb"><span>9:41</span><span>5G ▮▮▮</span></div>
+            <div class="in" style="text-align:left"><button class="back" data-go="evs" aria-label="Back" style="width:26px;height:26px;border-radius:50%;background:rgba(255,255,255,.18);font-weight:800">‹</button>
+              <div class="h" style="font-size:22px;font-weight:900;text-transform:uppercase;line-height:1;margin-top:10px">Christmas<br>Camp 2026</div><div class="sm" style="opacity:.85;margin-top:4px">22–23 December · 10am – 2pm · Ages 8–16</div></div><div class="grain w"></div></div>
+          <div class="bd">
+            <div class="cd" style="display:grid;gap:5px"><div class="row sp"><b><span id="campLeft2">18</span> places left</b><span class="pill p-or">€40</span></div><div class="places"><i id="campBar2" style="width:70%"></i></div><div class="sm mut">Coached by our Super League players. Bring water and runners.</div></div>
+            <button class="btn or" data-act="campBook" id="campBtn">Book a place</button>
+            <a class="zap" href="https://eannabasketball.clubzap.com/products" target="_blank" rel="noopener" style="background:var(--grad)">Pay <small>on ClubZap</small></a>
+            <div class="cd"><div class="lbl">Volunteer shifts</div>
+              <div class="shift"><div class="f"><b>Day 1 · morning</b><div class="sm mut">Registration desk</div></div><span class="pill p-ok">2/2</span></div>
+              <div class="shift"><div class="f"><b>Day 1 · lunch</b><div class="sm mut">Supervision</div></div><button class="btn g" data-act="shift">Sign up · <span>1</span>/3</button></div>
+              <div class="shift"><div class="f"><b>Day 2 · morning</b><div class="sm mut">Registration desk</div></div><button class="btn g" data-act="shift">Sign up · <span>0</span>/2</button></div>
+            </div>
+          </div>
+          <div class="tb" data-tab="3"></div>
+        </div>
+        <div class="toast"></div>
+      </div></div>
+      <div class="chips" data-for="p16"><button class="on" data-go="evs">All events</button><button data-go="camp">Event page</button></div>
+      <div class="tip">Open the camp, book a place, take a shift</div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== 16 DASHBOARD ===== -->
+<section class="s" id="s16">
+  <div class="notes">
+    <div class="kick"><span class="n">16</span>Section</div>
+    <h2>Club dashboard</h2>
+    <p>For the committee, on a laptop. Admins and committee only.</p>
+    <ul><li>Members, weekly active users, notifications switched on</li><li>Which teams are sending in score-sheets</li><li>Followers by team and the best content this week</li><li>Numbers for sponsor pitches and grant applications</li></ul>
+    <div class="qs"><h3>Your answers</h3>
+      <label><span>Who should see the dashboard (committee, coaches, sponsors)?</span><textarea class="ans" id="q16a" data-q="16 Dashboard · Who sees it?"></textarea></label>
+      <label><span>Any number the committee always asks for?</span><textarea class="ans" id="q16b" data-q="16 Dashboard · Numbers the committee wants?"></textarea></label>
+    </div>
+  </div>
+  <div class="stage">
+    <div class="lap">
+      <div class="lid"><div class="dash">
+        <div class="dh"><img src="assets/crest-dark.png" alt=""><b>Club dashboard<small>COMMITTEE · EXAMPLE NUMBERS</small></b><div class="seg" data-seg="dr"><button class="on" data-v="8">8 weeks</button><button data-v="s">Season</button></div></div>
+        <div class="db">
+          <div class="kpis" id="kpis"></div>
+          <div class="dgrid">
+            <div class="cd chart"><div class="row sp"><span class="lbl">Weekly active members</span><span class="sm mut" id="chLbl">Last 8 weeks</span></div><div id="chart"></div></div>
+            <div class="cd"><div class="lbl">Followers by team</div><div id="fol"></div></div>
+          </div>
+          <div class="dgrid">
+            <div class="cd"><div class="lbl" style="margin-bottom:4px">Score-sheets this week</div>
+              <table class="up-t"><thead><tr><th>Team</th><th>Games</th><th>Sent</th><th></th></tr></thead><tbody id="upT"></tbody></table></div>
+            <div class="cd"><div class="lbl" style="margin-bottom:4px">Top content this week</div>
+              <div class="pk"><div class="th"></div><div class="f"><b>Top performers carousel</b><div class="sm mut">1,240 views on the hub</div></div></div>
+              <div class="pk"><div class="th o"></div><div class="f"><b>Dean passes 1,000 points</b><div class="sm mut">106 reactions</div></div></div>
+              <div class="pk"><div class="th k"></div><div class="f"><b>Weekly question</b><div class="sm mut">48 answers</div></div></div>
+              <button class="btn" data-act="grant" style="margin-top:6px">Prepare sponsor &amp; grant summary</button></div>
+          </div>
+        </div>
+        <div class="toast"></div>
+      </div></div>
+      <div class="base"></div>
+    </div>
+  </div>
+</section>
+
+</div>
+
+<button class="fab" data-act="copyAns">Copy my answers <span class="c" id="ansCount">0</span></button>
+<div class="modal" id="modal" hidden><div class="box"><b style="font-family:var(--display)">Your answers</b><span style="font-size:14px;color:var(--muted)">Copied. If it didn't copy, select all the text below and copy it. Then paste it into our chat.</span><textarea id="modalTxt" readonly></textarea><div class="acts"><button data-act="closeModal">Close</button><button class="pri" data-act="selAll">Select all</button></div></div></div>
+
+<script>
+(function(){
+const $=(s,r=document)=>r.querySelector(s), $$=(s,r=document)=>[...r.querySelectorAll(s)];
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const jsy=(n,w)=>`<svg class="jy"><use href="#${w?'jsyw':'jsy'}"/><text x="20" y="33" text-anchor="middle" font-family="Anton" font-size="14" fill="#fff">${n}</text></svg>`;
+const crestImg=k=>k?`<img class="cr" src="assets/${k}.png" alt="">`:'';
+const opp=(g)=>g.crest?crestImg(g.crest):`<span class="oi">${g.opp.slice(0,2).toUpperCase()}</span>`;
+
+/* tab bar */
+const tabs=[['Home','M3 11l9-7 9 7v9a1 1 0 0 1-1 1h-5v-6h-6v6H4a1 1 0 0 1-1-1z'],['Results','M4 20V10M10 20V4M16 20v-7M22 20H2'],['Teams','M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20zM2 12h20M12 2c3 3 3 17 0 20M12 2c-3 3-3 17 0 20'],['Community','M21 12a8 8 0 0 1-11.6 7.1L3 21l1.9-6.4A8 8 0 1 1 21 12z'],['Me','M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8zM4 21a8 8 0 0 1 16 0']];
+$$('.tb').forEach(t=>{const on=+t.dataset.tab;t.innerHTML=tabs.map((x,i)=>`<span class="${i===on?'on':''}"><svg viewBox="0 0 24 24"><path d="${x[1]}"/></svg>${x[0]}</span>`).join('')});
+
+/* screens */
+const hooks={};
+function show(ph,id){
+  if(!ph)return;
+  $$('.scr',ph).forEach(s=>s.classList.toggle('on',s.dataset.s===id));
+  $$(`.chips[data-for="${ph.id}"] button`).forEach(b=>b.classList.toggle('on',b.dataset.go===id));
+  const bd=$(`.scr[data-s="${id}"] .bd`,ph); if(bd) bd.scrollTop=0;
+  ph.querySelector('.scrn').classList.remove('open');
+  const h=hooks[ph.id+':'+id]; if(h) h();
+}
+function toast(ph,msg){const t=$('.toast',ph);t.textContent=msg;t.classList.add('show');clearTimeout(t._t);t._t=setTimeout(()=>t.classList.remove('show'),2400)}
+
+/* data */
+const weeks=[
+ {label:'Week 8 · 20–26 Oct',sec:[['Senior',[{t:'Super League Men',opp:'Tralee Warriors',crest:'tralee-warriors',a:81,b:86,d:'Sat 25 Oct · Away'},{t:"Women's BIDL",opp:'Ballincollig',crest:'ballincollig',a:66,b:58,d:'Sat 25 Oct · Home'}]],['Underage',[{t:'U18 Boys',opp:'Neptune',crest:'neptune',a:74,b:61,d:'Sun 26 Oct'},{t:'U16 Girls',opp:'Lucan',a:38,b:35,d:'Sun 26 Oct'},{t:'U14 Boys',opp:'Templeogue',a:33,b:40,d:'Sat 25 Oct'}]]]},
+ {label:'Week 9 · 27 Oct–2 Nov',sec:[['Senior',[{t:'Super League Men',opp:'Neptune',crest:'neptune',a:90,b:77,d:'Sat 1 Nov · Home'},{t:"Women's BIDL",opp:'UCD Marian',crest:'ucd-marian',a:59,b:63,d:'Sat 1 Nov · Away'}]],['Underage',[{t:'U18 Boys',opp:'Killester',crest:'killester',a:66,b:60,d:'Sun 2 Nov'},{t:'U16 Girls',opp:'Kilcock',a:44,b:39,d:'Sun 2 Nov'},{t:'U12 Mixed',opp:'Lucan',hide:true,d:'Sat 1 Nov'}]]]},
+ {label:'Week 10 · 3–9 Nov',sec:[['Senior',[{id:'sl10',t:'Super League Men',opp:'Killester',crest:'killester',a:88,b:79,d:'Sat 8 Nov · Home'},{t:"Women's BIDL",opp:'Brunell',crest:'brunell',a:71,b:64,d:'Sat 8 Nov · Home'},{t:"Men's D2",opp:'Ballina',a:60,b:66,d:'Fri 7 Nov · Away'}]],['Underage',[{id:'u1810',t:'U18 Boys',opp:"St Vincent's",crest:'st-vincents',a:70,b:58,d:'Sat 8 Nov · Home'},{t:'U16 Girls',opp:'Templeogue',a:41,b:54,d:'Sun 9 Nov'},{t:'U12 Mixed',opp:'Lucan',hide:true,d:'Sat 8 Nov'}]]]}
+];
+const boxes={
+ sl10:{senior:true,q:'22–19 · 20–24 · 25–17 · 21–19',rows:[[5,'Dean Kiernan',27],[2,"Cathal O'Sullivan",19],[9,'Neil Lynch',12],[10,'Sean Jenkins',9],[8,'Morgan Taylor',8],[24,'Manou Christal',7],[13,'Karl Walsh',4],[14,'Ian Lynch',2],[0,'Adam McCarthy',0]]},
+ u1810:{senior:false,q:'18–12 · 16–15 · 20–14 · 16–17',rows:[[7,'Seán R.',18],[12,'Liam K.',14],[9,'Cian F.',12],[4,'Oisín B.',10],[15,'Darragh M.',9],[5,'Evan T.',7],[10,'Rory P.',0],[3,'Adam W.',0]]}
+};
+let wk=2;
+const mtRow=(g)=>{
+  const res=g.hide?`<span class="pill p-nv">Hidden</span>`:`<div class="sc ${g.a>g.b?'w':'l'}">${g.a}–${g.b}<small>${g.a>g.b?'WIN':'LOSS'}</small></div>`;
+  const inner=`${crestImg('crest')}<span class="vs">VS</span>${opp(g)}<div class="who"><b>${esc(g.t)}</b><span>${esc(g.opp)} · ${esc(g.d)}</span></div>${res}`;
+  return g.id?`<button class="mt" data-act="openGame" data-g="${g.id}">${inner}</button>`:`<div class="mt">${inner}</div>`;
+};
+function renderWeek(){
+  const w=weeks[wk]; $('#wkLabel').textContent=w.label;
+  $('#wkList').innerHTML=w.sec.map(([s,gs])=>`<div class="cd"><div class="lbl">${s}</div>${gs.map(mtRow).join('')}</div>`).join('')+(wk===2?'<div class="sm mut" style="text-align:center">Tap a game with a › to see the points</div>':'');
+  $$('#wkList button.mt').forEach(b=>b.insertAdjacentHTML('beforeend',''));
+}
+function homeRes(){const gs=weeks[2].sec.flatMap(x=>x[1]).filter(g=>!g.hide).slice(0,3);$('#homeRes').innerHTML=gs.map(g=>mtRow({...g,id:null})).join('')}
+function openGame(id){
+  const g=weeks[2].sec.flatMap(x=>x[1]).find(x=>x.id===id), bx=boxes[id];
+  $('#gTitle').innerHTML=`${esc(g.t)}<small>v ${esc(g.opp)} · ${esc(g.d)}</small>`;
+  const shown=bx.senior?bx.rows:bx.rows.filter(r=>r[2]>0);
+  $('#gBody').innerHTML=`<div class="cd"><div class="row sp"><div style="text-align:center"><img src="assets/crest.png" alt="" style="width:52px;height:52px;object-fit:contain"><div class="n" style="font-size:30px;color:var(--ok)">${g.a}</div></div><div style="text-align:center"><span class="vs" style="font-size:22px">VS</span><div><span class="pill p-ok">FINAL · WIN</span></div></div><div style="text-align:center"><img src="assets/${g.crest}.png" alt="" style="width:52px;height:52px;object-fit:contain"><div class="n" style="font-size:30px">${g.b}</div></div></div></div>
+  <div class="cd"><div class="lbl">Points</div><table class="bx"><thead><tr><th></th><th>Player</th><th class="r">Pts</th></tr></thead><tbody>${shown.map(r=>`<tr><td style="width:34px">${bx.senior?jsy(r[0]):`<span class="ball" style="width:24px;height:24px;font-size:9px">${r[0]}</span>`}</td><td>${esc(r[1])}</td><td class="r nn">${r[2]}</td></tr>`).join('')}</tbody></table></div>
+  <div class="banner ${bx.senior?'b-ok':'b-pu'}">${bx.senior?'Senior game: every player is shown, including 0.':`Underage game: ${bx.rows.length-shown.length} players who didn't score aren't shown.`}</div>
+  <div class="cd sm"><span class="lbl">By quarter</span><div class="n" style="font-size:13px;margin-top:2px">${bx.q}</div></div>`;
+}
+const leaders={m:{t:[['Dean Kiernan','SL',164],["Cathal O'Sullivan",'SL',141],['Seán R.','U18',128],['Neil Lynch','SL',117],['Jack D.','D2',102]],p:[['Dean Kiernan','SL',20.5],['Seán R.','U18',18.3],["Cathal O'Sullivan",'SL',17.6],['Jack D.','D2',14.6],['Neil Lynch','SL',14.1]],b:[['Dean Kiernan','v Tralee',31],['Seán R.','v Neptune',26],["Cathal O'Sullivan",'v Belfast Star',24],['Jack D.','v Ballina',22],['Neil Lynch','v Brunell',21]]},
+ w:{t:[['Aoife M.','BIDL',151],['Niamh B.','BIDL',118],['Ciara O.','U18',97],['Sarah K.','BIDL',88],['Ellen D.','D1',74]],p:[['Aoife M.','BIDL',18.9],['Niamh B.','BIDL',14.8],['Ciara O.','U18',13.9],['Sarah K.','BIDL',11.0],['Ellen D.','D1',10.6]],b:[['Aoife M.','v Brunell',29],['Ciara O.','v Lucan',24],['Niamh B.','v UCD Marian',22],['Sarah K.','v Ballincollig',19],['Ellen D.','v Swords',17]]}};
+let lg='m',lm='t';
+function renderLead(){const L=leaders[lg][lm],max=L[0][2];$('#leadList').innerHTML=L.map((r,i)=>`<div><div class="row"><span class="n" style="width:14px;color:var(--orange);font-size:15px">${i+1}</span><b class="f">${esc(r[0])} <span class="mut sm" style="font-weight:600">${esc(r[1])}</span></b><b class="n" style="font-size:16px">${lm==='p'?r[2].toFixed(1):r[2]}</b></div><div class="bar"><i style="width:${(r[2]/max*100).toFixed(0)}%"></i></div></div>`).join('')}
+
+const tops={m:[[5,'Dean Kiernan','Super League Men','killester','Killester',27,0],[2,"Cathal O'Sullivan",'Super League Men','killester','Killester',19,0],[7,'Seán R.','U18 Boys','st-vincents',"St Vincent's",18,0],[12,'Jack D.',"Men's D2",'','Ballina',16,0]],w:[[11,'Aoife M.',"Women's BIDL",'brunell','Brunell',22,1],[4,'Niamh B.',"Women's BIDL",'brunell','Brunell',17,1],[8,'Ciara O.','U16 Girls','','Templeogue',15,1],[6,'Ellen D.','Ladies D1','','Swords',12,1]]};
+function renderTop(v){$('#topList').innerHTML=`<div class="tc">${tops[v].map((r,i)=>`<div class="perf"><span class="n" style="font-size:16px;width:12px;color:var(--orange);text-shadow:none">${i+1}</span>${jsy(r[0],r[6])}<div class="f"><b>${esc(r[1])}</b><span>${esc(r[2])} · v ${esc(r[4])}</span></div><div class="n">${r[5]}<small>PTS</small></div></div>`).join('')}</div>`}
+
+/* carousel */
+let si=0;
+const slides=[
+ ()=>`<div class="slide"><div class="sw"></div><div class="sw2"></div><div class="gr"></div><div class="sbar"><img src="assets/griffith-college-black.png" alt=""><img class="c" src="assets/crest.png" alt=""><img src="assets/upmc-ssc-colour.png" alt=""></div><div class="body" style="padding-top:22px"><div class="tt">Top<br>Performers</div><div class="wd">WEEK 10 · 3–9 NOVEMBER</div><div style="height:2px;width:70%;background:var(--grad);margin-top:8px"></div></div><div class="who" style="bottom:18px"><b>Swipe for this<br>week's best</b><span>Men's &amp; women's · all teams</span></div></div>`,
+ ()=>perfSlide(tops.m[0],"MEN'S TOP PERFORMER"),
+ ()=>perfSlide(tops.w[0],"WOMEN'S TOP PERFORMER"),
+ ()=>`<div class="slide"><div class="sw"></div><div class="sw2"></div><div class="gr"></div><div class="sbar"><img src="assets/griffith-college-black.png" alt=""><img class="c" src="assets/crest.png" alt=""><img src="assets/upmc-ssc-colour.png" alt=""></div><div class="body"><div class="tt" style="font-size:17px">Shout-outs</div><div class="wd">UNDERAGE · WEEK 10</div><div style="display:grid;gap:5px;margin-top:10px;font-size:10.5px;max-width:62%"><div><b>U18 Boys</b> · Seán R. 18 pts in a win v St Vincent's</div><div><b>U16 Girls</b> · Ciara O. 15 pts</div><div><b>U14 Boys</b> · 48–30 win v Kilcock</div></div></div></div>`
+];
+function perfSlide(r,lab){return `<div class="slide"><div class="sw"></div><div class="sw2"></div><div class="gr"></div><div class="sbar"><img src="assets/griffith-college-black.png" alt=""><img class="c" src="assets/crest.png" alt=""><img src="assets/upmc-ssc-colour.png" alt=""></div><div class="body"><div class="tt" style="font-size:16px">${lab.split(' TOP')[0]}<br>Top Performer</div><div class="wd">WEEK 10</div></div><svg class="jbig"><use href="#${r[6]?'jsyw':'jsy'}"/><text x="20" y="33" text-anchor="middle" font-family="Anton" font-size="14" fill="#fff">${r[0]}</text></svg><div class="match"><img src="assets/crest.png" alt=""><span class="vs">VS</span>${r[3]?`<img src="assets/${r[3]}.png" alt="">`:''}</div><div class="who"><b>${esc(r[1])}</b><span>${esc(r[2])} · v ${esc(r[4])}</span></div><div class="big"><span class="n">${r[5]}</span><small>POINTS</small></div></div>`}
+function renderSlide(){$('#slide').innerHTML=slides[si]();$('#dots').innerHTML=slides.map((_,i)=>`<i class="${i===si?'on':''}"></i>`).join('')}
+
+/* upload check */
+let chk=[[7,'Seán R.',18],[12,'Liam K.',14],[9,'Cian F.',12],[4,'Oisín B.',12,1],[15,'Darragh M.',9],[5,'Evan T.',7],[10,'Rory P.',0]];
+function renderChk(){
+  const tot=chk.reduce((a,r)=>a+r[2],0), target=+($('#usA').value||0);
+  $('#chkRows').innerHTML=chk.map((r,i)=>`<tr class="${r[3]?'flag':''}"><td>${r[0]}</td><td>${esc(r[1])} ${r[3]?'<span class="pill p-warn">Check</span>':''}</td><td class="r">${r[3]?`<span class="step"><button data-act="chkStep" data-i="${i}" data-d="-1" aria-label="Minus">−</button><span class="n">${r[2]}</span><button data-act="chkStep" data-i="${i}" data-d="1" aria-label="Plus">+</button></span>`:`<span class="nn">${r[2]}</span>`}</td></tr>`).join('');
+  const b=$('#chkBanner'), ok=tot===target;
+  b.className='banner '+(ok?'b-ok':'b-warn');
+  b.innerHTML=ok?`Points add up to <b>${tot}</b>, which matches the final score ✓`:`Points add up to <b>${tot}</b> but the final score is <b>${target}</b>. Check the orange number.`;
+  $('#chkSend').style.opacity=ok?1:.5;
+}
+hooks['p4:scan']=()=>{const ph=$('#p4');clearTimeout(ph._t);ph._t=setTimeout(()=>{if($('.scr[data-s="scan"]',ph).classList.contains('on'))show(ph,'check')},1900)};
+hooks['p4:check']=renderChk;
+
+/* moderation */
+let queue=[
+ {type:'report',tag:'Reported ×2',title:'Answer on adults board',who:'ref_watch · Supporter · joined 2 weeks ago · 1 earlier warning',text:'"Refs in that game were a joke…"',ava:'RW'},
+ {type:'sheet',tag:'Score-sheet',title:"U18 Boys v St Vincent's",who:'Coach Mark ✓ · 1 number flagged',text:'Points checked by the coach. Final score 70–58.',ava:'CM'},
+ {type:'post',tag:'Post · photo',title:'U14 Boys Junior Cert congrats',who:'coach_rob · members only · consent ticked',text:'"Huge congrats to the lads who passed…"',ava:'RB'},
+ {type:'user',tag:'New member',title:'hoopsqueen · U16 Girls',who:'Parent approved ✓',text:'Under 18. Goes to the under-18 board.',ava:'HQ'},
+ {type:'role',tag:'Role request',title:'coach_rob wants the Coach role',who:'Says: U14 Boys coach',text:'Only Milo can approve staff roles.',ava:'RB'}
+];
+const tagCls={report:'p-no',sheet:'p-warn',post:'p-pu',user:'p-nv',role:'p-nv'};
+let qf='all',cur=null;
+let log=[['Anna','Approved','U16 Girls birthday post','Today 18:02'],['Milo','Approved role','Gráinne → Coach','Today 12:40'],['Anna','Hidden','Answer with a phone number','Yesterday']];
+function renderQ(){
+  const items=queue.map((q,i)=>({...q,i})).filter(q=>qf==='all'||q.type===qf);
+  $('#qCount').textContent=queue.length?`${queue.length} waiting`:'All clear';
+  $('#qList').innerHTML=items.length?items.map(q=>`<button class="cd qitem ${q.type}" data-act="openQ" data-i="${q.i}"><span class="pill ${tagCls[q.type]}">${q.tag}</span><div style="margin-top:3px"><b>${esc(q.title)}</b></div><div class="sm mut">${esc(q.who)}</div></button>`).join(''):`<div class="empty"><b>Nothing waiting</b>New posts, score-sheets and reports appear here.</div>`;
+}
+function addQ(q){queue.unshift(q);renderQ()}
+function renderLog(){$('#logList').innerHTML=log.map(l=>`<div class="logi"><div class="row sp"><b>${esc(l[0])} · ${esc(l[1])}</b><span class="mut">${esc(l[3])}</span></div><div class="mut">${esc(l[2])}</div></div>`).join('')}
+hooks['p10:log']=renderLog;
+let ed=[[7,'Seán R.',18,1],[12,'Liam K.',14,1],[9,'Cian F.',12,1],[4,'Oisín B.',10,1],[15,'Darragh M.',9,1],[5,'Evan T.',7,1],[3,'Adam W.',0,0,'parent'],[10,'Rory P.',0,0,'zero']];
+function renderEd(){
+  const tot=ed.reduce((a,r)=>a+r[2],0);
+  $('#edRows').innerHTML=ed.map((r,i)=>`<tr><td>${r[0]}</td><td>${esc(r[1])}</td><td class="r"><span class="step"><button data-act="edStep" data-i="${i}" data-d="-1" aria-label="Minus">−</button><span class="n">${r[2]}</span><button data-act="edStep" data-i="${i}" data-d="1" aria-label="Plus">+</button></span></td><td class="r">${r[4]==='parent'?'<span class="pill p-nv">Parent hid</span>':r[2]===0?'<span class="pill p-nv">Zero</span>':'<span class="pill p-ok">Shown</span>'}</td></tr>`).join('');
+  const b=$('#edBanner'); b.className='banner '+(tot===70?'b-ok':'b-warn'); b.innerHTML=tot===70?'Adds up to <b>70</b> ✓':`Adds up to <b>${tot}</b>, final score is <b>70</b>`;
+}
+hooks['p10:edit']=renderEd;
+
+/* admin */
+let mods=[{n:'Milo',r:'Admin · you',s:'admin',a:'MH'},{n:'Anna',r:'Moderator since 12 Nov',s:'mod',a:'AN'}];
+let pending=null;
+function renderMods(){$('#modList').innerHTML=mods.map((m,i)=>`<div class="cd row"><div class="ava ${m.s==='admin'?'o':m.s==='pend'?'k':'c'}">${m.a}</div><div class="f"><b>${esc(m.n)}</b><div class="sm mut">${esc(m.r)}</div></div>${m.s==='admin'?'<span class="pill p-gr">Admin</span>':m.s==='pend'?'<span class="pill p-warn">Invite sent</span>':`<button class="sm" style="color:var(--no);font-weight:700" data-act="rmMod" data-i="${i}">Remove</button>`}</div>`).join('')}
+const ageGroups=[['Academy – U12','r'],['U13 – U16','f'],['U17 – U20','a']];
+const ageDesc={h:'Team hidden from the public',r:'Team results only, no player names',f:'Scorers with first name only, zeros hidden',a:'Full stats, zeros hidden, parent toggle on'};
+function renderAges(){$('#ageList').innerHTML=ageGroups.map((g,i)=>`<div class="cd" style="display:grid;gap:6px"><b>${g[0]}</b><div class="seg" data-seg="ag${i}">${[['h','Hidden'],['r','Results'],['f','First names'],['a','Full']].map(o=>`<button data-v="${o[0]}" class="${o[0]===g[1]?'on':''}">${o[1]}</button>`).join('')}</div><div class="sm mut" id="agd${i}">${ageDesc[g[1]]}</div></div>`).join('')+`<div class="cd" style="display:grid;gap:6px"><div class="lbl">Who sees underage photos</div><div class="seg" data-seg="agp"><button data-v="e">Everyone</button><button class="on" data-v="m">Members only</button></div></div><div class="cd row sp"><span><b>Club code</b><br><span class="sm mut" id="codeShow">EANNA26</span></span><button class="btn g" style="width:auto;padding:6px 12px" data-act="newCode">Change</button></div>`}
+
+/* signup */
+let joinType='member';
+function finishProfile(){
+  const u=$('#pfUser').value.trim()||'member', sup=joinType==='supporter';
+  $('#meName').textContent=u; $('#meAva').textContent=u.replace(/[^a-z]/gi,'').slice(0,2).toUpperCase()||'ME';
+  const role=sup?'Supporter':$('#pfRole').value, staff=/Coach|manager|Committee/.test(role);
+  $('#meBadges').innerHTML=`<span class="badge" style="background:rgba(255,255,255,.15);border-color:rgba(255,255,255,.25);color:#fff">${esc(role)}${staff?' · pending ✓':''}</span><span class="badge" style="background:rgba(255,255,255,.15);border-color:rgba(255,255,255,.25);color:#fff">Member since ${esc($('#pfSince').value)}</span>`;
+  $('#meInfo').innerHTML=[['Team(s)',sup?'Following: '+$('#pfInt').value:$('#pfTeam').value],['Section',$('#pfSec').value],['Favourite',$('#pfFav').value],['Notifications',$('#pfInt').value]].map(r=>`<div class="row sp sm"><span class="mut">${r[0]}</span><b style="text-align:right">${esc(r[1])}</b></div>`).join('')+(staff?'<div class="banner b-warn">Staff roles stay pending until Milo approves them.</div>':'');
+  $('#meParent').hidden=sup||!/Parent/.test(role);
+}
+
+/* segs */
+const segHooks={tp:renderTop,lg:v=>{lg=v;renderLead()},lm:v=>{lm=v;renderLead()},qf:v=>{qf=v;renderQ()}};
+/* toggles */
+const togHooks={kidpts:on=>{$('#kidPrev').innerHTML=on?'Public sees: <b>Ciara O. · 12 pts</b> in U16 Girls v Templeogue':'Public sees: <b>U16 Girls lost 41–54</b>, with no player points.'}};
+
+/* answers */
+const ansKey='eanna-hub-answers';
+let saved={}; try{saved=JSON.parse(localStorage.getItem(ansKey)||'{}')}catch(e){}
+$$('.ans').forEach(t=>{if(saved[t.id])t.value=saved[t.id];t.addEventListener('input',()=>{saved[t.id]=t.value;try{localStorage.setItem(ansKey,JSON.stringify(saved))}catch(e){}countAns()})});
+function countAns(){$('#ansCount').textContent=$$('.ans').filter(t=>t.value.trim()).length}
+
+/* clicks */
+const acts={
+ slide:el=>{si=(si+ +el.dataset.d+slides.length)%slides.length;renderSlide()},
+ toast:el=>toast(el.closest('.ph'),el.dataset.msg),
+ wk:el=>{wk=Math.max(0,Math.min(weeks.length-1,wk+ +el.dataset.d));renderWeek()},
+ openGame:el=>{openGame(el.dataset.g);show($('#p2'),'game')},
+ chkStep:el=>{const r=chk[+el.dataset.i];r[2]=Math.max(0,r[2]+ +el.dataset.d);renderChk()},
+ sendSheet:el=>{const ph=$('#p4');if(chk.reduce((a,r)=>a+r[2],0)!==+$('#usA').value){toast(ph,'Fix the orange number first');return}addQ({type:'sheet',tag:'Score-sheet · new',title:$('#upTeam').value+" v St Vincent's",who:'Coach Mark ✓ · just now',text:'Points match the final score.',ava:'CM'});show(ph,'sent')},
+ tag:el=>{const g=el.parentElement;if(g.id==='npTags')$$('button',g).forEach(b=>b.classList.toggle('on',b===el));else el.classList.toggle('on')},
+ post:el=>{const t=$('#npText').value.trim()||'New post';addQ({type:'post',tag:'Post · new',title:t.slice(0,46)+(t.length>46?'…':''),who:'You · '+$('#npTeam').value+($('[data-t="mo"]').classList.contains('on')?' · members only':''),text:'"'+t+'"',ava:'ME'});show($('#p5'),'posted')},
+ answer:el=>{const b=el.dataset.b,inp=$(b==='a'?'#ansA':'#ansU'),t=inp.value.trim(),ph=$('#p6');if(!t){toast(ph,'Write an answer first');return}
+   const card=document.createElement('div');card.className='cd';card.style.cssText='display:grid;gap:5px;border-style:dashed';
+   card.innerHTML=`<div class="row"><div class="ava o">ME</div><b class="f">you</b><span class="pill p-warn">Waiting for approval</span></div><div>${esc(t)}</div><div class="sm mut">${b==='a'?'Your first posts are checked. After 3 approved posts, yours go live straight away.':'Every under-18 answer is checked before it appears.'}</div>`;
+   $(b==='a'?'#ansListA':'#ansListU').prepend(card);inp.value='';addQ({type:'post',tag:b==='a'?'Answer · adults':'Answer · under-18',title:t.slice(0,46),who:'you · just now',text:'"'+t+'"',ava:'ME'});toast(ph,'Sent to moderators')},
+ reps:el=>{const r=el.closest('.cd').querySelector('.reps');r.hidden=!r.hidden},
+ chat:el=>{const v=$('#msg').value.trim();if(!v)return;const d=document.createElement('div');d.className='bub me';d.innerHTML='<b>You</b>'+esc(v);$('#chat').appendChild(d);$('#msg').value='';$('#chat').scrollTop=9999},
+ pick:el=>{joinType=el.dataset.v;$$('#p8 .choice').forEach(c=>c.classList.toggle('on',c===el));$('#codeFld').hidden=joinType!=='member';$('#codeErr').hidden=true},
+ join:el=>{if(joinType==='member'&&$('#code').value.trim().toUpperCase()!=='EANNA26'){$('#codeErr').hidden=false;$('#code').focus();return}$('#codeErr').hidden=true;$('#profStep').textContent=joinType==='member'?'Member · Step 2 of 3':'Supporter · Step 2 of 2';$('#pfRoleF').hidden=joinType!=='member';show($('#p8'),'prof')},
+ finish:el=>{finishProfile();show($('#p8'),'me')},
+ approveKid:el=>toast($('#p8'),"Approved. hoopsqueen can now use the under-18 board"),
+ ping:el=>{const p=$('#push');const msgs=['Super League Men won 88–79 v Killester','New photos from U16 Girls v Templeogue','This week\'s Top Performers are out','New question of the week is up'];$('#pushTxt').textContent=msgs[Math.floor(Math.random()*msgs.length)];p.classList.add('show');clearTimeout(p._t);p._t=setTimeout(()=>p.classList.remove('show'),3200)},
+ openQ:el=>{cur=+el.dataset.i;const q=queue[cur];$('#msAva').textContent=q.ava;$('#msTitle').textContent=q.title;$('#msWho').textContent=q.who;$('#msText').textContent=q.text;$('#msReason').value=q.type==='report'?'Criticising referees, second time':'';$('#p10 .scrn').classList.add('open')},
+ closeSheet:el=>$('#p10 .scrn').classList.remove('open'),
+ mod:el=>{if(cur==null)return;const q=queue.splice(cur,1)[0];log.unshift(['Milo',el.dataset.a,q.title+($('#msReason').value?' · '+$('#msReason').value:''),'Just now']);cur=null;$('#p10 .scrn').classList.remove('open');renderQ();toast($('#p10'),el.dataset.a+' · saved to the log')},
+ edStep:el=>{const r=ed[+el.dataset.i];r[2]=Math.max(0,r[2]+ +el.dataset.d);renderEd()},
+ saveEdit:el=>{log.unshift(['Milo','Edited stats',"U18 Boys v St Vincent's",'Just now']);toast($('#p10'),'Saved · logged as edited by Milo')},
+ invite:el=>{const who=$('#invWho').value,name=who.split(' · ')[0],ph=$('#p11');if(pending){toast(ph,'Wait for '+pending.n+' to answer first');return}if(mods.some(m=>m.n===name)){toast(ph,name+' is already a moderator');return}
+   pending={n:name,a:name.slice(0,2).toUpperCase(),s:'pend',r:'Invite sent · waiting'};mods.push(pending);renderMods();
+   const ban=$('[data-t="invBan"]').classList.contains('on'),u18=$('[data-t="invU18"]').classList.contains('on');
+   $('#invHead').textContent=`Hi ${name}, Milo invited you to be a moderator`;
+   $('#invPerms').innerHTML=`<div class="row sp"><span>Ban users</span><b>${ban?'Yes':'No'}</b></div><div class="row sp"><span>Under-18 board</span><b>${u18?'Yes':'No'}</b></div>`;
+   show($('#p12'),'inv');toast(ph,'Invite sent to '+name)},
+ accept:el=>{if(!pending)return;pending.s='mod';pending.r='Moderator since today';const n=pending.n;pending=null;renderMods();log.unshift([n,'Accepted moderator invite','Invited by Milo','Just now']);show($('#p12'),'welcome');toast($('#p11'),n+' accepted')},
+ decline:el=>{if(!pending)return;mods=mods.filter(m=>m!==pending);const n=pending.n;pending=null;renderMods();show($('#p12'),'wait');toast($('#p11'),n+' declined')},
+ rmMod:el=>{const m=mods[+el.dataset.i];mods.splice(+el.dataset.i,1);renderMods();log.unshift(['Milo','Removed moderator',m.n,'Just now']);toast($('#p11'),m.n+' is no longer a moderator')},
+ newCode:el=>{const c='EANNA'+Math.floor(27+Math.random()*70);$('#codeShow').textContent=c;toast($('#p11'),'New code: '+c+'. Share it in the team chats.')},
+ copyAns:el=>{const txt=$$('.ans').map(t=>`${t.dataset.q}\n${t.value.trim()||'(no answer)'}`).join('\n\n');$('#modalTxt').value='My answers on the Éanna Hub screens\n\n'+txt;$('#modal').hidden=false;try{navigator.clipboard.writeText($('#modalTxt').value).catch(()=>{})}catch(e){}},
+ closeModal:el=>$('#modal').hidden=true,
+ selAll:el=>{const t=$('#modalTxt');t.focus();t.select()}
+};
+document.addEventListener('click',e=>{
+  const rx=e.target.closest('.rx');
+  if(rx){const on=rx.classList.toggle('on');const c=+rx.dataset.c+(on?1:0);rx.querySelector('b').textContent=c;rx.classList.add('pop');setTimeout(()=>rx.classList.remove('pop'),150);return}
+  const tg=e.target.closest('.tog');
+  if(tg){const on=tg.classList.toggle('on');tg.setAttribute('aria-pressed',on);const h=togHooks[tg.dataset.t];if(h)h(on);return}
+  const sb=e.target.closest('.seg button');
+  if(sb){const seg=sb.parentElement,k=seg.dataset.seg,v=sb.dataset.v;$$('button',seg).forEach(b=>b.classList.toggle('on',b===sb));const scope=seg.closest('.scr')||document;$$(`[data-pane^="${k}:"]`,scope).forEach(p=>p.hidden=p.dataset.pane!==k+':'+v);if(segHooks[k])segHooks[k](v);if(/^ag\d$/.test(k)){const i=+k.slice(2);ageGroups[i][1]=v;$('#agd'+i).textContent=ageDesc[v]}return}
+  const a=e.target.closest('[data-act]');
+  if(a&&acts[a.dataset.act]){acts[a.dataset.act](a);if(!a.dataset.go)return}
+  const g=e.target.closest('[data-go]');
+  if(g){const ph=g.dataset.ph?$('#'+g.dataset.ph):(g.closest('.ph')||$('#'+(g.closest('.chips')||{}).dataset?.for));if(g.dataset.scroll){$('#'+g.dataset.scroll).scrollIntoView({behavior:'smooth'})}show(ph,g.dataset.go)}
+});
+$('#usA').addEventListener('input',()=>{});
+
+/* init */
+homeRes();renderTop('m');renderSlide();renderWeek();openGame('sl10');renderLead();renderQ();renderLog();renderEd();renderMods();renderAges();countAns();finishProfile();
+window.hub={show,toast,acts,segHooks,togHooks,hooks,esc,jsy};
+})();
+</script>
+<script>
+(function(){
+const H=window.hub,esc=H.esc,$=(s,r=document)=>r.querySelector(s);
+
+/* ---- 12 content pack ---- */
+const pack=[
+ {k:'Carousel',t:'Top performers · Week 10',d:'4 slides · 4:5',c:'',on:1},
+ {k:'Result graphic',t:'Super League Men 88–79 Killester',d:'Story and post',c:'',on:1},
+ {k:'Result graphic',t:"Women's BIDL 71–64 Brunell",d:'Story and post',c:'',on:1},
+ {k:'Milestone',t:'Dean Kiernan passes 1,000 points',d:'Post idea',c:'o',on:1},
+ {k:'Best answer',t:'"Early Saturday games in January…"',d:'Quote card · tom_k',c:'k',on:1},
+ {k:'Photos',t:'6 match photos · v Killester',d:'Senior · fine to post',c:'',on:1},
+ {k:'Photos',t:'U12 Girls blitz photos',d:"No consent ticked, so it can't be sent",c:'k',on:0,lock:1}
+];
+function renderPack(){
+  $('#packList').innerHTML=pack.map((p,i)=>`<div class="pk"><button class="ck ${p.on?'on':''}" data-act="packTog" data-i="${i}" aria-label="Include ${esc(p.t)}" ${p.lock?'style="opacity:.35"':''}></button><div class="th ${p.c}"></div><div class="f"><span class="pill ${p.lock?'p-no':'p-pu'}">${p.k}</span><b style="display:block;margin-top:2px">${esc(p.t)}</b><div class="sm mut">${esc(p.d)}</div></div></div>`).join('');
+  const n=pack.filter(p=>p.on).length;$('#packBtn').textContent=n?`Send ${n} item${n>1?'s':''} to Media Calendar`:'Pick something to send';
+}
+H.acts.packTog=el=>{const p=pack[+el.dataset.i];if(p.lock){H.toast($('#p13'),"Photos without consent can't be sent");return}p.on=p.on?0:1;renderPack()};
+H.acts.sendPack=()=>{const items=pack.filter(p=>p.on);if(!items.length)return;$('#mcCount').textContent=items.length;
+  $('#mcBody').innerHTML=`<div class="grp"><img src="assets/crest.png" alt="" style="width:18px;height:18px;object-fit:contain">From Éanna Hub · Week 10 pack</div>`+items.map((p,i)=>`<div class="it" style="animation-delay:${i*.08}s"><div class="th"></div><div class="f" style="flex:1;min-width:0"><span class="chip">${p.k}</span><b>${esc(p.t)}</b><div class="k">${esc(p.d)} · arrived just now</div></div><button class="mb" data-act="mcApprove">Approve</button></div>`).join('');
+  H.toast($('#p13'),"Sent. It's in the Media Calendar's For approval tab")};
+H.acts.mcApprove=el=>{if(el.classList.contains('ok'))return;el.textContent='Scheduled';el.classList.add('ok');const c=$('#mcCount');c.textContent=Math.max(0,+c.textContent-1)};
+renderPack();
+
+/* ---- 13 game day ---- */
+const oppNames={'tralee-warriors':'Tralee Warriors','ucd-marian':'UCD Marian','belfast-star':'Belfast Star','neptune':'Neptune','killester':'Killester'};
+$('#gdOpp').addEventListener('change',e=>{$('#gdCrest').src='assets/'+e.target.value+'.png'});
+H.togHooks.gdTix=on=>{$('#gdTixF').hidden=!on};
+let gdTarget=null;
+function fmtWhen(d,t){t=t||'19:30';const dt=new Date(d+'T'+t);if(isNaN(dt))return 'Date to be confirmed';const day=dt.toLocaleDateString('en-IE',{weekday:'short',day:'numeric',month:'short'});let [h,m]=t.split(':').map(Number);const ap=h>=12?'pm':'am';h=h%12||12;return `${day} · ${h}:${String(m).padStart(2,'0')}${ap}`}
+function tick(){if(!gdTarget||isNaN(gdTarget))return;let s=Math.max(0,(gdTarget-new Date())/1000);const d=Math.floor(s/86400);s-=d*86400;const h=Math.floor(s/3600);s-=h*3600;const m=Math.floor(s/60);const sec=Math.floor(s-m*60);
+  $('#gdCount').innerHTML=[[d,'DAYS'],[h,'HRS'],[m,'MINS'],[sec,'SECS']].map(x=>`<div><span class="n">${String(x[0]).padStart(2,'0')}</span><span>${x[1]}</span></div>`).join('')}
+function gdApply(){
+  const o=$('#gdOpp').value,team=$('#gdTeam').value,home=/^Home/.test($('#gdVenue').value);
+  $('#gdOppImg').src='assets/'+o+'.png';$('#gdOppImg').alt=oppNames[o];
+  $('#gdTitle').textContent=home?`Éanna v ${oppNames[o]}`:`${oppNames[o]} v Éanna`;
+  $('#gdLbl').textContent=(team==='Super League Men'?'Super League':team)+' · '+(home?'Home':'Away');
+  $('#gdWhen').textContent=fmtWhen($('#gdDate').value,$('#gdTime').value);
+  $('#gdWhere').textContent=home?'Éanna home court, Rathfarnham':oppNames[o]+' home venue';
+  const note=$('#gdNote').value.trim();$('#gdNoteRow').hidden=!note;$('#gdNoteTxt').textContent=note;
+  $('#gdZap').hidden=!$('[data-t="gdTix"]').classList.contains('on');
+  let l=$('#gdLink').value.trim();if(l&&!/^https?:/i.test(l))l='https://'+l;if(/^https:\/\/([a-z0-9-]+\.)*clubzap\.com(\/|$)/i.test(l))$('#gdZap').href=l;
+  gdTarget=new Date($('#gdDate').value+'T'+($('#gdTime').value||'19:30'));tick();
+}
+setInterval(tick,1000);
+H.acts.gdPublish=()=>{gdApply();H.show($('#p14'),'page');H.toast($('#p14'),'Published. Followers get a reminder on the day')};
+gdApply();
+
+/* fixtures: see real-data script below */
+
+/* ---- 15 events ---- */
+let left=18,booked=false;
+function campUI(){['#campLeft','#campLeft2'].forEach(s=>$(s).textContent=left);['#campBar','#campBar2'].forEach(s=>$(s).style.width=((60-left)/60*100).toFixed(0)+'%')}
+H.acts.campBook=el=>{booked=!booked;left+=booked?-1:1;campUI();el.textContent=booked?'Booked · tap to cancel':'Book a place';el.classList.toggle('g',booked);H.toast($('#p16'),booked?'Place booked. Pay on ClubZap to confirm':'Booking cancelled')};
+H.acts.shift=el=>{const s=el.querySelector('span');if(el.dataset.done)return;s.textContent=+s.textContent+1;el.dataset.done=1;el.innerHTML="You're on ✓";el.classList.remove('g');H.toast($('#p16'),'Thanks! You\'ll get a reminder the day before')};
+campUI();
+
+/* ---- 16 dashboard ---- */
+const lapToast=m=>{const t=$('.lap .toast');t.textContent=m;t.classList.add('show');clearTimeout(t._t);t._t=setTimeout(()=>t.classList.remove('show'),2600)};
+const season=[134,152,168,182,195,201,214,229,238,268];
+const ups=[['Super League Men',1,1],["Women's BIDL",1,1],["Men's D2",1,1],['Ladies D1',1,1],['U18 Boys',1,1],['U16 Girls',1,1],['U14 Boys',1,1],['U12 Mixed',1,0]];
+function renderKpis(){const g=ups.reduce((a,r)=>a+r[1],0),s=ups.reduce((a,r)=>a+r[2],0);
+  $('#kpis').innerHTML=[['Members','412','<span class="up">▲ 18 this month</span>'],['Active this week','268','<span class="up">▲ 12% on last week</span>'],['Notifications on','61%','<span class="mut">of members</span>'],['Score-sheets in',`${s} of ${g}`,s<g?`<span class="dn">${g-s} missing</span>`:'<span class="up">All in</span>']].map(k=>`<div class="kpi"><span class="lbl">${k[0]}</span><span class="n">${k[1]}</span><span class="d">${k[2]}</span></div>`).join('')}
+function renderChart(mode){
+  const vals=mode==='s'?season:season.slice(-8),labs=vals.map((_,i)=>'W'+(season.length-vals.length+i+1));
+  const W=360,Hh=170,l=30,r=8,t=14,b=22,max=300,cw=(W-l-r)/vals.length,bw=cw*.62,y=v=>t+(Hh-t-b)*(1-v/max);
+  let s=`<svg viewBox="0 0 ${W} ${Hh}" role="img" aria-label="Weekly active members"><defs><linearGradient id="bg1" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#7656A3"/><stop offset="1" stop-color="#2B2763"/></linearGradient><linearGradient id="bg2" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f29a6b"/><stop offset="1" stop-color="#B65016"/></linearGradient></defs>`;
+  [0,100,200,300].forEach(v=>{s+=`<line x1="${l}" x2="${W-r}" y1="${y(v)}" y2="${y(v)}" stroke="#e8e5f3" stroke-width="1"/><text x="${l-6}" y="${y(v)+3}" text-anchor="end" font-size="9" fill="#6c6a8a">${v}</text>`});
+  vals.forEach((v,i)=>{const x=l+i*cw+(cw-bw)/2,last=i===vals.length-1;s+=`<rect x="${x.toFixed(1)}" y="${y(v).toFixed(1)}" width="${bw.toFixed(1)}" height="${(y(0)-y(v)).toFixed(1)}" rx="3" fill="url(#${last?'bg2':'bg1'})"/><text x="${(x+bw/2).toFixed(1)}" y="${Hh-7}" text-anchor="middle" font-size="9" fill="#6c6a8a">${labs[i]}</text>`;if(last)s+=`<text x="${(x+bw/2).toFixed(1)}" y="${(y(v)-5).toFixed(1)}" text-anchor="middle" font-size="11" font-weight="700" fill="#B65016">${v}</text>`});
+  $('#chart').innerHTML=s+'</svg>';$('#chLbl').textContent=mode==='s'?'Season so far':'Last 8 weeks';
+}
+function renderFol(){const f=[['Super League Men',1840],["Women's BIDL",620],['U16 Girls',210],['U14 Boys',188],['U18 Boys',176],['U12 Boys',142]],m=f[0][1];
+  $('#fol').innerHTML=f.map(x=>`<div class="hb"><span>${esc(x[0])}</span><div class="bar"><i style="width:${(x[1]/m*100).toFixed(0)}%"></i></div><b>${x[1].toLocaleString('en-IE')}</b></div>`).join('')}
+function renderUps(){$('#upT').innerHTML=ups.map((u,i)=>`<tr><td>${esc(u[0])}</td><td>${u[1]}</td><td>${u[2]}</td><td style="text-align:right">${u[2]>=u[1]?'<span class="pill p-ok">In</span>':`<button class="pill p-warn" data-act="remind" data-i="${i}">Remind</button>`}</td></tr>`).join('')}
+H.acts.remind=el=>lapToast('Reminder sent to the '+ups[+el.dataset.i][0]+' manager');
+H.acts.grant=()=>lapToast('Summary ready: 412 members, 268 active weekly, 8 teams reporting');
+H.segHooks.dr=v=>renderChart(v);
+renderKpis();renderChart('8');renderFol();renderUps();
+})();
+</script>
+<script>
+(function(){
+const H=window.hub,esc=H.esc,$=(s,r=document)=>r.querySelector(s),$$=(s,r=document)=>[...r.querySelectorAll(s)];
+const TODAY='2026-11-06';
+let G=[],T=[],TB={};
+const crestMap=[['Limerick Celtics','limerick-celtics'],['Limerick Eagles','limerick-sport-eagles'],['Sligo All','sligo-all-stars'],['UCC Demons','ucc-demons'],['Killester','killester'],['St. Vincent','st-vincents'],['St Vincent','st-vincents'],['UCD Marian','ucd-marian'],['Neptune','neptune'],['Tralee','tralee-warriors'],['Belfast Star','belfast-star'],['Brunell','brunell'],['Ballincollig','ballincollig']];
+const oname=o=>o.replace(/\s+BC\b/,'').trim();
+const ini=o=>oname(o).replace(/[^A-Za-zÀ-ÿ ]/g,'').split(' ').filter(Boolean).map(w=>w[0]).join('').slice(0,2).toUpperCase()||'?';
+const ocrest=(o,big)=>{const m=crestMap.find(c=>o.includes(c[0]));const st=big?' style="width:52px;height:52px"':'';return m?`<img class="cr" src="assets/${m[1]}.png" alt=""${st}>`:`<span class="oi"${big?' style="width:52px;height:52px;font-size:16px"':''}>${esc(ini(o))}</span>`};
+const isSen=g=>/^(Men's|Women's)/.test(g.team||g.name);
+const isW=x=>x.b==='DLBB'||x.sex==='w';
+const dfmt=(d,o)=>new Date(d+'T12:00').toLocaleDateString('en-IE',o||{weekday:'short',day:'numeric',month:'short'});
+const tfmt=t=>{if(!t)return'TBC';let [h,m]=t.split(':').map(Number);const ap=h>=12?'pm':'am';h=h%12||12;return h+(m?':'+String(m).padStart(2,'0'):'')+ap};
+const link=g=>g.b==='BI'?`https://ireland.basketball/${g.page}`:g.b==='ADD'?'':g.id?`https://bi.comortais.com/match.aspx?id=${g.id}&orgId=${g.b==='DMBB'?1006:1015}`:'';
+const boardName={DMBB:"Dublin Men's Basketball Board",DLBB:"Dublin Ladies' Basketball Board",BI:'Basketball Ireland',ADD:'Added on the hub'};
+const siteName={DMBB:'DMBB',DLBB:'DLBB',BI:'Basketball Ireland'};
+const src=g=>`<span class="src ${g.b==='DLBB'?'dl':''}">${g.b}</span>`;
+const ord=n=>n+(['th','st','nd','rd'][(n%100-20)%10]||['th','st','nd','rd'][n%100]||'th');
+function gRow(g){
+  const res=('us' in g)?`<div class="sc ${g.us>g.th?'w':'l'}">${g.us}–${g.th}<small>${g.us>g.th?'WIN':'LOSS'}</small></div>`:(g.d&&g.d<TODAY?'<span class="pill p-nv">No score</span>':`<div class="sc" style="font-size:13px">${g.d?tfmt(g.tm):'TBC'}<small>${g.h?'HOME':'AWAY'}</small></div>`);
+  return `<button class="mt" data-act="rGame" data-i="${g._i}"><img class="cr" src="assets/crest.png" alt=""><span class="vs">VS</span>${ocrest(g.o)}<div class="who"><b>${esc(g.team)}</b><span>${esc(oname(g.o))}${g.k==='Cup'?' · '+esc(g.c):''}</span></div>${res}</button>`;
+}
+const card=(lbl,rows)=>`<div class="cd"><div class="lbl">${lbl}</div>${rows}</div>`;
+const groupOf=x=>isSen(x)?(isW(x)?'Senior women':'Senior men'):(isW(x)?'Girls':'Boys');
+const GROUPS=['Senior men','Senior women','Boys','Girls'];
+
+/* game detail, injected into whichever phone asked */
+function detail(ph,g){
+  let scr=$('.scr[data-s="rgame"]',ph);
+  const prev=$('.scr.on',ph).dataset.s;
+  if(!scr){scr=document.createElement('div');scr.className='scr';scr.dataset.s='rgame';scr.innerHTML=`<div class="top"><div class="sb"><span>9:41</span><span>5G ▮▮▮</span></div><div class="ah"><button class="back" data-go="${prev}" aria-label="Back">‹</button><div class="t rgt">Game</div></div><div class="grain w"></div></div><div class="bd rgb"></div>`;ph.querySelector('.scrn').insertBefore(scr,$('.toast',ph))}
+  if(prev!=='rgame')$('.back',scr).dataset.go=prev;
+  const played='us' in g, past=g.d&&g.d<TODAY;
+  $('.rgt',scr).innerHTML=`${esc(g.team)}<small>${g.k==='Cup'?esc(g.c):'League'} · ${g.b}</small>`;
+  $('.rgb',scr).innerHTML=`<div class="cd"><div class="row sp"><div style="text-align:center;flex:1"><img src="assets/crest.png" alt="" style="width:52px;height:52px;object-fit:contain"><div class="sm" style="font-weight:700">Éanna</div>${played?`<div class="n" style="font-size:30px;color:${g.us>g.th?'var(--ok)':'var(--no)'}">${g.us}</div>`:''}</div><div style="text-align:center"><span class="vs" style="font-size:22px">VS</span><div>${played?`<span class="pill ${g.us>g.th?'p-ok':'p-no'}">FINAL · ${g.us>g.th?'WIN':'LOSS'}</span>`:past?'<span class="pill p-nv">No score yet</span>':'<span class="pill p-pu">UPCOMING</span>'}</div></div><div style="text-align:center;flex:1"><div style="display:grid;place-items:center">${ocrest(g.o,1)}</div><div class="sm" style="font-weight:700">${esc(oname(g.o))}</div>${played?`<div class="n" style="font-size:30px">${g.th}</div>`:''}</div></div></div>
+  <div class="cd"><div class="info"><span class="ic">📅</span><div class="f"><b>${g.d?dfmt(g.d,{weekday:'long',day:'numeric',month:'long'})+' · '+tfmt(g.tm):'Date to be confirmed'}</b><div class="sm mut">${g.h?'Home game':'Away game'}</div></div></div><div class="info"><span class="ic">📍</span><div class="f"><b>${esc(g.v||'Venue to be confirmed')}</b></div></div><div class="info"><span class="ic">🏆</span><div class="f"><b>${esc(g.c)}</b><div class="sm mut">${boardName[g.b]} · ${g.k}</div></div></div></div>
+  ${played?'<div class="banner b-pu">Player points come from the score-sheet upload. The board\'s site only has the team score.</div>':'<div class="btns"><button class="btn g" data-act="toast" data-msg="Added to your calendar">Add to calendar</button><button class="btn g" data-act="toast" data-msg="You\'ll get a reminder 2 hours before">Remind me</button></div>'}
+  ${link(g)?`<a class="zap" style="background:var(--grad)" href="${link(g)}" target="_blank" rel="noopener">Open on ${siteName[g.b]} site</a>`:(g.b==='ADD'?`<div class="banner b-warn">${g.shared?'Added by you. Shared with the team once a moderator approves it.':'Added by you. Only you can see it.'}</div>`:'')}`;
+  H.show(ph,'rgame');
+}
+H.acts.rGame=el=>detail(el.closest('.ph'),G[+el.dataset.i]);
+
+/* results by week (section 2) */
+const mon=d=>{const x=new Date(d+'T12:00');x.setDate(x.getDate()-((x.getDay()+6)%7));return x.toISOString().slice(0,10)};
+let weeks=[],wi=0;
+function renderRW(){
+  const w=weeks[wi],end=new Date(w+'T12:00');end.setDate(end.getDate()+6);const e=end.toISOString().slice(0,10);
+  $('#wkLabel').textContent=`${dfmt(w,{day:'numeric',month:'short'})} – ${dfmt(e,{day:'numeric',month:'short'})}`;
+  const gs=G.filter(g=>g.d&&g.d>=w&&g.d<=e);
+  const pl=gs.filter(g=>'us' in g),W=pl.filter(g=>g.us>g.th).length;
+  let h=`<div class="cd row sp" style="padding:8px 10px"><span class="lbl">${gs.length} games</span><span><span class="pill p-ok">${W} won</span> <span class="pill p-no">${pl.length-W} lost</span></span></div>`;
+  GROUPS.forEach(gr=>{const x=gs.filter(g=>groupOf(g)===gr);if(x.length)h+=card(gr,x.map(gRow).join(''))});
+  $('#wkList').innerHTML=gs.length?h:'<div class="empty"><b>No games this week</b></div>';
+}
+H.acts.wk=el=>{wi=Math.max(0,Math.min(weeks.length-1,wi+ +el.dataset.d));renderRW()};
+
+/* club teams (section 3) */
+let ctf='all';
+const ageKey=n=>{const m=n.match(/U(\d+)/);return m?+m[1]:0};
+function renderCT(){
+  const L=T.filter(t=>ctf==='all'||(ctf==='w')===isW(t));
+  let h='';
+  GROUPS.forEach(gr=>{const x=L.filter(t=>groupOf(t)===gr).sort((a,b)=>ageKey(a.name)-ageKey(b.name)||a.name.localeCompare(b.name));
+    if(!x.length)return;
+    h+=card(gr+` · ${x.length}`,x.map(t=>`<button class="row" style="width:100%;padding:7px 0;border-bottom:1px solid var(--a-line);text-align:left" data-act="rTeam" data-n="${esc(t.name)}"><span class="ball" style="width:26px;height:26px;font-size:8.5px">${esc((t.name.match(/U\d+/)||[isW(t)?'W':'M'])[0])}</span><div class="f"><b style="font-size:12px">${esc(t.name)}</b><div class="sm mut">${t.b} · ${esc(t.comp)}</div></div>${t.n?`<span class="n" style="font-size:14px">${t.w}–${t.l}</span>${t.pos?`<span class="pill ${t.pos<=2?'p-or':'p-nv'}">${ord(t.pos)}</span>`:''}`:'<span class="pill p-nv">No scores</span>'}<span class="chev">›</span></button>`).join(''))});
+  $('#ctList').innerHTML=h;
+}
+H.segHooks.ct=v=>{ctf=v;renderCT()};
+H.acts.rTeam=el=>{
+  const t=T.find(x=>x.name===el.dataset.n),ph=$('#p3');
+  const mine=G.filter(g=>g.team===t.name||(g.k==='Cup'&&g.t===t.name.split(' · ')[0])&&false);
+  const all=G.filter(g=>g.team===t.name);
+  const played=all.filter(g=>'us' in g).sort((a,b)=>(b.d||'').localeCompare(a.d||''));
+  const next=all.filter(g=>g.d&&g.d>=TODAY&&!('us' in g)).sort((a,b)=>a.d.localeCompare(b.d));
+  $('#rtName').textContent=t.name;$('#rtComp').textContent=t.b+' · '+t.comp;
+  const tb=TB[t.cid]||[];
+  let h=`<div class="stat3"><div><span class="n">${t.n?t.w+'–'+t.l:'–'}</span><span>Record</span></div><div><span class="n">${t.pos?ord(t.pos):'–'}</span><span>of ${t.of||'–'}</span></div><div><span class="n">${t.n?(t.pf/t.n).toFixed(0)+'–'+(t.pa/t.n).toFixed(0):'–'}</span><span>Avg score</span></div></div>`;
+  if(played.length)h+=`<div class="cd row sp"><span class="lbl">Form</span><span class="form">${played.slice(0,5).reverse().map(g=>`<span class="${g.us>g.th?'W':'L'}">${g.us>g.th?'W':'L'}</span>`).join('')}</span></div>`;
+  if(!t.n&&!played.length&&/U11/.test(t.name))h+='<div class="banner b-pu">U11 is a non-scoring league, so there are fixtures but no results or table.</div>';
+  if(next.length)h+=card('Next games',next.slice(0,4).map(gRow).join(''));
+  if(played.length)h+=card('Results',played.map(gRow).join(''));
+  if(tb.length)h+=`<div class="cd"><div class="lbl" style="margin-bottom:3px">League table</div><table class="bx"><thead><tr><th>#</th><th>Team</th><th class="r">W</th><th class="r">L</th><th class="r">+/−</th></tr></thead><tbody>${tb.map((r,i)=>`<tr style="${/^[EÉ]anna/.test(r[0])?'background:#efe9fb;font-weight:700':''}"><td>${i+1}</td><td>${esc(oname(r[0]))}</td><td class="r">${r[1]}</td><td class="r">${r[2]}</td><td class="r">${r[3]-r[4]>0?'+':''}${r[3]-r[4]}</td></tr>`).join('')}</tbody></table><div class="sm mut" style="margin-top:4px">Worked out from results on the ${t.b} site. The official table may differ slightly.</div></div>`;
+  $('#rtBody').innerHTML=h;H.show(ph,'rteam');
+};
+
+/* fixtures (section 14) */
+let fxf='all',fxt='',ym='2026-11',sel=TODAY;
+const fol={DMBB:1,DLBB:1},natOff=new Set();
+const pass=g=>(g.b==='ADD'||((g.b==='BI'?!natOff.has(g.c):fol[g.b])))&&(!fxt||g.team===fxt)&&(fxf==='all'||(fxf==='m'&&!isW(g))||(fxf==='w'&&isW(g))||(fxf==='sen'&&isSen(g)));
+function renderCal(){
+  const [y,m]=ym.split('-').map(Number),first=new Date(y,m-1,1,12),days=new Date(y,m,0).getDate(),off=(first.getDay()+6)%7,prevDays=new Date(y,m-1,0).getDate();
+  $('#monLabel').textContent=first.toLocaleDateString('en-IE',{month:'long',year:'numeric'});
+  let h='MTWTFSS'.split('').map(d=>`<span class="dh">${d}</span>`).join('');
+  for(let i=0;i<off;i++)h+=`<button class="x" disabled>${prevDays-off+1+i}</button>`;
+  for(let d=1;d<=days;d++){const ds=`${ym}-${String(d).padStart(2,'0')}`;const n=G.filter(g=>g.d===ds&&pass(g)).length;
+    h+=`<button class="${ds===sel?'sel':''} ${ds===TODAY?'today':''}" data-act="calDay" data-d="${ds}" aria-label="${ds}, ${n} games">${d}${n?`<span class="dots">${'<i></i>'.repeat(Math.min(n,3))}</span>`:''}</button>`}
+  $('#calGrid').innerHTML=h;
+  const day=G.filter(g=>g.d===sel&&pass(g)).sort((a,b)=>(a.tm||'').localeCompare(b.tm||''));
+  $('#dayList').innerHTML=`<div class="dayh">${dfmt(sel)} · ${day.length} game${day.length===1?'':'s'}</div>`+(day.length?card('',day.map(gRow).join('')).replace('<div class="lbl"></div>',''):'<div class="empty" style="padding:8px"><b>No games</b>Pick a day with orange dots.</div>');
+  $('#monSub').textContent=fxt||'All Éanna teams';
+}
+function renderFxList(){
+  const end=new Date(TODAY+'T12:00');end.setDate(end.getDate()+13);const e=end.toISOString().slice(0,10);
+  const up=G.filter(g=>g.d&&g.d>=TODAY&&g.d<=e&&pass(g)).sort((a,b)=>(a.d+a.tm).localeCompare(b.d+b.tm));
+  let h='',last='',buf='';
+  const flush=()=>{if(buf)h+=card('',buf).replace('<div class="lbl"></div>','');buf=''};
+  up.forEach(g=>{if(g.d!==last){flush();h+=`<div class="dayh">${dfmt(g.d)}</div>`;last=g.d}buf+=gRow(g)});flush();
+  const und=G.filter(g=>!g.d&&pass(g)).length;
+  $('#fxList').innerHTML=(h||'<div class="empty"><b>No games in the next 14 days</b></div>')+(und?`<div class="banner b-pu">${und} cup game${und>1?'s':''} don't have a date yet. They'll appear once the board sets them.</div>`:'');
+}
+H.acts.calDay=el=>{sel=el.dataset.d;renderCal()};
+H.acts.mon=el=>{let [y,m]=ym.split('-').map(Number);m+= +el.dataset.d;if(m<1){m=12;y--}if(m>12){m=1;y++};const k=`${y}-${String(m).padStart(2,'0')}`;if(k<'2026-09'||k>'2027-04')return;ym=k;const first=G.filter(g=>g.d&&g.d.startsWith(ym)&&pass(g)).map(g=>g.d).sort()[0];sel=first||`${ym}-01`;renderCal()};
+H.segHooks.fx=v=>{fxf=v;renderCal();renderFxList()};
+$('#fxTeam').addEventListener('change',e=>{fxt=e.target.value;renderCal();renderFxList()});
+
+let agHA=1;H.segHooks.agHA=v=>{agHA=+v};
+H.acts.addGame=()=>{const d=$('#agDate').value,team=$('#agTeam').value,o=$('#agOpp').value.trim()||$('#agType').value;if(!d){H.toast($('#p15'),'Pick a date first');return}
+  const shared=$('[data-t="agShare"]').classList.contains('on');
+  const g={b:'ADD',k:$('#agType').value,c:$('#agType').value,t:team,team,o,h:agHA,d,tm:$('#agTime').value||null,v:$('#agVenue').value.trim(),shared};g._i=G.length;G.push(g);
+  ym=d.slice(0,7);sel=d;renderCal();renderFxList();H.show($('#p15'),'month');H.toast($('#p15'),shared?'Added. A moderator will check it before the team sees it':'Added to your schedule')};
+function init(D){
+  G=D.games;T=D.teams;TB=D.tables;G.forEach((g,i)=>g._i=i);
+  // home results: latest 3
+  const K=x=>(x.d||'')+(x.tm||'');
+  const pl=G.filter(g=>'us' in g).sort((a,b)=>K(b).localeCompare(K(a)));
+  $('#homeRes').innerHTML=pl.slice(0,3).map(gRow).join('');
+  // weeks
+  const s=new Set(G.filter(g=>g.d&&g.d<=TODAY).map(g=>mon(g.d)));weeks=[...s].sort();wi=weeks.indexOf(mon(TODAY));if(wi<0)wi=weeks.length-1;renderRW();
+  renderCT();$('#ctSub').textContent=`${T.length} league teams · DMBB, DLBB & BI`;
+  const names=[...new Set(G.map(g=>g.team))].sort((a,b)=>groupOf({team:a,b:G.find(g=>g.team===a).b}).localeCompare(groupOf({team:b,b:G.find(g=>g.team===b).b}))||ageKey(a)-ageKey(b)||a.localeCompare(b));
+  $('#fxTeam').innerHTML='<option value="">All Éanna teams</option>'+names.map(n=>`<option>${esc(n)}</option>`).join('');
+  $('#agTeam').innerHTML=names.map(n=>`<option>${esc(n)}</option>`).join('');
+  const natPages={"Domino's Men's Super League":["Men's Super League"],"Men's Super League National Cup":["Men's Super League National Cup"],"NICC Men's National Cup":["NICC Men's National Cup"],"U20 Men's National Cup":["U20 Men's National Cup"],"U20 Women's National Cup":["U20 Women's National Cup"]};
+  $('#natList').innerHTML=D.national.map((n,i)=>{H.togHooks['nat-'+i]=on=>{(natPages[n.c]||[]).forEach(c=>on?natOff.delete(c):natOff.add(c));if(!natPages[n.c])H.toast($('#p15'),on?`Following ${n.c}. Its games will appear once loaded.`:`Stopped following ${n.c}`);renderCal();renderFxList()};return `<div class="trow"><span><b>${esc(n.c)}</b><br><span class="sm mut">${esc(n.s)}</span></span><button class="tog ${n.on?'on':''}" data-t="nat-${i}" aria-label="${esc(n.c)}"></button></div>`}).join('');
+  ['DMBB','DLBB'].forEach(b=>H.togHooks['fol-'+b]=on=>{fol[b]=on?1:0;renderCal();renderFxList()});
+  renderCal();renderFxList();
+  $('#realNote').textContent=`${G.length} Éanna league and cup games for ${T.length} teams, from the DMBB, DLBB and Basketball Ireland websites on 6 November 2026, including the Super League and National Cups. ${pl.length} have results so far.`;
+}
+fetch('data/eanna-fixtures.json').then(r=>{if(!r.ok)throw 0;return r.json()}).then(init).catch(err=>{console.error('fixtures',err);['#ctList','#dayList','#fxList'].forEach(s=>{const e=$(s);if(e)e.innerHTML='<div class="empty"><b>Couldn\'t load the fixtures</b>Refresh the page to try again.</div>'})});
+})();
+</script>
