@@ -399,7 +399,7 @@ function shrinkImage(file, max, q){
 
 /* ---------- admin ---------- */
 V.admin = async (sub, arg) => {
-  setHead('Admin', AUTH.admin ? (S.mode==='demo' ? 'Demo admin' : AUTH.email) : 'Moderators only', '#more');
+  setHead('Admin', AUTH.admin ? (S.mode==='demo' ? 'Demo admin' : (AUTH.name || AUTH.email)) : 'Moderators only', '#more');
   if(!AUTH.admin){
     $('#view').innerHTML = `<div class="cd" style="text-align:center;padding:26px 16px"><img src="assets/crest.png" alt="" style="width:80px"><div class="h2">Moderators</div>
       <p class="mut">${S.mode==='demo' ? 'Demo mode: anyone can open the admin area to try it. Nothing leaves this browser.' : AUTH.email ? `You're signed in as ${esc(AUTH.email)}, but that account isn't a moderator. Ask Milo to add you.` : 'Sign in with the Google account Milo added as a moderator.'}</p>
@@ -447,7 +447,7 @@ V.admin = async (sub, arg) => {
     $('#eOk').onclick = async () => {
       const lines = read(); const pv = $('#eP').value; const [pno, ...pn] = pv.split('|');
       const potg = pv ? { no: pno, name: (lines.find(l => String(l.no) === String(pno)) || {}).name || pn.join('|'), note: $('#eN').value.trim() } : null;
-      const patch = { potg, lines, us: parseInt($('#eUs').value,10)||0, th: parseInt($('#eTh').value,10)||0, status:'approved', checkedBy: AUTH.email || 'admin', checked: new Date().toISOString() };
+      const patch = { potg, lines, us: parseInt($('#eUs').value,10)||0, th: parseInt($('#eTh').value,10)||0, status:'approved', checkedBy: AUTH.name || AUTH.email || 'admin', checked: new Date().toISOString() };
       await S.updateSubmission(s.id, patch);
       // remember names in the roster (keeps hidden flags)
       const r = await S.getRoster(s.team); const ps = r.players || [];
@@ -489,11 +489,11 @@ V.admin = async (sub, arg) => {
     $$('form[data-fk]').forEach(f => {
       f.onsubmit = async e => { e.preventDefault(); const k = f.dataset.fk; const g = G.find(x => gameKey(x) === k); const v = Object.fromEntries(new FormData(f));
         const base = g.b === 'ADD' ? (EDITS.find(x => x.key === k) || {}) : {};
-        await S.putFixtureEdit(k, { ...base, d: v.d || null, tm: v.tm || null, v: v.v, status: v.status, note: v.note, by: AUTH.email || 'moderator' }); toast('Fixture saved'); setTimeout(()=>location.reload(), 500) };
+        await S.putFixtureEdit(k, { ...base, d: v.d || null, tm: v.tm || null, v: v.v, status: v.status, note: v.note, by: AUTH.name || AUTH.email || 'moderator' }); toast('Fixture saved'); setTimeout(()=>location.reload(), 500) };
       const u = $('[data-undo]', f); if(u) u.onclick = async () => { await S.deleteFixtureEdit(f.dataset.fk); toast('Done'); setTimeout(()=>location.reload(), 500) };
     });
     $('#xAdd').onsubmit = async e => { e.preventDefault(); const v = Object.fromEntries(new FormData(e.target)); const src = G.find(g => g.team === cur) || {};
-      await S.putFixtureEdit('ADD:' + S.uid(), { added:true, team:cur, sex: sexOf(src), k:v.type, c:v.type, o:v.o, h:+v.h, d:v.d, tm:v.tm||null, v:v.v, status:'', note:'', by: AUTH.email || 'moderator' });
+      await S.putFixtureEdit('ADD:' + S.uid(), { added:true, team:cur, sex: sexOf(src), k:v.type, c:v.type, o:v.o, h:+v.h, d:v.d, tm:v.tm||null, v:v.v, status:'', note:'', by: AUTH.name || AUTH.email || 'moderator' });
       toast('Game added'); setTimeout(()=>location.reload(), 500) };
     return;
   }
@@ -501,7 +501,7 @@ V.admin = async (sub, arg) => {
     const admins = await S.listAdmins();
     const permRow = (p, on) => `<div class="trow sm"><span>${p[1]}</span><button type="button" class="tog ${on?'on':''}" data-p="${p[0]}" aria-label="${esc(p[1])}"></button></div>`;
     $('#view').innerHTML = nav + `<div class="banner b-pu">Only owners can add or remove moderators. You choose what each moderator can do, and you can change it at any time. Owners (you and your backup admin) can do everything.</div>` +
-      admins.map(a => `<form class="cd" data-em="${esc(a.email)}" style="display:grid;gap:4px"><div class="row sp"><b>${esc(a.name || a.email)}</b><select name="role" class="pill p-nv" style="border:0"><option value="moderator" ${a.role!=='owner'?'selected':''}>Moderator</option><option value="owner" ${a.role==='owner'?'selected':''}>Owner</option></select></div><div class="sm mut">${esc(a.email)}</div>
+      admins.map(a => `<form class="cd" data-em="${esc(a.email)}" style="display:grid;gap:4px"><div class="row sp"><label class="fld f" style="padding:4px 10px"><span>Name</span><input name="name" value="${esc(a.name || (a.email===AUTH.email ? AUTH.name : '') || '')}" placeholder="Their name"></label><select name="role" class="pill p-nv" style="border:0"><option value="moderator" ${a.role!=='owner'?'selected':''}>Moderator</option><option value="owner" ${a.role==='owner'?'selected':''}>Owner</option></select></div><div class="sm mut">${esc(a.email)}</div>
         <div ${a.role==='owner'?'hidden':''} data-perms>${PERMS.map(p => permRow(p, (a.perms||{})[p[0]])).join('')}</div>
         <div class="btns"><button class="btn sm" type="submit">Save</button>${a.email===AUTH.email ? '<span class="sm mut" style="align-self:center">This is you</span>' : '<button class="btn r sm" type="button" data-rm>Remove</button>'}</div></form>`).join('') +
       `<form class="cd" id="mAdd" style="display:grid;gap:6px"><div class="lbl">Invite a moderator</div>
@@ -513,7 +513,7 @@ V.admin = async (sub, arg) => {
     const wire = f => { f.onclick = e => { const t = e.target.closest('.tog'); if(t) t.classList.toggle('on') }; const r = $('[name=role]', f); r.onchange = () => { $('[data-perms]', f).hidden = r.value === 'owner' } };
     const read = f => { const perms = {}; $$('[data-p]', f).forEach(t => perms[t.dataset.p] = t.classList.contains('on')); return { role: $('[name=role]', f).value, perms } };
     $$('form[data-em]').forEach(f => { wire(f);
-      f.onsubmit = async e => { e.preventDefault(); const a = admins.find(x => x.email === f.dataset.em); await S.putAdmin(f.dataset.em, { name: a.name || '', added: a.added || '', ...read(f) }); toast('Saved') };
+      f.onsubmit = async e => { e.preventDefault(); const a = admins.find(x => x.email === f.dataset.em); await S.putAdmin(f.dataset.em, { name: $('[name=name]', f).value.trim(), added: a.added || '', ...read(f) }); if(f.dataset.em === AUTH.email){ AUTH.name = $('[name=name]', f).value.trim() } toast('Saved'); V.admin('mods') };
       const rm = $('[data-rm]', f); if(rm) rm.onclick = async () => { if(!rm.dataset.sure){ rm.dataset.sure = 1; rm.textContent = 'Tap again'; return } await S.deleteAdmin(f.dataset.em); toast('Removed'); V.admin('mods') } });
     const add = $('#mAdd'); wire(add);
     add.onsubmit = async e => { e.preventDefault(); const em = $('[name=email]', add).value.trim().toLowerCase(); await S.putAdmin(em, { name: $('[name=name]', add).value.trim(), ...read(add), added: new Date().toISOString() }); toast('Moderator added'); V.admin('mods') };

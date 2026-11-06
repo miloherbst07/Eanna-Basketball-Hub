@@ -58,7 +58,7 @@ function demoStore(){
     async putAdmin(email, v){ db.admins[email] = v; persist() },
     async deleteAdmin(email){ delete db.admins[email]; persist() },
     onAuth(fn){ listeners.push(fn); fn({ ...me }) },
-    async signIn(){ me = { admin:true, email:'demo-admin', role:'owner', perms: ALL }; emit() },
+    async signIn(){ me = { admin:true, email:'demo-admin', name:'You (demo)', role:'owner', perms: ALL }; emit() },
     async signOut(){ me = { admin:false, email:null, role:null, perms:{} }; emit() },
     isSeeded(){ return db.seeded },
     markSeeded(){ db.seeded = true; persist() },
@@ -83,8 +83,8 @@ async function firebaseStore(conf){
   let me = { admin:false, email:null, role:null, perms:{} }; const listeners = [];
   A.getRedirectResult(auth).catch(e => console.warn("sign-in", e.code));
   A.onAuthStateChanged(auth, async (u) => {
-    me = { admin:false, email: u ? u.email : null, role:null, perms:{} };
-    if(u){ try{ const s = await F.getDoc(d('admins', u.email)); if(s.exists()){ const v = s.data(); me.admin = true; me.role = v.role || 'moderator'; me.perms = me.role === 'owner' ? ALL : (v.perms || {}) } }catch(e){} }
+    me = { admin:false, email: u ? u.email : null, name: u ? (u.displayName || '') : '', role:null, perms:{} };
+    if(u){ try{ const s = await F.getDoc(d('admins', u.email)); if(s.exists()){ const v = s.data(); me.admin = true; if(v.name) me.name = v.name; me.role = v.role || 'moderator'; me.perms = me.role === 'owner' ? ALL : (v.perms || {}) } }catch(e){} }
     listeners.forEach(f => f({ ...me }));
   });
   const safeKey = k => encodeURIComponent(k).replace(/\./g,'%2E');
