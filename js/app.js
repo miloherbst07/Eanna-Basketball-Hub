@@ -13,10 +13,12 @@ let S = null;            // store
 let DATA = null;         // fixtures json
 let G = [], T = [], TB = {};
 let SETTINGS = null, BOXES = {};
-let AUTH = { admin:false, email:null, role:null, perms:{} };
+let AUTH = { admin:false, member:false, owner:false, email:null, perms:{}, teams:[] };
 let EDITS = [];
-const can = p => AUTH.admin && (AUTH.role === 'owner' || !!(AUTH.perms||{})[p]);
-const PERMS = [['sheets','Approve & edit score-sheets'],['fixtures','Edit fixtures & add games'],['rosters','Rosters & hide players'],['underage','Underage settings'],['carousel','Make carousels'],['settings','Club code & backups']];
+// can(task) = has the task at all; can(task, team) = may do it for that team
+const can = (t, team) => { if(AUTH.owner) return true; const v = (AUTH.perms||{})[t]; if(!v) return false; if(v === 'all' || team === undefined) return true; return (AUTH.teams||[]).includes(team) };
+const myTeams = t => (AUTH.owner || (AUTH.perms||{})[t] === 'all') ? null : (AUTH.teams || []);   // null = every team
+const allTeams = () => [...new Set(G.map(g => g.team))].sort((a,b)=> GROUPS.indexOf(groupOf(G.find(g=>g.team===a))) - GROUPS.indexOf(groupOf(G.find(g=>g.team===b))) || (ageOf(a)||0)-(ageOf(b)||0) || a.localeCompare(b));
 
 /* ---------- helpers ---------- */
 const crestMap = [['Limerick Celtics','limerick-celtics'],['Limerick Eagles','limerick-sport-eagles'],['Sligo All','sligo-all-stars'],['UCC Demons','ucc-demons'],['Killester','killester'],['St. Vincent','st-vincents'],['St Vincent','st-vincents'],['UCD Marian','ucd-marian'],['Neptune','neptune'],['Tralee','tralee-warriors'],['Belfast Star','belfast-star'],['Brunell','brunell'],['Ballincollig','ballincollig']];
@@ -138,7 +140,7 @@ V.home = () => {
     </div>
     ${card(`This week's results · ${res.length ? `<span class="pill p-ok">${W} won</span> <span class="pill p-no">${res.length-W} lost</span>` : ''}`, res.length ? rows(res.slice(0,6)) + (res.length > 6 ? `<a class="btn g block" style="margin-top:8px" href="#results">All ${res.length} results</a>` : '') : '<div class="empty" style="padding:12px"><b>No results yet this week</b></div>')}
     </div><div>${card('Next up', next.length ? rows(next) + `<a class="btn g block" style="margin-top:8px" href="#fixtures">All fixtures</a>` : '<div class="empty" style="padding:12px"><b>No upcoming games</b></div>')}
-    <a class="cd row" href="#submit" style="text-decoration:none;color:inherit"><span class="ball">✎</span><div class="f"><b>Coaches: send a score-sheet</b><div class="sm mut">Takes about a minute after the game</div></div><span class="mut">›</span></a>
+    ${can('sendSheets') ? '' : '<!--'}<a class="cd row" href="#submit" style="text-decoration:none;color:inherit"><span class="ball">✎</span><div class="f"><b>Send a score-sheet</b><div class="sm mut">Takes about a minute after the game</div></div><span class="mut">›</span></a>${can('sendSheets') ? '' : '-->'}
     <div class="spons home-spons"><img src="assets/griffith-college-black.png" alt="Griffith College"><img src="assets/crest.png" alt="Éanna Basketball" style="height:46px"><img src="assets/upmc-ssc-colour.png" alt="UPMC Sports Surgery Clinic"></div></div></div>`;
   $$('[data-tp] button').forEach(b => b.onclick = () => { lsSet('eanna-hub-tp', b.dataset.v); V.home() });
 };
@@ -187,10 +189,10 @@ V.game = (key) => {
     } else {
       h += `<div class="banner b-pu">The score-sheet for this game is in. Player points aren't shown publicly for this age group.</div>`;
     }
-  } else if(p || past){
+  } else if((p || past) && can('sendSheets', g.team)){
     h += `<a class="cd row" href="#submit/${encodeURIComponent(key)}" style="text-decoration:none;color:inherit"><span class="ball">✎</span><div class="f"><b>No score-sheet yet</b><div class="sm mut">Coach or manager? Send it in for player points.</div></div><span class="mut">›</span></a>`;
   }
-  if(can('fixtures')) h += `<a class="btn g block" href="#admin/fixtures/${encodeURIComponent(key)}">Edit this fixture</a>`;
+  if(can('editFixtures')) h += `<a class="btn g block" href="#admin/fixtures/${encodeURIComponent(key)}">Edit this fixture</a>`;
   if(gameLink(g)) h += `<a class="btn g block" href="${gameLink(g)}" target="_blank" rel="noopener">Open on the ${g.b==='BI'?'Basketball Ireland':g.b} site ↗</a>`;
   $('#view').innerHTML = `<div class="narrow">${h}</div>`;
 };
@@ -305,8 +307,8 @@ V.more = () => {
   setHead('More', 'Éanna Hub');
   const upd = DATA.fetched ? fmtDate(DATA.fetched,{day:'numeric',month:'long',year:'numeric'}) : '';
   $('#view').innerHTML = `
-    <a class="cd row" href="#submit" style="text-decoration:none;color:inherit"><span class="ball">✎</span><div class="f"><b>Send a score-sheet</b><div class="sm mut">For coaches and team managers</div></div><span class="mut">›</span></a>
-    <a class="cd row" href="#admin" style="text-decoration:none;color:inherit"><img src="assets/crest.png" alt="" style="width:34px;height:34px;object-fit:contain"><div class="f"><b>Admin &amp; moderators</b><div class="sm mut">${AUTH.admin ? 'Signed in' : 'Sign in to approve score-sheets'}</div></div><span class="mut">›</span></a>
+    ${can('sendSheets') ? `<a class="cd row" href="#submit" style="text-decoration:none;color:inherit"><span class="ball">✎</span><div class="f"><b>Send a score-sheet</b><div class="sm mut">${AUTH.owner || (AUTH.perms||{}).sendSheets==='all' ? 'Any team' : esc((AUTH.teams||[]).join(', '))}</div></div><span class="mut">›</span></a>` : ''}
+    <a class="cd row" href="#admin" style="text-decoration:none;color:inherit"><img src="assets/crest.png" alt="" style="width:34px;height:34px;object-fit:contain"><div class="f"><b>${AUTH.email ? 'Club tools' : 'Coaches &amp; staff sign in'}</b><div class="sm mut">${AUTH.email ? 'Signed in as ' + esc(AUTH.name || AUTH.email) : 'For coaches, managers, committee and moderators'}</div></div><span class="mut">›</span></a>
     ${card('Add the hub to your phone', `<div class="sm" style="margin-top:6px"><b>iPhone:</b> open this page in Safari, tap <b>Share</b>, then <b>Add to Home Screen</b>.<br><b>Android:</b> open it in Chrome, tap the <b>⋮</b> menu, then <b>Install app</b> or <b>Add to Home screen</b>.</div>`)}
     ${card('Where the fixtures come from', `<div class="sm" style="margin-top:6px">Dublin leagues and cups from the <a href="https://bi.comortais.com/competitionstabs.aspx?oid=1006" target="_blank" rel="noopener">DMBB</a> and <a href="https://bi.comortais.com/competitionstabs.aspx?oid=1015" target="_blank" rel="noopener">DLBB</a> sites. National games from <a href="https://ireland.basketball/NationalLeagueFixtures" target="_blank" rel="noopener">Basketball Ireland</a>.${upd?` Last updated ${upd}.`:''} Player points come from score-sheets sent in by coaches.</div>`)}
     ${card('Privacy', `<div class="sm" style="margin-top:6px">The hub doesn't collect dates of birth, addresses or phone numbers. Underage players who don't score aren't listed, and each age group can be set to show results only. Score-sheet photos are only seen by moderators. To have a player's name removed, contact the club.</div>`)}
@@ -317,10 +319,16 @@ V.more = () => {
 const SUB_KEY = 'eanna-hub-submitter';
 V.submit = async (preKey) => {
   setHead('Send a score-sheet', 'Coaches & team managers', '#more');
-  const me = lsGet(SUB_KEY, { name:'', code:'', names:{} });
-  const teams = [...new Set(G.map(g => g.team))].sort((a,b)=> GROUPS.indexOf(groupOf(G.find(g=>g.team===a))) - GROUPS.indexOf(groupOf(G.find(g=>g.team===b))) || (ageOf(a)||0)-(ageOf(b)||0) || a.localeCompare(b));
+  if(!can('sendSheets')){
+    $('#view').innerHTML = `<div class="narrow"><div class="cd" style="text-align:center;padding:26px 16px"><span class="ball" style="width:64px;height:64px;margin:0 auto;font-size:24px">✎</span><div class="h2">Coaches &amp; managers only</div><p class="mut">${AUTH.email ? `You're signed in as ${esc(AUTH.name || AUTH.email)}, but your account can't send score-sheets yet. Ask the club to give you the right role.` : 'Sign in with the account the club added for you.'}</p>${AUTH.email ? '' : '<a class="btn block" href="#admin">Sign in</a>'}</div></div>`;
+    return;
+  }
+  const me = lsGet(SUB_KEY, { name:'', names:{} });
+  const mine = myTeams('sendSheets');
+  const teams = allTeams().filter(t => !mine || mine.includes(t));
+  if(!teams.length){ $('#view').innerHTML = '<div class="empty"><b>No teams on your account yet</b>Ask the club to add your team to your profile.</div>'; return }
   const pre = preKey ? G.find(g => gameKey(g) === preKey) : null;
-  let team = pre ? pre.team : (me.team || teams[0]);
+  let team = pre && teams.includes(pre.team) ? pre.team : (teams.includes(me.team) ? me.team : teams[0]);
   const render = () => {
     const games = G.filter(g => g.team === team && g.d && g.d <= addDays(TODAY, 1) && g.d >= addDays(TODAY, -45)).sort((a,b)=>b.d.localeCompare(a.d));
     const sel = pre && pre.team === team ? gameKey(pre) : (games[0] ? gameKey(games[0]) : '');
@@ -340,9 +348,9 @@ V.submit = async (preKey) => {
         <label class="fld"><span>Player</span><select id="sPotg"><option value="">No pick</option></select></label>
         <label class="fld" style="margin-top:8px"><span>Why? A line from the coach</span><input id="sNote" maxlength="160" placeholder="e.g. Ran the offence and never stopped talking on D"></label></div>
       <label class="fld"><span>Photo of the score-sheet (optional, only moderators see it)</span><input id="sPhoto" type="file" accept="image/*"></label>
-      <div class="grid2"><label class="fld"><span>Your name</span><input id="sName" value="${esc(me.name)}" autocomplete="name"></label><label class="fld"><span>Club code</span><input id="sCode" value="${esc(me.code)}" autocomplete="off" autocapitalize="characters"></label></div>
+      <label class="fld"><span>Your name</span><input id="sName" value="${esc(AUTH.name || me.name)}" autocomplete="name"></label>
       <button class="btn or block" id="sSend">Send for checking</button>
-      ${S.mode==='demo' ? `<div class="sm mut" style="text-align:center">Demo mode: the club code is <b>${esc(CFG.demoClubCode)}</b>.</div>` : ''}`;
+`;
     const fill = () => { const g = G.find(x => gameKey(x) === $('#sGame').value); if(g){ $('#sThL').textContent = oname(g.o) + ' score'; if(played(g)){ $('#sUs').value = g.us; $('#sTh').value = g.th } } check() };
     $('#sTeam').onchange = e => { team = e.target.value; render() };
     $('#sGame').onchange = fill;
@@ -367,12 +375,11 @@ V.submit = async (preKey) => {
   async function send(){
     const g = G.find(x => gameKey(x) === $('#sGame').value);
     const lines = readLines().filter(l => l.no || l.name);
-    const name = $('#sName').value.trim(), code = $('#sCode').value.trim();
+    const name = $('#sName').value.trim();
     if(!g) return toast('Pick the game first', 1);
     if(!lines.length) return toast('Add at least one player', 1);
     if(lines.some(l => !l.name)) return toast('Every player needs a name', 1);
     if(!name) return toast('Add your name so the moderator knows who sent it', 1);
-    if(!code) return toast('Enter the club code', 1);
     const btn = $('#sSend'); btn.disabled = true; btn.textContent = 'Sending…';
     let photo = '';
     const f = $('#sPhoto').files[0];
@@ -381,12 +388,12 @@ V.submit = async (preKey) => {
       lines: lines.map(l => ({ no: l.no, name: l.name, pts: l.pts || 0 })), by: name, photo };
     const pv = $('#sPotg').value; if(pv){ const [pno, ...pn] = pv.split('|'); sub.potg = { no: pno, name: pn.join('|'), note: $('#sNote').value.trim() } }
     try {
-      await S.submitSheet(sub, code);
-      me.name = name; me.code = code; me.team = g.team; me.names = me.names || {}; me.names[g.team] = lines.map(l => ({ no:l.no, name:l.name })); lsSet(SUB_KEY, me);
+      await S.submitSheet(sub);
+      me.name = name; me.team = g.team; me.names = me.names || {}; me.names[g.team] = lines.map(l => ({ no:l.no, name:l.name })); lsSet(SUB_KEY, me);
       $('#view').innerHTML = `<div class="cd" style="text-align:center;padding:28px 16px"><div class="ball" style="width:72px;height:72px;margin:0 auto;font-size:28px">✓</div><div class="h2" style="margin-top:12px"><span class="gt">Sent for checking</span></div><p class="mut">${esc(g.team)} v ${esc(oname(g.o))}. A moderator will check it, usually within a day. Player names are saved on this phone for next time.</p><a class="btn g" href="#submit">Send another</a></div>`;
     } catch(e){
       btn.disabled = false; btn.textContent = 'Send for checking';
-      toast(e.message === 'code' || /permission/i.test(e.message) ? "That club code doesn't match. Ask your coach or the club." : 'Couldn\'t send it. Check your connection and try again.', 1);
+      toast(/permission/i.test(e.message || e.code || '') ? "Your account can't send score-sheets for this team. Ask the club." : 'Couldn\'t send it. Check your connection and try again.', 1);
     }
   }
   render();
@@ -401,18 +408,19 @@ function shrinkImage(file, max, q){
 V.admin = async (sub, arg) => {
   setHead('Admin', AUTH.admin ? (S.mode==='demo' ? 'Demo admin' : (AUTH.name || AUTH.email)) : 'Moderators only', '#more');
   if(!AUTH.admin){
-    $('#view').innerHTML = `<div class="cd" style="text-align:center;padding:26px 16px"><img src="assets/crest.png" alt="" style="width:80px"><div class="h2">Moderators</div>
-      <p class="mut">${S.mode==='demo' ? 'Demo mode: anyone can open the admin area to try it. Nothing leaves this browser.' : AUTH.email ? `You're signed in as ${esc(AUTH.email)}, but that account isn't a moderator. Ask Milo to add you.` : 'Sign in with the Google account Milo added as a moderator.'}</p>
+    $('#view').innerHTML = `<div class="cd" style="text-align:center;padding:26px 16px"><img src="assets/crest.png" alt="" style="width:80px"><div class="h2">Club tools</div>
+      <p class="mut">${S.mode==='demo' ? 'Demo mode: anyone can open the club tools to try them. Nothing leaves this browser.' : AUTH.email ? `You're signed in as ${esc(AUTH.name || AUTH.email)}, but your account doesn't have any club tools yet. Ask the club to add you and choose your role.` : 'For coaches, managers, committee and moderators. Sign in with the Google account the club added for you.'}</p>
       <button class="btn block" id="aIn">${S.mode==='demo' ? 'Open admin (demo)' : 'Sign in with Google'}</button>${AUTH.email && S.mode!=='demo' ? '<button class="btn g block" id="aOut" style="margin-top:8px">Sign out</button>' : ''}</div>`;
     $('#aIn').onclick = async () => { try { await S.signIn() } catch(e){ console.warn('sign-in', e); toast('Sign-in didn\'t finish: ' + (e.code || e.message || 'unknown'), 1) } };
     if($('#aOut')) $('#aOut').onclick = () => S.signOut();
     return;
   }
   sub = sub || 'queue';
-  const subs = await S.listSubmissions();
+  if(!AUTH.admin){ return }
+  const subs = can('approveSheets') ? await S.listSubmissions() : [];
   const pending = subs.filter(s => s.status === 'pending');
-  const tabs = [['queue',`Score-sheets${pending.length?` (${pending.length})`:''}`,'sheets'],['fixtures','Fixtures','fixtures'],['rosters','Rosters','rosters'],['underage','Underage','underage'],['carousel','Carousel','carousel'],['mods','Moderators','owner'],['settings','Settings','any']].filter(t => t[2]==='any' || (t[2]==='owner' ? AUTH.role==='owner' : can(t[2])));
-  if(sub === 'sheet' && !can('sheets')) sub = tabs[0][0];
+  const tabs = [['queue',`Score-sheets${pending.length?` (${pending.length})`:''}`,'approveSheets'],['fixtures','Fixtures','editFixtures'],['rosters','Rosters','rosters'],['underage','Underage','underage'],['carousel','Carousel','carousel'],['members','Members','members'],['roles','Roles','owner'],['settings','Settings','any']].filter(t => t[2]==='any' || (t[2]==='owner' ? AUTH.owner : can(t[2])));
+  if(sub === 'sheet' && !can('approveSheets')) sub = tabs[0][0];
   if(!tabs.find(t => t[0] === (sub==='sheet'?'queue':sub))) sub = tabs[0][0];
   const nav = `<nav class="atabs">${tabs.map(t=>`<a href="#admin/${t[0]}" class="${(sub==='sheet'?'queue':sub)===t[0]?'on':''}">${t[1]}</a>`).join('')}</nav>`;
   $('#view').classList.toggle('wide', sub === 'carousel');
@@ -464,8 +472,10 @@ V.admin = async (sub, arg) => {
   if(sub === 'fixtures'){
     const preKey = arg || '';
     const pre = preKey ? G.find(g => gameKey(g) === preKey) : null;
-    const teams = [...new Set(G.map(g => g.team))].sort();
-    const cur = pre ? pre.team : lsGet('eanna-hub-fx-team', teams[0]);
+    const fxMine = myTeams('editFixtures');
+    const teams = allTeams().filter(t => !fxMine || fxMine.includes(t));
+    if(!teams.length){ $('#view').innerHTML = nav + '<div class="empty"><b>No teams on your account yet</b></div>'; return }
+    let cur = pre && teams.includes(pre.team) ? pre.team : lsGet('eanna-hub-fx-team', teams[0]); if(!teams.includes(cur)) cur = teams[0];
     const list = G.filter(g => g.team === cur && (!g.d || g.d >= addDays(TODAY, -21))).sort((a,b)=>(a.d||'9999').localeCompare(b.d||'9999'));
     const edited = new Set(EDITS.map(e => e.key));
     const form = g => `<form class="cd" data-fk="${esc(gameKey(g))}" ${gameKey(g)===preKey?'':'hidden'} style="display:grid;gap:8px;background:var(--soft)">
@@ -489,7 +499,7 @@ V.admin = async (sub, arg) => {
     $$('form[data-fk]').forEach(f => {
       f.onsubmit = async e => { e.preventDefault(); const k = f.dataset.fk; const g = G.find(x => gameKey(x) === k); const v = Object.fromEntries(new FormData(f));
         const base = g.b === 'ADD' ? (EDITS.find(x => x.key === k) || {}) : {};
-        await S.putFixtureEdit(k, { ...base, d: v.d || null, tm: v.tm || null, v: v.v, status: v.status, note: v.note, by: AUTH.name || AUTH.email || 'moderator' }); toast('Fixture saved'); setTimeout(()=>location.reload(), 500) };
+        await S.putFixtureEdit(k, { ...base, team: g.team, d: v.d || null, tm: v.tm || null, v: v.v, status: v.status, note: v.note, by: AUTH.name || AUTH.email || 'moderator' }); toast('Fixture saved'); setTimeout(()=>location.reload(), 500) };
       const u = $('[data-undo]', f); if(u) u.onclick = async () => { await S.deleteFixtureEdit(f.dataset.fk); toast('Done'); setTimeout(()=>location.reload(), 500) };
     });
     $('#xAdd').onsubmit = async e => { e.preventDefault(); const v = Object.fromEntries(new FormData(e.target)); const src = G.find(g => g.team === cur) || {};
@@ -497,26 +507,53 @@ V.admin = async (sub, arg) => {
       toast('Game added'); setTimeout(()=>location.reload(), 500) };
     return;
   }
-  if(sub === 'mods'){
-    const admins = await S.listAdmins();
-    const permRow = (p, on) => `<div class="trow sm"><span>${p[1]}</span><button type="button" class="tog ${on?'on':''}" data-p="${p[0]}" aria-label="${esc(p[1])}"></button></div>`;
-    $('#view').innerHTML = nav + `<div class="banner b-pu">Only owners can add or remove moderators. You choose what each moderator can do, and you can change it at any time. Owners (you and your backup admin) can do everything.</div>` +
-      admins.map(a => `<form class="cd" data-em="${esc(a.email)}" style="display:grid;gap:4px"><div class="row sp"><label class="fld f" style="padding:4px 10px"><span>Name</span><input name="name" value="${esc(a.name || (a.email===AUTH.email ? AUTH.name : '') || '')}" placeholder="Their name"></label><select name="role" class="pill p-nv" style="border:0"><option value="moderator" ${a.role!=='owner'?'selected':''}>Moderator</option><option value="owner" ${a.role==='owner'?'selected':''}>Owner</option></select></div><div class="sm mut">${esc(a.email)}</div>
-        <div ${a.role==='owner'?'hidden':''} data-perms>${PERMS.map(p => permRow(p, (a.perms||{})[p[0]])).join('')}</div>
-        <div class="btns"><button class="btn sm" type="submit">Save</button>${a.email===AUTH.email ? '<span class="sm mut" style="align-self:center">This is you</span>' : '<button class="btn r sm" type="button" data-rm>Remove</button>'}</div></form>`).join('') +
-      `<form class="cd" id="mAdd" style="display:grid;gap:6px"><div class="lbl">Invite a moderator</div>
-        <div class="grid2"><label class="fld"><span>Name</span><input name="name" required></label><label class="fld"><span>Google email</span><input name="email" type="email" required></label></div>
-        <label class="fld"><span>Role</span><select name="role"><option value="moderator">Moderator</option><option value="owner">Owner (backup admin)</option></select></label>
-        <div data-perms>${PERMS.map(p => permRow(p, ['sheets','fixtures'].includes(p[0]))).join('')}</div>
-        <button class="btn or" type="submit">Add moderator</button>
-        <div class="sm mut">They sign in at More › Admin with that Google account. Tell them once you've added them.</div></form>`;
-    const wire = f => { f.onclick = e => { const t = e.target.closest('.tog'); if(t) t.classList.toggle('on') }; const r = $('[name=role]', f); r.onchange = () => { $('[data-perms]', f).hidden = r.value === 'owner' } };
-    const read = f => { const perms = {}; $$('[data-p]', f).forEach(t => perms[t.dataset.p] = t.classList.contains('on')); return { role: $('[name=role]', f).value, perms } };
-    $$('form[data-em]').forEach(f => { wire(f);
-      f.onsubmit = async e => { e.preventDefault(); const a = admins.find(x => x.email === f.dataset.em); await S.putAdmin(f.dataset.em, { name: $('[name=name]', f).value.trim(), added: a.added || '', ...read(f) }); if(f.dataset.em === AUTH.email){ AUTH.name = $('[name=name]', f).value.trim() } toast('Saved'); V.admin('mods') };
-      const rm = $('[data-rm]', f); if(rm) rm.onclick = async () => { if(!rm.dataset.sure){ rm.dataset.sure = 1; rm.textContent = 'Tap again'; return } await S.deleteAdmin(f.dataset.em); toast('Removed'); V.admin('mods') } });
-    const add = $('#mAdd'); wire(add);
-    add.onsubmit = async e => { e.preventDefault(); const em = $('[name=email]', add).value.trim().toLowerCase(); await S.putAdmin(em, { name: $('[name=name]', add).value.trim(), ...read(add), added: new Date().toISOString() }); toast('Moderator added'); V.admin('mods') };
+  if(sub === 'members'){
+    const [members, roles] = await Promise.all([S.listMembers(), S.getRoles()]);
+    const rids = Object.keys(roles);
+    const teams = allTeams();
+    const scoped = sel => sel.some(r => roles[r] && roles[r].scope === 'teams');
+    const form = (m, isNew) => `<form class="cd" ${isNew?'id="mAdd"':`data-em="${esc(m.email)}"`} style="display:grid;gap:8px">
+      ${isNew ? '<div class="lbl">Add a member</div>' : ''}
+      <div class="grid2"><label class="fld"><span>Name</span><input name="name" value="${esc(m.name||'')}" required></label><label class="fld"><span>Google email</span><input name="email" type="email" value="${esc(m.email||'')}" ${isNew?'required':'readonly'}></label></div>
+      <div><div class="sm mut" style="margin-bottom:4px">Roles · pick as many as you like</div><div class="chips">${rids.map(r => `<button type="button" data-role="${esc(r)}" class="${(m.roles||[]).includes(r)?'on':''}" ${roles[r].ownerOnly && !AUTH.owner ? 'disabled title="Only owners can give or remove this role" style="opacity:.55"' : ''}>${esc(roles[r].name)}${roles[r].ownerOnly?' 🔒':''}</button>`).join('')}</div></div>
+      <label class="fld" data-teams ${scoped(m.roles||[])?'':'hidden'}><span>Their teams (hold ⌘ or Ctrl to pick several)</span><select name="teams" multiple size="6">${teams.map(t => `<option ${(m.teams||[]).includes(t)?'selected':''}>${esc(t)}</option>`).join('')}</select></label>
+      ${AUTH.owner ? `<div class="trow sm"><span><b>Owner</b> · can do everything, including editing roles</span><button type="button" class="tog ${m.owner?'on':''}" data-owner aria-label="Owner"></button></div>` : ''}
+      <div class="btns"><button class="btn sm" type="submit">${isNew?'Add member':'Save'}</button>${isNew ? '<span></span>' : (m.email===AUTH.email ? '<span class="sm mut" style="align-self:center">This is you</span>' : `<button class="btn r sm" type="button" data-rm>Remove</button>`)}</div>
+      ${S.mode==='demo' && !isNew ? '<button class="btn g sm" type="button" data-as>See the hub as this person (demo)</button>' : ''}</form>`;
+    $('#view').innerHTML = nav + `<div class="banner b-pu">Each member can have several roles. What each role can do is set in <b>Roles</b>${AUTH.owner?'':' (owners only)'}. Roles marked "own teams" only work for the teams picked here.</div>` + form({}, true) + members.sort((a,b)=>(b.owner?1:0)-(a.owner?1:0) || (a.name||'').localeCompare(b.name||'')).map(m => form(m, false)).join('');
+    const wire = f => {
+      f.onclick = e => { const c = e.target.closest('[data-role]'); if(c && c.disabled) return; if(c){ c.classList.toggle('on'); $('[data-teams]', f).hidden = !scoped($$('[data-role].on', f).map(x => x.dataset.role)) } const o = e.target.closest('[data-owner]'); if(o) o.classList.toggle('on') };
+      f.onsubmit = async e => { e.preventDefault();
+        const email = $('[name=email]', f).value.trim().toLowerCase(); if(!email) return toast('Add their email', 1);
+        const v = { name: $('[name=name]', f).value.trim(), roles: $$('[data-role].on', f).map(x => x.dataset.role), teams: [...$('[name=teams]', f).selectedOptions].map(o => o.value), owner: AUTH.owner ? !!$('[data-owner].on', f) : !!(members.find(x => x.email === email) || {}).owner };
+        if(v.owner === false && email === AUTH.email && AUTH.owner) return toast("You can't remove your own owner access", 1);
+        await S.putMember(email, v); toast(f.id === 'mAdd' ? 'Member added. Tell them to sign in at More › Coaches & staff sign in' : 'Saved'); V.admin('members') };
+      const rm = $('[data-rm]', f); if(rm) rm.onclick = async () => { if(!rm.dataset.sure){ rm.dataset.sure = 1; rm.textContent = 'Tap again to remove'; return } await S.deleteMember(f.dataset.em); toast('Removed'); V.admin('members') };
+      const as = $('[data-as]', f); if(as) as.onclick = async () => { await S.viewAs(f.dataset.em); toast('Now seeing the hub as ' + ($('[name=name]', f).value || f.dataset.em) + '. Sign out in Settings to go back.'); location.hash = '#home' };
+    };
+    $$('form', $('#view')).forEach(wire);
+    return;
+  }
+  if(sub === 'roles'){
+    const roles = await S.getRoles();
+    const TASKS = HubRoles.TASKS;
+    const draw = () => {
+      const ids = Object.keys(roles);
+      $('#view').innerHTML = nav + `<div class="banner b-pu">Roles with 🔒 can only be given or removed by owners. Switch on what each type of member can do. A task can belong to as many roles as you like, and a person can have several roles. Owners can always do everything.</div>
+        <div class="cd tscroll"><table class="bx" style="min-width:${180 + ids.length*120}px"><thead><tr><th>Task</th>${ids.map(r => `<th style="min-width:110px"><input data-rn="${esc(r)}" value="${esc(roles[r].name)}" aria-label="Role name" style="font-weight:800"><label class="sm" style="display:flex;gap:4px;align-items:center;margin-top:4px;font-weight:600;text-transform:none;letter-spacing:0"><input type="checkbox" data-ro="${esc(r)}" ${roles[r].ownerOnly?'checked':''} style="width:auto">🔒 Owners give it</label><select data-rs="${esc(r)}" style="width:100%;margin-top:4px;font-size:12px;border:1px solid var(--line);border-radius:8px;padding:3px"><option value="all" ${roles[r].scope!=='teams'?'selected':''}>All teams</option><option value="teams" ${roles[r].scope==='teams'?'selected':''}>Own teams only</option></select><button class="btn g sm" data-rd="${esc(r)}" style="margin-top:4px;width:100%">Delete</button></th>`).join('')}</tr></thead>
+        <tbody>${TASKS.map(([t, label, scopable]) => `<tr><td><b>${label}</b>${scopable?'<div class="sm mut">Can be own teams only</div>':''}</td>${ids.map(r => `<td style="text-align:center"><button class="tog ${roles[r].perms && roles[r].perms[t]?'on':''}" data-t="${t}" data-r="${esc(r)}" aria-label="${esc(roles[r].name)}: ${label}"></button></td>`).join('')}</tr>`).join('')}</tbody></table></div>
+        <div class="row wrap"><label class="fld f"><span>New role name</span><input id="nr" placeholder="e.g. Table official"></label><button class="btn g" id="nrAdd">+ Add role</button></div>
+        <button class="btn block" id="rSave">Save roles</button>
+        <div class="sm mut">Saving updates everyone's access straight away.</div>`;
+      $$('[data-t]').forEach(b => b.onclick = () => { const r = roles[b.dataset.r]; r.perms = r.perms || {}; r.perms[b.dataset.t] = !r.perms[b.dataset.t]; b.classList.toggle('on') });
+      $$('[data-rn]').forEach(i => i.oninput = () => { roles[i.dataset.rn].name = i.value });
+      $$('[data-rs]').forEach(x => x.onchange = () => { roles[x.dataset.rs].scope = x.value });
+      $$('[data-ro]').forEach(x => x.onchange = () => { roles[x.dataset.ro].ownerOnly = x.checked });
+      $$('[data-rd]').forEach(b => b.onclick = () => { if(!b.dataset.sure){ b.dataset.sure = 1; b.textContent = 'Tap again'; return } delete roles[b.dataset.rd]; draw() });
+      $('#nrAdd').onclick = () => { const n = $('#nr').value.trim(); if(!n) return; const id = n.toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'') || ('role-' + Date.now()); roles[id] = { name:n, scope:'all', perms:{} }; draw() };
+      $('#rSave').onclick = async () => { await S.saveRoles(roles); toast('Roles saved') };
+    };
+    draw();
     return;
   }
   if(sub === 'rosters'){
@@ -550,14 +587,12 @@ V.admin = async (sub, arg) => {
   }
   if(sub === 'carousel'){ return Carousel.view(nav) }
   if(sub === 'settings'){
-    const code = can('settings') ? await S.getClubCode() : '';
     $('#view').innerHTML = nav + `
-      <div class="cd" ${can("settings")?"":"hidden"}><div class="lbl">Club code</div><div class="row" style="margin-top:8px"><label class="fld f"><span>Coaches type this to send a score-sheet</span><input id="cCode" value="${esc(code)}" autocapitalize="characters"></label><button class="btn sm" id="cSave">Save</button></div><div class="sm mut" style="margin-top:6px">Change it if it gets shared outside the club, then post the new one in the coaches' group.</div></div>
-      <div class="cd"><div class="lbl">Mode</div><p class="sm" style="margin:6px 0 0">${S.mode==='demo' ? '<b>Demo mode.</b> Everything is saved in this browser only. Follow README.md to connect the free Firebase project and go live.' : `<b>Live.</b> Signed in as ${esc(AUTH.email)}.`}</p></div>
+
+      <div class="cd"><div class="lbl">Mode</div><p class="sm" style="margin:6px 0 0">${S.mode==='demo' ? '<b>Demo mode.</b> Everything is saved in this browser only. Follow README.md to connect the free Firebase project and go live.' : `<b>Live.</b> Signed in as ${esc(AUTH.name || AUTH.email)}.`}</p></div>
       <div class="cd" ${can("settings")?"":"hidden"}><div class="lbl">Backup</div><p class="sm" style="margin:6px 0 8px">Download every roster, score-sheet and setting as one file.</p><button class="btn g" id="cExp">Download backup</button></div>
       ${S.mode==='demo' ? '<button class="btn r block" id="cReset">Reset demo data</button>' : ''}
       <button class="btn g block" id="cOut">Sign out</button>`;
-    $('#cSave').onclick = async () => { const v = $('#cCode').value.trim().toUpperCase(); if(v.length < 4) return toast('Use at least 4 letters or numbers', 1); await S.setClubCode(v); toast('Club code saved') };
     $('#cExp').onclick = async () => { const blob = new Blob([JSON.stringify(await S.exportAll(), null, 1)], { type:'application/json' }); const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = `eanna-hub-backup-${TODAY}.json`; a.click() };
     if($('#cReset')) $('#cReset').onclick = () => S.resetDemo();
     $('#cOut').onclick = async () => { await S.signOut(); location.hash = '#home' };
@@ -691,6 +726,7 @@ async function route(){
 /* ---------- demo examples ---------- */
 async function seedDemo(){
   if(S.mode !== 'demo' || S.isSeeded()) return;
+  await S.signIn();
   const sl = G.find(g => g.team === "Men's Super League" && played(g) && g.us === 77 && /Tralee/.test(g.o)) || G.find(g => g.team === "Men's Super League" && played(g));
   const roster = [[0,'Adam McCarthy'],[2,"Cathal O'Sullivan"],[5,'Dean Kiernan'],[7,'Kiki'],[8,'Morgan Taylor'],[9,'Neil Lynch'],[10,'Sean Jenkins'],[11,'David George'],[12,'Nick Hopkins'],[13,'Karl Walsh'],[14,'Ian Lynch'],[17,'Harry Lynch'],[24,'Manou Christal'],[32,'Misha Kucheriavyi'],[36,'Neil Coughlan']];
   await S.saveRoster("Men's Super League", roster.map(([no,name]) => ({ no:String(no), name, hidden:false })));
@@ -699,7 +735,7 @@ async function seedDemo(){
     let pts = w.map(x => Math.floor(x*sl.us)); pts[0] += sl.us - pts.reduce((a,b)=>a+b,0);
     const lines = split.map((no,i) => ({ no:String(no), name: roster.find(r=>r[0]===no)[1], pts: pts[i] }));
     const sub = { team: sl.team, sex:'m', gameKey: gameKey(sl), d: sl.d, o: sl.o, comp: sl.c, us: sl.us, th: sl.th, lines, by:'Example (demo)', photo:'', example:true, potg:{ no:'5', name:'Dean Kiernan', note:'Example note: set the tone on both ends and hit the big shots late.' } };
-    const id = await S.submitSheet(sub, CFG.demoClubCode);
+    const id = await S.submitSheet(sub);
     await S.updateSubmission(id, { status:'approved', checked: new Date().toISOString() });
     await S.putBoxscore(sub.gameKey, publicBox(sub, null));
   }
@@ -707,9 +743,10 @@ async function seedDemo(){
   if(ug){
     const names = ['Seán','Liam','Cian','Oisín','Darragh','Evan','Rory','Adam'];
     const w = [.26,.2,.17,.13,.1,.09,.05,0]; let pts = w.map(x => Math.floor(x*ug.us)); pts[0] += ug.us - pts.reduce((a,b)=>a+b,0);
-    await S.submitSheet({ team: ug.team, sex:'m', gameKey: gameKey(ug), d: ug.d, o: ug.o, comp: ug.c, us: ug.us, th: ug.th, lines: names.map((n,i)=>({ no:String([7,12,9,4,15,5,10,3][i]), name:n+' (example)', pts:pts[i] })), by:'Example coach (demo)', photo:'', example:true }, CFG.demoClubCode);
+    await S.submitSheet({ team: ug.team, sex:'m', gameKey: gameKey(ug), d: ug.d, o: ug.o, comp: ug.c, us: ug.us, th: ug.th, lines: names.map((n,i)=>({ no:String([7,12,9,4,15,5,10,3][i]), name:n+' (example)', pts:pts[i] })), by:'Example coach (demo)', photo:'', example:true });
   }
   S.markSeeded();
+  await S.signOut();
 }
 
 /* ---------- start ---------- */
