@@ -4,7 +4,7 @@
 // this browser only, nothing is shared). To go live, create a free Firebase
 // project, add a Web app, and paste its config object here. See README.md.
 window.HUB_CONFIG = {
-  // Set to null to go back to demo mode.
+  // Set firebase to null to go back to demo mode.
   firebase: {
     apiKey: "AIzaSyBXiEQQ9zO2iI1ZckNvKoB3_Svx3NG2ifs",
     authDomain: "eanna-basketball-hub.firebaseapp.com",

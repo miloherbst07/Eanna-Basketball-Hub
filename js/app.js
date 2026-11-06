@@ -113,7 +113,17 @@ async function republishAll(){
     if(b.mode === 'hidden') await S.deleteBoxscore(s.gameKey); else await S.putBoxscore(s.gameKey, b) }
   await loadBoxes();
 }
-async function loadBoxes(){ BOXES = {}; try { (await within(S.listBoxscores(), 6000, [])).forEach(b => { BOXES[b.key] = b }) } catch(e){ console.warn("box scores", e) } }
+async function loadBoxes(){ BOXES = {}; try { (await within(S.listBoxscores(), 6000, [])).forEach(b => { BOXES[b.key] = b }) } catch(e){ console.warn("box scores", e) } applyClubScores() }
+function applyClubScores(){
+  G.forEach(g => {
+    if(g.boardScore === undefined) g.boardScore = typeof g.us === 'number';
+    if(g.boardScore) return;                        // the board has posted it: keep the official score
+    delete g.us; delete g.th; delete g.scoreSrc;
+    const e = EDITS.find(x => x.key === gameKey(g)), b = BOXES[gameKey(g)];
+    if(e && Number.isFinite(e.us) && Number.isFinite(e.th)){ g.us = e.us; g.th = e.th; g.scoreSrc = 'club' }
+    else if(b && Number.isFinite(b.us) && Number.isFinite(b.th) && (b.us || b.th)){ g.us = b.us; g.th = b.th; g.scoreSrc = 'sheet' }
+  });
+}
 
 /* ---------- views ---------- */
 const V = {};
@@ -174,7 +184,7 @@ V.game = (key) => {
   const p = played(g), past = g.d && g.d < TODAY;
   let h = `<div class="cd"><div class="row sp" style="align-items:flex-start">
       <div style="text-align:center;flex:1"><img src="assets/crest.png" alt="" style="width:64px;height:64px;object-fit:contain"><div class="sm" style="font-weight:700">Éanna</div>${p?`<div class="n" style="font-size:36px;color:${g.us>g.th?'var(--ok)':'var(--no)'}">${g.us}</div>`:''}</div>
-      <div style="text-align:center;padding-top:18px"><span class="vs" style="font-size:26px">VS</span><div>${p?`<span class="pill ${g.us>g.th?'p-ok':'p-no'}">FINAL · ${g.us>g.th?'WIN':'LOSS'}</span>`:past?'<span class="pill p-nv">No score yet</span>':'<span class="pill p-pu">UPCOMING</span>'}</div></div>
+      <div style="text-align:center;padding-top:18px"><span class="vs" style="font-size:26px">VS</span><div>${p?`<span class="pill ${g.us>g.th?'p-ok':'p-no'}">FINAL · ${g.us>g.th?'WIN':'LOSS'}</span>${g.scoreSrc?`<div class="sm mut" style="margin-top:4px">Club score · not on the ${g.b==='BI'?'Basketball Ireland':g.b==='ADD'?'':g.b} site yet</div>`:''}`:past?'<span class="pill p-nv">No score yet</span>':'<span class="pill p-pu">UPCOMING</span>'}</div></div>
       <div style="text-align:center;flex:1"><div style="display:grid;place-items:center;height:64px">${crest(g.o, 60)}</div><div class="sm" style="font-weight:700">${esc(oname(g.o))}</div>${p?`<div class="n" style="font-size:36px">${g.th}</div>`:''}</div></div></div>
     <div class="cd">
       <div class="info"><span class="ic">📅</span><div class="f"><b>${g.d ? fmtDate(g.d,{weekday:'long',day:'numeric',month:'long'})+' · '+fmtTime(g.tm) : 'Date to be confirmed'}</b><div class="sm mut">${g.h?'Home':'Away'}</div></div></div>
@@ -481,12 +491,13 @@ V.admin = async (sub, arg) => {
     const form = g => `<form class="cd" data-fk="${esc(gameKey(g))}" ${gameKey(g)===preKey?'':'hidden'} style="display:grid;gap:8px;background:var(--soft)">
       <div class="grid2"><label class="fld"><span>Date</span><input type="date" name="d" value="${esc(g.d||'')}"></label><label class="fld"><span>Time</span><input type="time" name="tm" value="${esc(g.tm||'')}"></label></div>
       <label class="fld"><span>Venue</span><input name="v" value="${esc(g.v||'')}"></label>
+      ${g.boardScore ? `<div class="sm mut">Final score from the ${g.b==='BI'?'Basketball Ireland':g.b} site: <b>${g.us}–${g.th}</b></div>` : `<div class="grid2"><label class="fld"><span>Éanna final score</span><input name="us" inputmode="numeric" value="${esc(g.scoreSrc==='club'?g.us:'')}" placeholder="${g.scoreSrc==='sheet'?g.us:''}"></label><label class="fld"><span>${esc(oname(g.o))} final score</span><input name="th" inputmode="numeric" value="${esc(g.scoreSrc==='club'?g.th:'')}" placeholder="${g.scoreSrc==='sheet'?g.th:''}"></label></div><div class="sm mut">Shows straight away. When the ${g.b==='ADD'?'':'board'} site posts the official score, it takes over.</div>`}
       <label class="fld"><span>Status</span><select name="status"><option value="">On as planned</option>${['Postponed','Cancelled'].map(x=>`<option ${g.status===x?'selected':''}>${x}</option>`).join('')}</select></label>
       <label class="fld"><span>Note for players and parents</span><input name="note" maxlength="160" value="${esc(g.note||'')}"></label>
       <div class="btns"><button class="btn" type="submit">Save</button>${edited.has(gameKey(g)) ? `<button class="btn g" type="button" data-undo>${g.b==='ADD'?'Delete game':'Undo my changes'}</button>` : '<span></span>'}</div></form>`;
     $('#view').innerHTML = nav + `
       <label class="fld"><span>Team</span><select id="xTeam">${teams.map(n=>`<option ${n===cur?'selected':''}>${esc(n)}</option>`).join('')}</select></label>
-      <div class="cd">${list.length ? list.map(g => `<div><div class="row" style="padding:8px 0;border-bottom:1px solid var(--line)"><div class="f"><b>${g.d?fmtDate(g.d):'Date TBC'} · v ${esc(oname(g.o))}</b><div class="sm mut">${esc(g.c)} · ${g.d?fmtTime(g.tm):''} · ${esc(g.v||'Venue TBC')}${g.status?` · <b>${esc(g.status)}</b>`:''}${edited.has(gameKey(g))?' · <span class="pill p-pu">Edited</span>':''}</div></div><button class="btn g sm" data-open="${esc(gameKey(g))}">Edit</button></div>${form(g)}</div>`).join('') : '<div class="empty"><b>No games from the last 3 weeks on</b></div>'}</div>
+      <div class="cd">${list.length ? list.map(g => `<div><div class="row" style="padding:8px 0;border-bottom:1px solid var(--line)"><div class="f"><b>${g.d?fmtDate(g.d):'Date TBC'} · v ${esc(oname(g.o))}${played(g)?` · ${g.us}–${g.th}`:(g.d && g.d < TODAY ? ' · <span class="pill p-warn">Needs score</span>' : '')}</b><div class="sm mut">${esc(g.c)} · ${g.d?fmtTime(g.tm):''} · ${esc(g.v||'Venue TBC')}${g.status?` · <b>${esc(g.status)}</b>`:''}${edited.has(gameKey(g))?' · <span class="pill p-pu">Edited</span>':''}</div></div><button class="btn g sm" data-open="${esc(gameKey(g))}">Edit</button></div>${form(g)}</div>`).join('') : '<div class="empty"><b>No games from the last 3 weeks on</b></div>'}</div>
       <form class="cd" id="xAdd" style="display:grid;gap:8px"><div class="lbl">Add a game · friendly, blitz, tournament</div>
         <div class="grid2"><label class="fld"><span>Type</span><select name="type"><option>Friendly</option><option>Blitz</option><option>Tournament</option><option>National Cup</option><option>Other</option></select></label><label class="fld"><span>Home or away</span><select name="h"><option value="1">Home</option><option value="0">Away</option></select></label></div>
         <label class="fld"><span>Opponent or event name</span><input name="o" required></label>
@@ -499,7 +510,8 @@ V.admin = async (sub, arg) => {
     $$('form[data-fk]').forEach(f => {
       f.onsubmit = async e => { e.preventDefault(); const k = f.dataset.fk; const g = G.find(x => gameKey(x) === k); const v = Object.fromEntries(new FormData(f));
         const base = g.b === 'ADD' ? (EDITS.find(x => x.key === k) || {}) : {};
-        await S.putFixtureEdit(k, { ...base, team: g.team, d: v.d || null, tm: v.tm || null, v: v.v, status: v.status, note: v.note, by: AUTH.name || AUTH.email || 'moderator' }); toast('Fixture saved'); setTimeout(()=>location.reload(), 500) };
+        const us = parseInt(v.us, 10), th = parseInt(v.th, 10);
+        await S.putFixtureEdit(k, { ...base, team: g.team, us: Number.isFinite(us) ? us : null, th: Number.isFinite(th) ? th : null, d: v.d || null, tm: v.tm || null, v: v.v, status: v.status, note: v.note, by: AUTH.name || AUTH.email || 'moderator' }); toast('Fixture saved'); setTimeout(()=>location.reload(), 500) };
       const u = $('[data-undo]', f); if(u) u.onclick = async () => { await S.deleteFixtureEdit(f.dataset.fk); toast('Done'); setTimeout(()=>location.reload(), 500) };
     });
     $('#xAdd').onsubmit = async e => { e.preventDefault(); const v = Object.fromEntries(new FormData(e.target)); const src = G.find(g => g.team === cur) || {};
@@ -764,6 +776,7 @@ const within = (p, ms, fallback) => Promise.race([p, new Promise(r => setTimeout
     EDITS.forEach(e => { if(e.added){ G.push({ b:'ADD', id: e.key.slice(4), team:e.team, sex:e.sex, k:e.k, c:e.c, o:e.o, h:e.h, d:e.d, tm:e.tm, v:e.v, status:e.status, note:e.note }) }
       else { const g = G.find(x => gameKey(x) === e.key); if(g) ['d','tm','v','status','note'].forEach(f => { if(e[f] !== undefined && e[f] !== '' && e[f] !== null) g[f] = e[f]; else if(f==='status'||f==='note') g[f] = e[f] || '' }) } });
     G.sort((a,b)=>((a.d||'9999')+(a.tm||'')).localeCompare((b.d||'9999')+(b.tm||'')));
+    G.forEach(g => { g.boardScore = typeof g.us === 'number' });
     await seedDemo();
     await loadBoxes();
     S.onAuth(a => { const was = AUTH.admin; AUTH = a; if(was !== a.admin && location.hash.startsWith('#admin')) route() });
