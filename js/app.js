@@ -55,8 +55,21 @@ function gameRow(g){
     : g.status ? `<span class="pill ${g.status==='Cancelled'?'p-no':'p-warn'}">${esc(g.status)}</span>`
     : (g.d && g.d < TODAY ? '<span class="pill p-nv">No score</span>' : `<div class="sc" style="font-size:15px">${g.d?fmtTime(g.tm):'TBC'}<small>${g.h?'HOME':'AWAY'}</small></div>`);
   const box = BOXES[gameKey(g)] ? ' <span class="pill p-pu">Box score</span>' : '';
-  return `<a class="mt" href="#game/${encodeURIComponent(gameKey(g))}"><img class="cr" src="assets/crest.png" alt="Éanna"><span class="vs">VS</span>${crest(g.o)}<div class="who"><b>${esc(g.team)}${box}</b><span>${esc(oname(g.o))}${g.k==='Cup'||g.b==='ADD'?' · '+esc(g.c):''}</span></div>${res}</a>`;
+  return `<a class="mt" href="#game/${encodeURIComponent(gameKey(g))}"><img class="cr" src="assets/crest.png" alt="Éanna"><span class="vs">VS</span>${crest(g.o)}<div class="who"><b>${favTeam(g.team)?'<i style="font-style:normal;color:var(--orange)">★</i> ':''}${esc(g.team)}${box}</b><span>${esc(oname(g.o))}${g.k==='Cup'||g.b==='ADD'?' · '+esc(g.c):''}</span></div>${res}</a>`;
 }
+const FAV_KEY = 'eanna-hub-favs';
+const favs = () => { const f = lsGet(FAV_KEY, null) || {}; return { teams: f.teams || [], players: f.players || [] } };
+const favTeam = t => favs().teams.includes(t);
+const favPlayer = (team, no) => favs().players.some(p => p.team === team && String(p.no) === String(no));
+const favGameFirst = (a, b) => (favTeam(b.team) ? 1 : 0) - (favTeam(a.team) ? 1 : 0);
+const starBtn = (attrs, on, dark) => `<button class="star ${on?'on':''} ${dark?'dk':''}" ${attrs} aria-pressed="${on}">${on ? '★ Favourite' : '☆ Add to favourites'}</button>`;
+document.addEventListener('click', e => {
+  const b = e.target.closest('[data-fav-team],[data-fav-player]'); if(!b) return;
+  e.preventDefault(); const f = favs();
+  if(b.dataset.favTeam !== undefined){ const t = b.dataset.favTeam; const on = f.teams.includes(t); f.teams = on ? f.teams.filter(x => x !== t) : [...f.teams, t]; lsSet(FAV_KEY, f); toast(on ? 'Removed from favourites' : `${t} added to your favourites`) }
+  else { const [team, no, ...nm] = b.dataset.favPlayer.split('|'); const on = f.players.some(p => p.team === team && String(p.no) === no); f.players = on ? f.players.filter(p => !(p.team === team && String(p.no) === no)) : [...f.players, { team, no, name: nm.join('|') }]; lsSet(FAV_KEY, f); toast(on ? 'Removed from favourites' : `${nm.join('|')} added to your favourites`) }
+  route();
+});
 const rows = list => list.map(gameRow).join('');
 const namesShown = team => ['full','first'].includes(modeFor(team));
 const playerHref = (team, no) => `#player/${encodeURIComponent(team)}/${encodeURIComponent(no)}`;
@@ -133,16 +146,33 @@ V.home = () => {
   const wk = currentWeek(), end = addDays(wk, 6);
   const tp = topPerformers(wk, end);
   const sex = lsGet('eanna-hub-tp', 'm');
-  const list = tp[sex].slice(0, 5);
+  const list = tp[sex].sort((a,b) => (favPlayer(b.team,b.no)?1:0)-(favPlayer(a.team,a.no)?1:0) || b.pts-a.pts).slice(0, 5);
   const pg = potgList(wk, end);
   const potgCard = pg.length ? card(`Players of the game · picked by coaches`, pg.slice(0,6).map(p => `<a class="row" href="#game/${encodeURIComponent(p.key)}" style="padding:9px 0;border-bottom:1px solid var(--line);text-decoration:none;color:inherit;align-items:flex-start">${jersey(p.no, p.sex==='w')}<div class="f"><b>${esc(p.name)}</b> <span class="sm mut">${esc(p.team)} · v ${esc(oname(p.o))}</span>${p.note?`<div class="sm" style="margin-top:2px">“${esc(p.note)}”</div>`:''}</div></a>`).join('')) : '';
-  const perf = list.length ? list.map(p => `<div class="perf">${jersey(p.no, p.sex==='w')}<div class="f"><b>${pname(p.team, p.no, p.name)}</b><span>${esc(p.team)} · v ${esc(oname(p.o))}</span></div><div class="n">${p.pts}<small>PTS</small></div></div>`).join('')
+  const perf = list.length ? list.map(p => `<div class="perf">${jersey(p.no, p.sex==='w')}<div class="f"><b>${favPlayer(p.team,p.no)?'<span style="color:var(--orange)">★</span> ':''}${pname(p.team, p.no, p.name)}</b><span>${esc(p.team)} · v ${esc(oname(p.o))}</span></div><div class="n">${p.pts}<small>PTS</small></div></div>`).join('')
     : `<div style="padding:12px 0 4px"><b style="font-family:var(--display)">No score-sheets in yet for this week</b><div class="sm" style="opacity:.8;margin-top:4px">Top performers appear here once coaches send in score-sheets and a moderator approves them.</div></div>`;
   const wkGames = G.filter(g => g.d >= wk && g.d <= end && visible(g.team));
-  const res = wkGames.filter(played).sort((a,b)=>(b.d+(b.tm||'')).localeCompare(a.d+(a.tm||'')));
+  const res = wkGames.filter(played).sort((a,b)=> favGameFirst(a,b) || (b.d+(b.tm||'')).localeCompare(a.d+(a.tm||'')));
   const next = G.filter(g => g.d && g.d >= TODAY && !played(g) && visible(g.team)).sort((a,b)=>(a.d+(a.tm||'')).localeCompare(b.d+(b.tm||''))).slice(0, 5);
   const W = res.filter(g=>g.us>g.th).length;
-  $('#view').innerHTML = `<div class="split"><div>${potgCard}
+  const F = favs();
+  let favCard = '';
+  if(F.teams.length || F.players.length){
+    const items = [];
+    F.teams.filter(visible).forEach(t => {
+      const last = G.filter(g => g.team === t && played(g)).sort((a,b)=>(b.d||'').localeCompare(a.d||''))[0];
+      const nxt = G.filter(g => g.team === t && g.d && g.d >= TODAY && !played(g)).sort((a,b)=>(a.d+(a.tm||'')).localeCompare(b.d+(b.tm||'')))[0];
+      items.push(`<div style="padding:6px 0;border-bottom:1px solid var(--line)"><a href="#team/${encodeURIComponent(t)}" style="text-decoration:none;color:inherit"><b>★ ${esc(t)}</b></a>${last ? `<div class="sm mut" style="margin-top:2px">Last result · ${fmtDate(last.d,{day:'numeric',month:'short'})}</div>${gameRow(last)}` : ''}${nxt ? `<div class="sm mut">Next · ${fmtDate(nxt.d)}</div>${gameRow(nxt)}` : ''}</div>`);
+    });
+    F.players.filter(p => namesShown(p.team)).forEach(p => {
+      const g = Object.values(BOXES).filter(b => b.team === p.team).map(b => ({ b, l: (b.lines||[]).find(l => String(l.no) === String(p.no)) })).filter(x => x.l).sort((a,c)=>(c.b.d||'').localeCompare(a.b.d||''))[0];
+      items.push(`<a class="row" href="${playerHref(p.team, p.no)}" style="padding:9px 0;border-bottom:1px solid var(--line);text-decoration:none;color:inherit">${jersey(p.no, sexOf(G.find(x => x.team === p.team) || {})==='w')}<div class="f"><b>★ ${esc(g ? g.l.name : p.name)}</b><div class="sm mut">${esc(p.team)}${g ? ` · last game v ${esc(oname(g.b.o))}` : ' · no games on record yet'}</div></div>${g ? `<span class="n" style="font-size:20px">${g.l.pts}</span><span class="sm mut">pts</span>` : ''}${g && g.b.potg && String(g.b.potg.no) === String(p.no) ? '<span class="pill p-or">Player of the game</span>' : ''}</a>`);
+    });
+    favCard = card('My favourites', items.join('') || '<div class="sm mut" style="padding:6px 0">Your favourite teams are hidden for their age group.</div>');
+  } else {
+    favCard = `<div class="cd row" style="padding:10px 14px"><span style="font-size:22px;color:var(--orange)">☆</span><div class="f sm"><b>Follow your teams and players.</b> Tap ☆ on any team or player page and they'll show here first.</div></div>`;
+  }
+  $('#view').innerHTML = `<div class="split"><div>${favCard}${potgCard}
     <div class="tc">
       <div class="row sp"><span class="lbl">Top scorer from each game · ${fmtDate(wk,{day:'numeric',month:'short'})}–${fmtDate(end,{day:'numeric',month:'short'})}</span></div>
       <div class="seg" style="margin:10px 0 2px;background:rgba(255,255,255,.08);border-color:rgba(255,255,255,.14)" data-tp><button data-v="m" class="${sex==='m'?'on':''}" style="color:#fff">Men &amp; boys</button><button data-v="w" class="${sex==='w'?'on':''}" style="color:#fff">Women &amp; girls</button></div>
@@ -166,11 +196,12 @@ V.results = () => {
   const pl = gs.filter(played), W = pl.filter(g=>g.us>g.th).length;
   let h = `<div class="cd row sp" style="padding:8px 10px"><button class="btn g sm" data-wk="-1" ${wi===0?'disabled':''} aria-label="Previous week">‹</button><b style="font-family:var(--display)">${fmtDate(w,{day:'numeric',month:'short'})} – ${fmtDate(e,{day:'numeric',month:'short'})}</b><button class="btn g sm" data-wk="1" ${wi===weeks.length-1?'disabled':''} aria-label="Next week">›</button></div>
     <div class="row wrap"><span class="pill p-nv">${gs.length} games</span><span class="pill p-ok">${W} won</span><span class="pill p-no">${pl.length-W} lost</span>${gs.length-pl.length?`<span class="pill p-warn">${gs.length-pl.length} no score yet</span>`:''}</div>`;
-  const cols = [[],[]]; GROUPS.forEach((gr, i) => { const x = gs.filter(g => groupOf(g) === gr); if(x.length) cols[i%2].push(card(gr, rows(x))) });
+  const mineWk = gs.filter(g => favTeam(g.team)); if(mineWk.length) h += card('★ Your teams this week', rows(mineWk));
+  const cols = [[],[]]; GROUPS.forEach((gr, i) => { const x = gs.filter(g => groupOf(g) === gr).sort(favGameFirst); if(x.length) cols[i%2].push(card(gr, rows(x))) });
   h += `<div class="cards"><div>${cols[0].join('')}</div><div>${cols[1].join('')}</div></div>`;
   const tally = { m:{}, w:{} };
   Object.values(BOXES).forEach(b => { if(!namesShown(b.team)) return; (b.lines||[]).forEach(l => { const k = b.team+'|'+l.no; const t = tally[b.sex==='w'?'w':'m']; t[k] = t[k] || { team:b.team, no:l.no, name:l.name, pts:0, gp:0 }; t[k].pts += l.pts; t[k].gp++ }) });
-  const lb = sx => Object.values(tally[sx]).sort((a,b)=>b.pts-a.pts).slice(0,10).map((p,i)=>`<a class="row" href="${playerHref(p.team,p.no)}" style="padding:7px 0;border-bottom:1px solid var(--line);text-decoration:none;color:inherit"><span class="n" style="width:22px;color:var(--orange)">${i+1}</span><div class="f"><b>${esc(p.name)}</b> <span class="sm mut">${esc(p.team)}</span></div><span class="sm mut">${p.gp} gm</span><span class="n" style="font-size:17px">${p.pts}</span></a>`).join('') || '<div class="sm mut" style="padding:8px 0">No score-sheets yet.</div>';
+  const lb = sx => Object.values(tally[sx]).sort((a,b)=>b.pts-a.pts).slice(0,10).map((p,i)=>`<a class="row" href="${playerHref(p.team,p.no)}" style="padding:7px 0;border-bottom:1px solid var(--line);text-decoration:none;color:inherit"><span class="n" style="width:22px;color:var(--orange)">${i+1}</span><div class="f"><b>${favPlayer(p.team,p.no)?'★ ':''}${esc(p.name)}</b> <span class="sm mut">${esc(p.team)}</span></div><span class="sm mut">${p.gp} gm</span><span class="n" style="font-size:17px">${p.pts}</span></a>`).join('') || '<div class="sm mut" style="padding:8px 0">No score-sheets yet.</div>';
   h += `<details class="cd"><summary class="lbl" style="cursor:pointer">Season points ▾</summary><div class="cards" style="margin-top:8px"><div><div class="lbl">Men &amp; boys</div>${lb('m')}</div><div><div class="lbl">Women &amp; girls</div>${lb('w')}</div></div><div class="sm mut" style="margin-top:8px">From approved score-sheets only. Follows each age group's settings.</div></details>`;
   $('#view').innerHTML = h;
   $$('[data-wk]').forEach(b => b.onclick = () => { wi += +b.dataset.wk; V.results() });
@@ -212,6 +243,8 @@ V.teams = () => {
   setHead('Teams', `${T.filter(t=>visible(t.name)).length} Éanna teams`);
   const L = T.filter(t => visible(t.name) && (ctf==='all' || (ctf==='w') === (sexOf(t)==='w')));
   let h = `<div class="seg" data-ct><button data-v="all" class="${ctf==='all'?'on':''}">All</button><button data-v="m" class="${ctf==='m'?'on':''}">Men &amp; boys</button><button data-v="w" class="${ctf==='w'?'on':''}">Women &amp; girls</button></div>`;
+  const favT = L.filter(t => favTeam(t.name));
+  if(favT.length) h += card('★ Your favourites', favT.map(t => `<a class="row" href="#team/${encodeURIComponent(t.name)}" style="padding:9px 0;border-bottom:1px solid var(--line);text-decoration:none;color:inherit"><span class="ball" style="font-size:9.5px">★</span><div class="f"><b>${esc(t.name)}</b><div class="sm mut">${t.b==='BI'?'Basketball Ireland':t.b} · ${esc(t.comp)}</div></div>${t.n ? `<span class="n" style="font-size:17px">${t.w}–${t.l}</span>${t.pos?`<span class="pill ${t.pos<=2?'p-or':'p-nv'}">${ord(t.pos)}</span>`:''}` : ''}<span class="mut">›</span></a>`).join(''));
   const tcols = [[],[]];
   GROUPS.forEach((gr, gi) => {
     const x = L.filter(t => groupOf(t) === gr).sort((a,b) => (ageOf(a.name)||0)-(ageOf(b.name)||0) || a.name.localeCompare(b.name));
@@ -230,7 +263,7 @@ V.team = (name) => {
   if(!visible(name)){ $('#view').innerHTML = '<div class="empty"><b>This team isn\'t shown publicly</b></div>'; return }
   const pl = all.filter(played).sort((a,b)=>(b.d||'').localeCompare(a.d||''));
   const next = all.filter(g => g.d && g.d >= TODAY && !played(g)).sort((a,b)=>(a.d+(a.tm||'')).localeCompare(b.d+(b.tm||'')));
-  let h = `<div class="wood"><div class="in"><img src="assets/crest-dark.png" alt=""><div class="f"><div class="lbl" style="color:rgba(255,255,255,.75)">${t?esc(t.comp):'Cup'}</div><h2>${esc(name)}</h2></div>${name==="Men's Super League"?'<img src="assets/mens-super-league.png" alt="" style="width:56px;height:auto">':''}</div></div>`;
+  let h = `<div class="wood"><div class="in"><img src="assets/crest-dark.png" alt=""><div class="f"><div class="lbl" style="color:rgba(255,255,255,.75)">${t?esc(t.comp):'Cup'}</div><h2>${esc(name)}</h2><div style="margin-top:8px">${starBtn(`data-fav-team="${esc(name)}"`, favTeam(name), true)}</div></div>${name==="Men's Super League"?'<img src="assets/mens-super-league.png" alt="" style="width:56px;height:auto">':''}</div></div>`;
   if(t) h += `<div class="stat3"><div><span class="n">${t.n?t.w+'–'+t.l:'–'}</span><span>Record</span></div><div><span class="n">${t.pos?ord(t.pos):'–'}</span><span>of ${t.of||'–'}</span></div><div><span class="n">${t.n?Math.round(t.pf/t.n)+'–'+Math.round(t.pa/t.n):'–'}</span><span>Avg score</span></div></div>`;
   if(pl.length) h += `<div class="cd row sp"><span class="lbl">Form</span><span class="form">${pl.slice(0,5).reverse().map(g=>`<span class="${g.us>g.th?'W':'L'}">${g.us>g.th?'W':'L'}</span>`).join('')}</span></div>`;
   if(/U11/.test(name)) h += '<div class="banner b-pu">U11 is a non-scoring league, so there are fixtures but no results or table.</div>';
@@ -257,7 +290,7 @@ V.player = (team, no) => {
   const pg = games.filter(x => x.b.potg && String(x.b.potg.no) === String(no)).length;
   setHead(name, team, `#team/${encodeURIComponent(team)}`);
   const w = sexOf(games[0].b) === 'w';
-  $('#view').innerHTML = `<div class="narrow"><div class="tc"><div class="row"><svg style="width:84px;height:92px;filter:drop-shadow(0 8px 12px rgba(0,0,0,.5))" aria-hidden="true"><use href="#${w?'jsyw':'jsy'}"/><text x="20" y="33" text-anchor="middle" font-family="Anton" font-size="14" fill="#fff">${esc(no)}</text></svg><div class="f"><div class="lbl">${esc(team)}</div><div class="h2" style="color:#fff">${esc(name)}</div>${pg?`<span class="pill p-or" style="margin-top:6px">Player of the game × ${pg}</span>`:''}</div></div></div>
+  $('#view').innerHTML = `<div class="narrow"><div class="tc"><div class="row"><svg style="width:84px;height:92px;filter:drop-shadow(0 8px 12px rgba(0,0,0,.5))" aria-hidden="true"><use href="#${w?'jsyw':'jsy'}"/><text x="20" y="33" text-anchor="middle" font-family="Anton" font-size="14" fill="#fff">${esc(no)}</text></svg><div class="f"><div class="lbl">${esc(team)}</div><div class="h2" style="color:#fff">${esc(name)}</div><div style="margin:6px 0">${starBtn(`data-fav-player="${esc(team)}|${esc(no)}|${esc(name)}"`, favPlayer(team, no), true)}</div>${pg?`<span class="pill p-or" style="margin-top:6px">Player of the game × ${pg}</span>`:''}</div></div></div>
     <div class="stat3"><div><span class="n">${games.length}</span><span>Games</span></div><div><span class="n">${(tot/games.length).toFixed(1)}</span><span>Pts per game</span></div><div><span class="n">${hi}</span><span>Best game</span></div></div>
     ${card('Game log', games.map(x => `<a class="row" href="#game/${encodeURIComponent(x.b.key)}" style="padding:8px 0;border-bottom:1px solid var(--line);text-decoration:none;color:inherit"><span class="sm mut" style="width:62px">${x.b.d?fmtDate(x.b.d,{day:'numeric',month:'short'}):''}</span>${crest(x.b.o)}<b class="f">v ${esc(oname(x.b.o))} <span class="${x.b.us>x.b.th?'w':'l'} sm">${x.b.us>x.b.th?'W':'L'}</span></b><span class="n" style="font-size:17px">${x.l.pts}</span></a>`).join(''))}</div>`;
 };
@@ -267,7 +300,7 @@ let fx = { f:'all', team:'', ym: TODAY.slice(0,7), sel: TODAY };
 const FOLLOW_KEY = 'eanna-hub-follow';
 function following(){ return lsGet(FOLLOW_KEY, { off: [] }) }
 const fxPass = g => { const fo = following(); if(fo.off.includes(g.b==='BI' ? g.c : g.b)) return false;
-  return visible(g.team) && (!fx.team || g.team === fx.team) && (fx.f==='all' || (fx.f==='m' && sexOf(g)==='m') || (fx.f==='w' && sexOf(g)==='w') || (fx.f==='sen' && isSenior(g.team))) };
+  return visible(g.team) && (!fx.team || g.team === fx.team) && (fx.f==='all' || (fx.f==='m' && sexOf(g)==='m') || (fx.f==='w' && sexOf(g)==='w') || (fx.f==='sen' && isSenior(g.team)) || (fx.f==='fav' && favTeam(g.team))) };
 V.fixtures = () => {
   setHead('Fixtures', fx.team || 'All Éanna teams');
   const [y, m] = fx.ym.split('-').map(Number);
@@ -277,7 +310,7 @@ V.fixtures = () => {
   for(let i=0;i<off;i++) cal += `<button class="x" disabled>${prevDays-off+1+i}</button>`;
   for(let d=1; d<=days; d++){ const ds = `${fx.ym}-${pad(d)}`; const n = G.filter(g => g.d === ds && fxPass(g)).length;
     cal += `<button class="${ds===fx.sel?'sel':''} ${ds===TODAY?'today':''}" data-day="${ds}" aria-label="${fmtDate(ds)}, ${n} games">${d}${n?`<span class="dots">${'<i></i>'.repeat(Math.min(n,3))}</span>`:''}</button>` }
-  const day = G.filter(g => g.d === fx.sel && fxPass(g)).sort((a,b)=>(a.tm||'').localeCompare(b.tm||''));
+  const day = G.filter(g => g.d === fx.sel && fxPass(g)).sort((a,b)=> favGameFirst(a,b) || (a.tm||'').localeCompare(b.tm||''));
   const nat = (DATA.national || []);
   const fo = following();
   const tg = (key, on) => `<button class="tog ${on?'on':''}" data-fol="${esc(key)}" aria-pressed="${on}" aria-label="${esc(key)}"></button>`;
@@ -287,7 +320,7 @@ V.fixtures = () => {
   const flush = () => { if(buf) upH += card('', buf); buf = '' };
   up.forEach(g => { if(g.d !== last){ flush(); upH += `<div class="dayh">${fmtDate(g.d)}</div>`; last = g.d } buf += gameRow(g) }); flush();
   $('#view').innerHTML = `
-    <div class="seg" data-fx><button data-v="all">All</button><button data-v="m">Men &amp; boys</button><button data-v="w">Women &amp; girls</button><button data-v="sen">Senior</button></div>
+    <div class="seg" data-fx><button data-v="fav">★ Mine</button><button data-v="all">All</button><button data-v="m">Men &amp; boys</button><button data-v="w">Women &amp; girls</button><button data-v="sen">Senior</button></div>
     <label class="fld"><span>Team</span><select id="fxTeam"><option value="">All Éanna teams</option>${teams.map(n=>`<option ${n===fx.team?'selected':''}>${esc(n)}</option>`).join('')}</select></label>
     <div class="split fx-split"><div>
     <div class="cd"><div class="row sp" style="margin-bottom:8px"><button class="btn g sm" data-mon="-1" aria-label="Previous month">‹</button><b style="font-family:var(--display)">${first.toLocaleDateString('en-IE',{month:'long',year:'numeric'})}</b><button class="btn g sm" data-mon="1" aria-label="Next month">›</button></div><div class="cal">${cal}</div></div>
@@ -319,6 +352,7 @@ V.more = () => {
   $('#view').innerHTML = `
     ${can('sendSheets') ? `<a class="cd row" href="#submit" style="text-decoration:none;color:inherit"><span class="ball">✎</span><div class="f"><b>Send a score-sheet</b><div class="sm mut">${AUTH.owner || (AUTH.perms||{}).sendSheets==='all' ? 'Any team' : esc((AUTH.teams||[]).join(', '))}</div></div><span class="mut">›</span></a>` : ''}
     <a class="cd row" href="#admin" style="text-decoration:none;color:inherit"><img src="assets/crest.png" alt="" style="width:34px;height:34px;object-fit:contain"><div class="f"><b>${AUTH.email ? 'Club tools' : 'Coaches &amp; staff sign in'}</b><div class="sm mut">${AUTH.email ? 'Signed in as ' + esc(AUTH.name || AUTH.email) : 'For coaches, managers, committee and moderators'}</div></div><span class="mut">›</span></a>
+    <a class="cd row" href="preview.html" style="text-decoration:none;color:inherit"><span class="ball">★</span><div class="f"><b>What's coming to the hub</b><div class="sm mut">Preview of the full app: news, community, staff rooms, events, game days and more</div></div><span class="mut">›</span></a>
     ${card('Add the hub to your phone', `<div class="sm" style="margin-top:6px"><b>iPhone:</b> open this page in Safari, tap <b>Share</b>, then <b>Add to Home Screen</b>.<br><b>Android:</b> open it in Chrome, tap the <b>⋮</b> menu, then <b>Install app</b> or <b>Add to Home screen</b>.</div>`)}
     ${card('Where the fixtures come from', `<div class="sm" style="margin-top:6px">Dublin leagues and cups from the <a href="https://bi.comortais.com/competitionstabs.aspx?oid=1006" target="_blank" rel="noopener">DMBB</a> and <a href="https://bi.comortais.com/competitionstabs.aspx?oid=1015" target="_blank" rel="noopener">DLBB</a> sites. National games from <a href="https://ireland.basketball/NationalLeagueFixtures" target="_blank" rel="noopener">Basketball Ireland</a>.${upd?` Last updated ${upd}.`:''} Player points come from score-sheets sent in by coaches.</div>`)}
     ${card('Privacy', `<div class="sm" style="margin-top:6px">The hub doesn't collect dates of birth, addresses or phone numbers. Underage players who don't score aren't listed, and each age group can be set to show results only. Score-sheet photos are only seen by moderators. To have a player's name removed, contact the club.</div>`)}
