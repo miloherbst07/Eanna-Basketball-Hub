@@ -21,7 +21,7 @@ const myTeams = t => (AUTH.owner || (AUTH.perms||{})[t] === 'all') ? null : (AUT
 const allTeams = () => [...new Set(G.map(g => g.team))].sort((a,b)=> GROUPS.indexOf(groupOf(G.find(g=>g.team===a))) - GROUPS.indexOf(groupOf(G.find(g=>g.team===b))) || (ageOf(a)||0)-(ageOf(b)||0) || a.localeCompare(b));
 
 /* ---------- helpers ---------- */
-const crestMap = [['Limerick Celtics','limerick-celtics'],['Limerick Eagles','limerick-sport-eagles'],['Sligo All','sligo-all-stars'],['UCC Demons','ucc-demons'],['Killester','killester'],['St. Vincent','st-vincents'],['St Vincent','st-vincents'],['UCD Marian','ucd-marian'],['Neptune','neptune'],['Tralee','tralee-warriors'],['Belfast Star','belfast-star'],['Brunell','brunell'],['Ballincollig','ballincollig']];
+const crestMap = [['Limerick Celtics','limerick-celtics'],['Limerick Eagles','limerick-sport-eagles'],['Sligo All','sligo-all-stars'],['UCC Demons','ucc-demons'],['Killester','killester'],['St. Vincent','st-vincents'],['St Vincent','st-vincents'],['UCD','ucd-marian'],['Neptune','neptune'],['Tralee','tralee-warriors'],['Belfast Star','belfast-star'],['Brunell','brunell'],['Ballincollig','ballincollig'],['KUBS','kubs'],['Templeogue','templeogue'],['Malahide','malahide'],['Raiders','dublin-raiders'],['Swords','swords'],['Tolka','tolka-rovers'],['Ongar','ongar-chasers'],['Dublin Lions','dublin-lions'],['Meteors','meteors'],['Tridents','tridents'],['Kilcock','kilcock-tigers'],['Tigers','kilcock-tigers'],['Oblate','oblate'],['Liffey Celtics','liffey-celtics'],['Naas','naas-serpents'],['Sonics','dublin-sonics'],['Greystones','greystones-sharks'],['Lusk','lusk-ravens'],['Glasnevin','glasnevin'],['NEIC','neic-trojans'],['Kevin','st-kevins-knights'],['Wicklow','wicklow-gators'],['Balbriggan','balbriggan'],['Bray','bray-bullets'],['Rathmines','rathmines'],['Luttrellstown','luttrellstown'],['Adamstown','adamstown-grafters'],['Aer Lingus','aer-lingus'],['Leixlip','leixlip'],['Lietkabelis','lietkabelis'],['Inchicore','inchicore'],['Nets','nets-ladies'],['Pegasus','pegasus'],['St. Mark','st-marks'],['St Mark','st-marks'],['Waterford','waterford-vikings'],['Boyne','boyne-warriors'],['Glanmire','glanmire'],['Tullamore','tullamore']];
 const oname = o => String(o||'').replace(/\s+BC\b/,'').trim();
 const initials = o => oname(o).replace(/[^A-Za-zÀ-ÿ ]/g,'').split(' ').filter(Boolean).map(w=>w[0]).join('').slice(0,2).toUpperCase() || '?';
 const crest = (o, size) => { const m = crestMap.find(c => String(o).includes(c[0])); const st = size ? ` style="width:${size}px;height:${size}px"` : '';
@@ -43,7 +43,8 @@ const addDays = (d, n) => { const x = new Date(d+'T12:00'); x.setDate(x.getDate(
 const played = g => typeof g.us === 'number';
 const boardName = { DMBB:"Dublin Men's Basketball Board", DLBB:"Dublin Ladies' Basketball Board", BI:'Basketball Ireland' };
 const gameLink = g => g.b === 'BI' ? `https://ireland.basketball/${g.page}` : g.id ? `https://bi.comortais.com/match.aspx?id=${g.id}&orgId=${g.b==='DMBB'?1006:1015}` : '';
-const jersey = (n, w) => `<svg class="jy" aria-hidden="true"><use href="#${w?'jsyw':'jsy'}"/><text x="20" y="33" text-anchor="middle" font-family="Anton" font-size="14" fill="#fff">${esc(n)}</text></svg>`;
+const jFont = n => { const l = String(n ?? '').length; return l >= 3 ? 9.5 : l === 2 ? 13 : 15.5 };
+const jersey = (n, w, style) => `<svg class="jy" viewBox="0 0 40 44" preserveAspectRatio="xMidYMid meet" aria-hidden="true"${style ? ` style="${style}"` : ''}><use href="#${w?'jsyw':'jsy'}" width="40" height="44"/><text x="20" y="25.5" text-anchor="middle" dominant-baseline="central" font-family="Anton" font-size="${jFont(n)}" fill="#fff">${esc(n ?? '')}</text></svg>`;
 const lsGet = (k, d) => { try { const v = localStorage.getItem(k); return v ? JSON.parse(v) : d } catch(e) { return d } };
 const lsSet = (k, v) => { try { localStorage.setItem(k, JSON.stringify(v)) } catch(e) {} };
 function toast(msg, err){ const t = $('#toast'); t.textContent = msg; t.classList.toggle('err', !!err); t.classList.add('show'); clearTimeout(t._t); t._t = setTimeout(()=>t.classList.remove('show'), 2800) }
@@ -60,20 +61,30 @@ function gameRow(g){
 const FAV_KEY = 'eanna-hub-favs';
 const favs = () => { const f = lsGet(FAV_KEY, null) || {}; return { teams: f.teams || [], players: f.players || [] } };
 const favTeam = t => favs().teams.includes(t);
-const favPlayer = (team, no) => favs().players.some(p => p.team === team && String(p.no) === String(no));
+// Each roster player has a pid. A line on a score-sheet carries the pid plus the number worn that day.
+// Old lines without a pid fall back to '#<number>' within their team.
+const newPid = () => 'p' + Date.now().toString(36).slice(-5) + Math.random().toString(36).slice(2, 6);
+const pkey = l => l && l.pid ? l.pid : '#' + (l ? l.no : '');
+const normName = n => String(n || '').trim().toLowerCase().replace(/\s+/g, ' ');
+function matchPlayer(ps, l){
+  return (l.pid && ps.find(p => p.pid === l.pid)) || (l.name && ps.find(p => normName(p.name) === normName(l.name))) || (!l.name && l.no !== '' && ps.find(p => String(p.no) === String(l.no))) || null;
+}
+function ensurePids(ps){ let ch = false; (ps || []).forEach(p => { if(!p.pid){ p.pid = newPid(); ch = true } }); return ch }
+const favKey = p => p.k || ('#' + p.no);
+const favPlayer = (team, k) => favs().players.some(p => k && k[0] !== '#' ? favKey(p) === k : (p.team === team && favKey(p) === k));
 const favGameFirst = (a, b) => (favTeam(b.team) ? 1 : 0) - (favTeam(a.team) ? 1 : 0);
 const starBtn = (attrs, on, dark) => `<button class="star ${on?'on':''} ${dark?'dk':''}" ${attrs} aria-pressed="${on}">${on ? '★ Favourite' : '☆ Add to favourites'}</button>`;
 document.addEventListener('click', e => {
   const b = e.target.closest('[data-fav-team],[data-fav-player]'); if(!b) return;
   e.preventDefault(); const f = favs();
   if(b.dataset.favTeam !== undefined){ const t = b.dataset.favTeam; const on = f.teams.includes(t); f.teams = on ? f.teams.filter(x => x !== t) : [...f.teams, t]; lsSet(FAV_KEY, f); toast(on ? 'Removed from favourites' : `${t} added to your favourites`) }
-  else { const [team, no, ...nm] = b.dataset.favPlayer.split('|'); const on = f.players.some(p => p.team === team && String(p.no) === no); f.players = on ? f.players.filter(p => !(p.team === team && String(p.no) === no)) : [...f.players, { team, no, name: nm.join('|') }]; lsSet(FAV_KEY, f); toast(on ? 'Removed from favourites' : `${nm.join('|')} added to your favourites`) }
+  else { const [team, k, ...nm] = b.dataset.favPlayer.split('|'); const same = p => k[0] !== '#' ? favKey(p) === k : (p.team === team && favKey(p) === k); const on = f.players.some(same); f.players = on ? f.players.filter(p => !same(p)) : [...f.players, { team, k, name: nm.join('|') }]; lsSet(FAV_KEY, f); toast(on ? 'Removed from favourites' : `${nm.join('|')} added to your favourites`) }
   route();
 });
 const rows = list => list.map(gameRow).join('');
 const namesShown = team => ['full','first'].includes(modeFor(team));
-const playerHref = (team, no) => `#player/${encodeURIComponent(team)}/${encodeURIComponent(no)}`;
-const pname = (team, no, name) => namesShown(team) ? `<a href="${playerHref(team, no)}" style="color:inherit;text-decoration:none">${esc(name)}</a>` : esc(name);
+const playerHref = (team, k) => `#player/${encodeURIComponent(team)}/${encodeURIComponent(k)}`;
+const pname = (team, k, name) => namesShown(team) ? `<a href="${playerHref(team, k)}" style="color:inherit;text-decoration:none">${esc(name)}</a>` : esc(name);
 
 function setHead(title, sub, back){
   $('#head').innerHTML = `${back ? `<a class="back" href="${back}" aria-label="Back">‹</a>` : `<img class="crest" src="assets/crest-dark.png" alt="Éanna Basketball">`}
@@ -84,6 +95,9 @@ const TABS = [['home','Home','M3 11l9-7 9 7v9a1 1 0 0 1-1 1h-5v-6h-6v6H4a1 1 0 0
 function setTab(r){ $('#tabs').innerHTML = TABS.map(t => `<a href="#${t[0]}" class="${t[0]===r?'on':''}"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="${t[2]}"/></svg><span class="t">${t[1]}</span></a>`).join('') }
 
 /* ---------- box scores ---------- */
+function playerGames(team, k){
+  return Object.values(BOXES).filter(b => k[0] === '#' ? b.team === team : true).map(b => ({ b, l: (b.lines||[]).find(l => pkey(l) === k) })).filter(x => x.l).sort((a,c)=>(c.b.d||'').localeCompare(a.b.d||''));
+}
 function topPerformers(from, to){
   const out = { m:[], w:[] };
   Object.values(BOXES).forEach(b => {
@@ -106,23 +120,37 @@ function currentWeek(){
 // Build the public box score from a full (private) submission, applying underage rules
 function publicBox(sub, roster){
   const mode = modeFor(sub.team);
-  const hiddenNos = new Set((roster && roster.players || []).filter(p => p.hidden).map(p => String(p.no)));
+  const ps = (roster && roster.players) || [];
+  const pidOf = l => l.pid || (matchPlayer(ps, l) || {}).pid || null;
+  const hidden = new Set(ps.filter(p => p.hidden).map(p => p.pid).filter(Boolean));
+  const isHidden = l => l.hidden || (pidOf(l) && hidden.has(pidOf(l)));
   let lines = [];
   if(mode === 'full' || mode === 'first'){
-    lines = (sub.lines||[]).filter(l => !l.hidden && !hiddenNos.has(String(l.no)));
+    lines = (sub.lines||[]).filter(l => !isHidden(l));
     if(!isSenior(sub.team)) lines = lines.filter(l => l.pts > 0);
-    lines = lines.map(l => ({ no: l.no, name: mode === 'first' ? String(l.name||'').trim().split(/\s+/)[0] : l.name, pts: +l.pts || 0 }));
+    lines = lines.map(l => { const pid = pidOf(l); return { ...(pid ? { pid } : {}), no: l.no, name: mode === 'first' ? String(l.name||'').trim().split(/\s+/)[0] : l.name, pts: +l.pts || 0 } });
     lines.sort((a,b)=>b.pts-a.pts);
   }
   let potg = null;
-  if((mode === 'full' || mode === 'first') && sub.potg && sub.potg.name && !hiddenNos.has(String(sub.potg.no))){
-    potg = { no: sub.potg.no, name: mode === 'first' ? String(sub.potg.name).trim().split(/\s+/)[0] : sub.potg.name, note: sub.potg.note || '' };
+  if((mode === 'full' || mode === 'first') && sub.potg && sub.potg.name && !isHidden(sub.potg)){
+    const pid = pidOf(sub.potg);
+    potg = { ...(pid ? { pid } : {}), no: sub.potg.no, name: mode === 'first' ? String(sub.potg.name).trim().split(/\s+/)[0] : sub.potg.name, note: sub.potg.note || '' };
   }
   return { key: sub.gameKey, team: sub.team, sex: sub.sex, d: sub.d, o: sub.o, us: +sub.us, th: +sub.th, mode, lines, potg, example: !!sub.example, approved: new Date().toISOString() };
 }
 async function republishAll(){
   const subs = (await S.listSubmissions()).filter(s => s.status === 'approved');
-  for(const s of subs){ const r = await S.getRoster(s.team); const b = publicBox(s, r);
+  const rosters = {};
+  for(const s of subs){
+    let r = rosters[s.team];
+    if(!r){ r = rosters[s.team] = await S.getRoster(s.team); r.players = r.players || []; if(ensurePids(r.players)) await S.saveRoster(s.team, r.players) }
+    if((s.lines||[]).some(l => !l.pid) || (s.potg && !s.potg.pid)){
+      const lines = (s.lines||[]).map(l => { if(l.pid) return l; const m = matchPlayer(r.players, l); return m ? { ...l, pid: m.pid } : l });
+      let potg = s.potg || null;
+      if(potg && !potg.pid){ const m = lines.find(l => String(l.no) === String(potg.no) && normName(l.name) === normName(potg.name)) || matchPlayer(r.players, potg); if(m && m.pid) potg = { ...potg, pid: m.pid } }
+      try { await S.updateSubmission(s.id, { lines, potg }); s.lines = lines; s.potg = potg } catch(e){ console.warn('move-over', e) }
+    }
+    const b = publicBox(s, r);
     if(b.mode === 'hidden') await S.deleteBoxscore(s.gameKey); else await S.putBoxscore(s.gameKey, b) }
   await loadBoxes();
 }
@@ -146,10 +174,10 @@ V.home = () => {
   const wk = currentWeek(), end = addDays(wk, 6);
   const tp = topPerformers(wk, end);
   const sex = lsGet('eanna-hub-tp', 'm');
-  const list = tp[sex].sort((a,b) => (favPlayer(b.team,b.no)?1:0)-(favPlayer(a.team,a.no)?1:0) || b.pts-a.pts).slice(0, 5);
+  const list = tp[sex].sort((a,b) => (favPlayer(b.team,pkey(b))?1:0)-(favPlayer(a.team,pkey(a))?1:0) || b.pts-a.pts).slice(0, 5);
   const pg = potgList(wk, end);
   const potgCard = pg.length ? card(`Players of the game · picked by coaches`, pg.slice(0,6).map(p => `<a class="row" href="#game/${encodeURIComponent(p.key)}" style="padding:9px 0;border-bottom:1px solid var(--line);text-decoration:none;color:inherit;align-items:flex-start">${jersey(p.no, p.sex==='w')}<div class="f"><b>${esc(p.name)}</b> <span class="sm mut">${esc(p.team)} · v ${esc(oname(p.o))}</span>${p.note?`<div class="sm" style="margin-top:2px">“${esc(p.note)}”</div>`:''}</div></a>`).join('')) : '';
-  const perf = list.length ? list.map(p => `<div class="perf">${jersey(p.no, p.sex==='w')}<div class="f"><b>${favPlayer(p.team,p.no)?'<span style="color:var(--orange)">★</span> ':''}${pname(p.team, p.no, p.name)}</b><span>${esc(p.team)} · v ${esc(oname(p.o))}</span></div><div class="n">${p.pts}<small>PTS</small></div></div>`).join('')
+  const perf = list.length ? list.map(p => `<div class="perf">${jersey(p.no, p.sex==='w')}<div class="f"><b>${favPlayer(p.team,pkey(p))?'<span style="color:var(--orange)">★</span> ':''}${pname(p.team, pkey(p), p.name)}</b><span>${esc(p.team)} · v ${esc(oname(p.o))}</span></div><div class="n">${p.pts}<small>PTS</small></div></div>`).join('')
     : `<div style="padding:12px 0 4px"><b style="font-family:var(--display)">No score-sheets in yet for this week</b><div class="sm" style="opacity:.8;margin-top:4px">Top performers appear here once coaches send in score-sheets and a moderator approves them.</div></div>`;
   const wkGames = G.filter(g => g.d >= wk && g.d <= end && visible(g.team));
   const res = wkGames.filter(played).sort((a,b)=> favGameFirst(a,b) || (b.d+(b.tm||'')).localeCompare(a.d+(a.tm||'')));
@@ -165,8 +193,8 @@ V.home = () => {
       items.push(`<div style="padding:6px 0;border-bottom:1px solid var(--line)"><a href="#team/${encodeURIComponent(t)}" style="text-decoration:none;color:inherit"><b>★ ${esc(t)}</b></a>${last ? `<div class="sm mut" style="margin-top:2px">Last result · ${fmtDate(last.d,{day:'numeric',month:'short'})}</div>${gameRow(last)}` : ''}${nxt ? `<div class="sm mut">Next · ${fmtDate(nxt.d)}</div>${gameRow(nxt)}` : ''}</div>`);
     });
     F.players.filter(p => namesShown(p.team)).forEach(p => {
-      const g = Object.values(BOXES).filter(b => b.team === p.team).map(b => ({ b, l: (b.lines||[]).find(l => String(l.no) === String(p.no)) })).filter(x => x.l).sort((a,c)=>(c.b.d||'').localeCompare(a.b.d||''))[0];
-      items.push(`<a class="row" href="${playerHref(p.team, p.no)}" style="padding:9px 0;border-bottom:1px solid var(--line);text-decoration:none;color:inherit">${jersey(p.no, sexOf(G.find(x => x.team === p.team) || {})==='w')}<div class="f"><b>★ ${esc(g ? g.l.name : p.name)}</b><div class="sm mut">${esc(p.team)}${g ? ` · last game v ${esc(oname(g.b.o))}` : ' · no games on record yet'}</div></div>${g ? `<span class="n" style="font-size:20px">${g.l.pts}</span><span class="sm mut">pts</span>` : ''}${g && g.b.potg && String(g.b.potg.no) === String(p.no) ? '<span class="pill p-or">Player of the game</span>' : ''}</a>`);
+      const k = favKey(p), g = playerGames(p.team, k)[0];
+      items.push(`<a class="row" href="${playerHref(p.team, k)}" style="padding:9px 0;border-bottom:1px solid var(--line);text-decoration:none;color:inherit">${jersey(g ? g.l.no : (p.no || ''), sexOf(G.find(x => x.team === p.team) || {})==='w')}<div class="f"><b>★ ${esc(g ? g.l.name : p.name)}</b><div class="sm mut">${esc(p.team)}${g ? ` · last game v ${esc(oname(g.b.o))}` : ' · no games on record yet'}</div></div>${g ? `<span class="n" style="font-size:20px">${g.l.pts}</span><span class="sm mut">pts</span>` : ''}${g && g.b.potg && pkey(g.b.potg) === k ? '<span class="pill p-or">Player of the game</span>' : ''}</a>`);
     });
     favCard = card('My favourites', items.join('') || '<div class="sm mut" style="padding:6px 0">Your favourite teams are hidden for their age group.</div>');
   } else {
@@ -200,8 +228,8 @@ V.results = () => {
   const cols = [[],[]]; GROUPS.forEach((gr, i) => { const x = gs.filter(g => groupOf(g) === gr).sort(favGameFirst); if(x.length) cols[i%2].push(card(gr, rows(x))) });
   h += `<div class="cards"><div>${cols[0].join('')}</div><div>${cols[1].join('')}</div></div>`;
   const tally = { m:{}, w:{} };
-  Object.values(BOXES).forEach(b => { if(!namesShown(b.team)) return; (b.lines||[]).forEach(l => { const k = b.team+'|'+l.no; const t = tally[b.sex==='w'?'w':'m']; t[k] = t[k] || { team:b.team, no:l.no, name:l.name, pts:0, gp:0 }; t[k].pts += l.pts; t[k].gp++ }) });
-  const lb = sx => Object.values(tally[sx]).sort((a,b)=>b.pts-a.pts).slice(0,10).map((p,i)=>`<a class="row" href="${playerHref(p.team,p.no)}" style="padding:7px 0;border-bottom:1px solid var(--line);text-decoration:none;color:inherit"><span class="n" style="width:22px;color:var(--orange)">${i+1}</span><div class="f"><b>${favPlayer(p.team,p.no)?'★ ':''}${esc(p.name)}</b> <span class="sm mut">${esc(p.team)}</span></div><span class="sm mut">${p.gp} gm</span><span class="n" style="font-size:17px">${p.pts}</span></a>`).join('') || '<div class="sm mut" style="padding:8px 0">No score-sheets yet.</div>';
+  Object.values(BOXES).forEach(b => { if(!namesShown(b.team)) return; (b.lines||[]).forEach(l => { const k = l.pid || b.team+'|#'+l.no; const t = tally[b.sex==='w'?'w':'m']; t[k] = t[k] || { team:b.team, k:pkey(l), name:l.name, pts:0, gp:0 }; t[k].pts += l.pts; t[k].gp++ }) });
+  const lb = sx => Object.values(tally[sx]).sort((a,b)=>b.pts-a.pts).slice(0,10).map((p,i)=>`<a class="row" href="${playerHref(p.team,p.k)}" style="padding:7px 0;border-bottom:1px solid var(--line);text-decoration:none;color:inherit"><span class="n" style="width:22px;color:var(--orange)">${i+1}</span><div class="f"><b>${favPlayer(p.team,p.k)?'★ ':''}${esc(p.name)}</b> <span class="sm mut">${esc(p.team)}</span></div><span class="sm mut">${p.gp} gm</span><span class="n" style="font-size:17px">${p.pts}</span></a>`).join('') || '<div class="sm mut" style="padding:8px 0">No score-sheets yet.</div>';
   h += `<details class="cd"><summary class="lbl" style="cursor:pointer">Season points ▾</summary><div class="cards" style="margin-top:8px"><div><div class="lbl">Men &amp; boys</div>${lb('m')}</div><div><div class="lbl">Women &amp; girls</div>${lb('w')}</div></div><div class="sm mut" style="margin-top:8px">From approved score-sheets only. Follows each age group's settings.</div></details>`;
   $('#view').innerHTML = h;
   $$('[data-wk]').forEach(b => b.onclick = () => { wi += +b.dataset.wk; V.results() });
@@ -223,10 +251,10 @@ V.game = (key) => {
       <div class="info"><span class="ic">🏆</span><div class="f"><b>${esc(g.c)}</b><div class="sm mut">${boardName[g.b]||'Added by a moderator'} · ${esc(g.k)}</div></div></div>
       ${g.status?`<div class="info"><span class="ic">⚠️</span><div class="f"><b>${esc(g.status)}</b></div></div>`:''}${g.note?`<div class="info"><span class="ic">ℹ️</span><div class="f">${esc(g.note)}</div></div>`:''}
     </div>`;
-  if(box && box.potg) h += `<div class="tc"><div class="lbl">Player of the game · coach's pick</div><div class="perf">${jersey(box.potg.no, box.sex==='w')}<div class="f"><b>${pname(g.team, box.potg.no, box.potg.name)}</b>${box.potg.note?`<span style="display:block;margin-top:4px;font-size:14px;opacity:.9">“${esc(box.potg.note)}”</span>`:''}</div></div></div>`;
+  if(box && box.potg) h += `<div class="tc"><div class="lbl">Player of the game · coach's pick</div><div class="perf">${jersey(box.potg.no, box.sex==='w')}<div class="f"><b>${pname(g.team, pkey(box.potg), box.potg.name)}</b>${box.potg.note?`<span style="display:block;margin-top:4px;font-size:14px;opacity:.9">“${esc(box.potg.note)}”</span>`:''}</div></div></div>`;
   if(box){
     if(box.lines && box.lines.length){
-      h += card(`Points${box.example?' · <span class="pill p-warn">Example</span>':''}`, `<table class="bx"><thead><tr><th></th><th>Player</th><th class="r">Pts</th></tr></thead><tbody>${box.lines.map(l=>`<tr><td style="width:40px">${jersey(l.no, box.sex==='w')}</td><td>${pname(g.team, l.no, l.name)}</td><td class="r n" style="font-size:17px">${l.pts}</td></tr>`).join('')}</tbody></table>${!isSenior(g.team)?'<div class="sm mut" style="margin-top:6px">Underage game: only players who scored are shown.</div>':''}`);
+      h += card(`Points${box.example?' · <span class="pill p-warn">Example</span>':''}`, `<table class="bx"><thead><tr><th></th><th>Player</th><th class="r">Pts</th></tr></thead><tbody>${box.lines.map(l=>`<tr><td style="width:40px">${jersey(l.no, box.sex==='w')}</td><td>${pname(g.team, pkey(l), l.name)}</td><td class="r n" style="font-size:17px">${l.pts}</td></tr>`).join('')}</tbody></table>${!isSenior(g.team)?'<div class="sm mut" style="margin-top:6px">Underage game: only players who scored are shown.</div>':''}`);
     } else {
       h += `<div class="banner b-pu">The score-sheet for this game is in. Player points aren't shown publicly for this age group.</div>`;
     }
@@ -269,9 +297,9 @@ V.team = (name) => {
   if(/U11/.test(name)) h += '<div class="banner b-pu">U11 is a non-scoring league, so there are fixtures but no results or table.</div>';
   // top scorers from approved box scores
   const tally = {};
-  Object.values(BOXES).filter(b => b.team === name).forEach(b => (b.lines||[]).forEach(l => { const k = l.no+'|'+l.name; tally[k] = tally[k] || { no:l.no, name:l.name, pts:0, gp:0 }; tally[k].pts += l.pts; tally[k].gp++ }));
+  Object.values(BOXES).filter(b => b.team === name).forEach(b => (b.lines||[]).forEach(l => { const k = pkey(l); tally[k] = tally[k] || { k, no:l.no, name:l.name, pts:0, gp:0 }; tally[k].no = tally[k].no || l.no; tally[k].pts += l.pts; tally[k].gp++ }));
   const ts = Object.values(tally).sort((a,b)=>b.pts-a.pts).slice(0,5);
-  if(ts.length) h += card('Top scorers · from score-sheets', ts.map(p => `<div class="row" style="padding:7px 0;border-bottom:1px solid var(--line)">${jersey(p.no, sexOf(t||{})==='w')}<b class="f">${pname(name, p.no, p.name)}</b><span class="sm mut">${p.gp} gm</span><span class="n" style="font-size:18px">${p.pts}</span></div>`).join(''));
+  if(ts.length) h += card('Top scorers · from score-sheets', ts.map(p => `<div class="row" style="padding:7px 0;border-bottom:1px solid var(--line)">${jersey(p.no, sexOf(t||{})==='w')}<b class="f">${pname(name, p.k, p.name)}</b><span class="sm mut">${p.gp} gm</span><span class="n" style="font-size:18px">${p.pts}</span></div>`).join(''));
   let right = '';
   if(next.length) right += card('Next games', rows(next.slice(0,4)));
   if(pl.length) right += card('Results', rows(pl));
@@ -281,18 +309,21 @@ V.team = (name) => {
   $('#view').innerHTML = cut > 0 ? h.slice(0, cut) + `<div class="split"><div>${h.slice(cut)}</div><div>${right}</div></div>` : h + right;
 };
 
-V.player = (team, no) => {
+V.player = (team, k) => {
   setHead('Player', team, `#team/${encodeURIComponent(team)}`);
   if(!namesShown(team)){ $('#view').innerHTML = '<div class="empty"><b>Player pages aren\'t shown for this age group</b></div>'; return }
-  const games = Object.values(BOXES).filter(b => b.team === team).map(b => ({ b, l: (b.lines||[]).find(l => String(l.no) === String(no)) })).filter(x => x.l).sort((a,c)=>(c.b.d||'').localeCompare(a.b.d||''));
+  if(/^\d+$/.test(k)) k = '#' + k;                 // old links used the shirt number
+  const games = playerGames(team, k).filter(x => namesShown(x.b.team));
   if(!games.length){ $('#view').innerHTML = '<div class="empty"><b>No games on record yet</b></div>'; return }
   const name = games[0].l.name, tot = games.reduce((a,x)=>a+x.l.pts,0), hi = Math.max(...games.map(x=>x.l.pts));
-  const pg = games.filter(x => x.b.potg && String(x.b.potg.no) === String(no)).length;
+  const pg = games.filter(x => x.b.potg && pkey(x.b.potg) === k).length;
+  const no = games[0].l.no, worn = [...new Set(games.map(x => String(x.l.no)).filter(Boolean))], teamsPlayed = [...new Set(games.map(x => x.b.team))];
   setHead(name, team, `#team/${encodeURIComponent(team)}`);
   const w = sexOf(games[0].b) === 'w';
-  $('#view').innerHTML = `<div class="narrow"><div class="tc"><div class="row"><svg style="width:84px;height:92px;filter:drop-shadow(0 8px 12px rgba(0,0,0,.5))" aria-hidden="true"><use href="#${w?'jsyw':'jsy'}"/><text x="20" y="33" text-anchor="middle" font-family="Anton" font-size="14" fill="#fff">${esc(no)}</text></svg><div class="f"><div class="lbl">${esc(team)}</div><div class="h2" style="color:#fff">${esc(name)}</div><div style="margin:6px 0">${starBtn(`data-fav-player="${esc(team)}|${esc(no)}|${esc(name)}"`, favPlayer(team, no), true)}</div>${pg?`<span class="pill p-or" style="margin-top:6px">Player of the game × ${pg}</span>`:''}</div></div></div>
+  $('#view').innerHTML = `<div class="narrow"><div class="tc"><div class="row">${jersey(no, w, 'width:84px;height:92px;filter:drop-shadow(0 8px 12px rgba(0,0,0,.5))')}<div class="f"><div class="lbl">${esc(team)}</div><div class="h2" style="color:#fff">${esc(name)}</div><div style="margin:6px 0">${starBtn(`data-fav-player="${esc(team)}|${esc(k)}|${esc(name)}"`, favPlayer(team, k), true)}</div>${worn.length > 1 ? `<div class="sm" style="opacity:.85">Has worn ${worn.map(n => '#' + esc(n)).join(', ')}</div>` : ''}${teamsPlayed.length > 1 ? `<div class="sm" style="opacity:.85">Played for ${teamsPlayed.map(esc).join(' and ')}</div>` : ''}${pg?`<span class="pill p-or" style="margin-top:6px">Player of the game × ${pg}</span>`:''}</div></div></div>
     <div class="stat3"><div><span class="n">${games.length}</span><span>Games</span></div><div><span class="n">${(tot/games.length).toFixed(1)}</span><span>Pts per game</span></div><div><span class="n">${hi}</span><span>Best game</span></div></div>
-    ${card('Game log', games.map(x => `<a class="row" href="#game/${encodeURIComponent(x.b.key)}" style="padding:8px 0;border-bottom:1px solid var(--line);text-decoration:none;color:inherit"><span class="sm mut" style="width:62px">${x.b.d?fmtDate(x.b.d,{day:'numeric',month:'short'}):''}</span>${crest(x.b.o)}<b class="f">v ${esc(oname(x.b.o))} <span class="${x.b.us>x.b.th?'w':'l'} sm">${x.b.us>x.b.th?'W':'L'}</span></b><span class="n" style="font-size:17px">${x.l.pts}</span></a>`).join(''))}</div>`;
+    ${teamsPlayed.length > 1 ? card('By team', teamsPlayed.map(tn => { const gs = games.filter(x => x.b.team === tn), pts = gs.reduce((a,x)=>a+x.l.pts,0); return `<a class="row" href="#team/${encodeURIComponent(tn)}" style="padding:7px 0;border-bottom:1px solid var(--line);text-decoration:none;color:inherit"><b class="f">${esc(tn)}</b><span class="sm mut">${gs.length} gm · ${(pts/gs.length).toFixed(1)} ppg</span><span class="n" style="font-size:17px">${pts}</span></a>` }).join('')) : ''}
+    ${card('Game log', games.map(x => `<a class="row" href="#game/${encodeURIComponent(x.b.key)}" style="padding:8px 0;border-bottom:1px solid var(--line);text-decoration:none;color:inherit"><span class="sm mut" style="width:62px">${x.b.d?fmtDate(x.b.d,{day:'numeric',month:'short'}):''}</span>${crest(x.b.o)}<b class="f">v ${esc(oname(x.b.o))} <span class="${x.b.us>x.b.th?'w':'l'} sm">${x.b.us>x.b.th?'W':'L'}</span><span class="sm mut" style="font-weight:400"> · #${esc(x.l.no)}${x.b.team !== team ? ' · ' + esc(x.b.team) : ''}</span></b><span class="n" style="font-size:17px">${x.l.pts}</span></a>`).join(''))}</div>`;
 };
 
 /* fixtures */
@@ -373,19 +404,24 @@ V.submit = async (preKey) => {
   if(!teams.length){ $('#view').innerHTML = '<div class="empty"><b>No teams on your account yet</b>Ask the club to add your team to your profile.</div>'; return }
   const pre = preKey ? G.find(g => gameKey(g) === preKey) : null;
   let team = pre && teams.includes(pre.team) ? pre.team : (teams.includes(me.team) ? me.team : teams[0]);
-  const render = () => {
+  let R = { players: [] }, extra = [];
+  const render = async () => {
+    try { R = await within(S.getRoster(team), 5000, { players: [] }); R.players = R.players || [] } catch(e){ R = { players: [] } }
     const games = G.filter(g => g.team === team && g.d && g.d <= addDays(TODAY, 1) && g.d >= addDays(TODAY, -45)).sort((a,b)=>b.d.localeCompare(a.d));
     const sel = pre && pre.team === team ? gameKey(pre) : (games[0] ? gameKey(games[0]) : '');
     const saved = (me.names && me.names[team]) || [];
-    const baseRows = saved.length ? saved.map(p => ({ no:p.no, name:p.name, pts:'' })) : Array.from({length:8}, () => ({ no:'', name:'', pts:'' }));
+    const fromRoster = R.players.filter(p => p.pid && p.name).sort((a,b) => (parseInt(a.no,10)||999) - (parseInt(b.no,10)||999)).map(p => ({ pid:p.pid, no:p.no, last:p.no, name:p.name, pts:'' }));
+    const baseRows = fromRoster.length ? fromRoster : saved.length ? saved.map(p => ({ no:p.no, name:p.name, pts:'' })) : Array.from({length:8}, () => ({ no:'', name:'', pts:'' }));
     $('#view').innerHTML = `
       <div class="banner b-pu">Type each player's points from the score-sheet. A moderator checks it before anything goes public.</div>
       <label class="fld"><span>Team</span><select id="sTeam">${teams.map(n=>`<option ${n===team?'selected':''}>${esc(n)}</option>`).join('')}</select></label>
       <label class="fld"><span>Game</span><select id="sGame">${games.length ? games.map(g=>`<option value="${esc(gameKey(g))}" ${gameKey(g)===sel?'selected':''}>${fmtDate(g.d)} · v ${esc(oname(g.o))}${g.k==='Cup'?' (cup)':''}</option>`).join('') : '<option value="">No recent games for this team</option>'}</select></label>
       <div class="grid2"><label class="fld"><span>Éanna score</span><input id="sUs" inputmode="numeric" pattern="[0-9]*"></label><label class="fld"><span id="sThL">Opponent score</span><input id="sTh" inputmode="numeric" pattern="[0-9]*"></label></div>
-      <div class="cd"><div class="lbl" style="margin-bottom:6px">Players</div>
-        <div class="tscroll"><table class="bx"><thead><tr><th>No.</th><th>Name</th><th class="r">Pts</th></tr></thead><tbody id="sRows">${baseRows.map(rowHtml).join('')}</tbody></table></div>
-        <button class="btn g sm" id="sAdd" style="margin-top:8px">+ Add player</button>
+      <div class="cd"><div class="lbl" style="margin-bottom:4px">Players · today's numbers</div>
+        <div class="sm mut" style="margin-bottom:6px">${fromRoster.length ? "Numbers are filled in from last game. Change any that are different today. Leave points blank for anyone who didn't play, and type 0 if they played but didn't score." : 'Type the number each player wore today, their name and their points.'}</div>
+        <div class="tscroll"><table class="bx"><thead><tr><th>No. today</th><th>Name</th><th class="r">Pts</th></tr></thead><tbody id="sRows">${baseRows.map(rowHtml).join('')}</tbody></table></div>
+        <div class="row wrap" style="margin-top:8px;gap:6px"><button class="btn g sm" id="sAdd">+ New player</button><button class="btn g sm" id="sUp">+ Playing up from another team</button></div>
+        <div id="sUpBox" hidden style="margin-top:8px"></div>
         <div id="sCheck" class="banner" style="margin-top:10px"></div>
       </div>
       <div class="cd"><div class="lbl" style="margin-bottom:6px">Player of the game · coach's pick (optional)</div>
@@ -399,20 +435,35 @@ V.submit = async (preKey) => {
     $('#sTeam').onchange = e => { team = e.target.value; render() };
     $('#sGame').onchange = fill;
     $('#sAdd').onclick = () => { $('#sRows').insertAdjacentHTML('beforeend', rowHtml({no:'',name:'',pts:''})); check() };
+    $('#sUp').onclick = async () => {
+      const box = $('#sUpBox'); box.hidden = false; box.innerHTML = '<div class="sm mut">Loading the other teams…</div>';
+      let rs = []; try { rs = await within(S.listRosters(), 6000, []) } catch(e){}
+      const opts = rs.filter(r => r.team !== team).flatMap(r => (r.players||[]).filter(p => p.pid && p.name && !p.hidden).map(p => ({ ...p, team: r.team }))).sort((a,b) => a.team.localeCompare(b.team) || a.name.localeCompare(b.name));
+      if(!opts.length){ box.innerHTML = '<div class="sm mut">No other team rosters yet. Use + New player instead.</div>'; return }
+      box.innerHTML = `<label class="fld"><span>Player from another team</span><select id="sUpSel"><option value="">Pick a player</option>${opts.map((p,i) => `<option value="${i}">${esc(p.name)} · ${esc(p.team)}${p.no!==''?' · usually #'+esc(p.no):''}</option>`).join('')}</select></label>`;
+      $('#sUpSel').onchange = e => { const p = opts[+e.target.value]; if(!p) return; if($$('#sRows tr').some(tr => tr.dataset.pid === p.pid)) return toast('Already on the sheet', 1); $('#sRows').insertAdjacentHTML('beforeend', rowHtml({ pid:p.pid, no:p.no, last:p.no, name:p.name, pts:'', from:p.team })); box.hidden = true; check() };
+    };
     $('#sRows').oninput = check; $('#sUs').oninput = check;
     $('#sSend').onclick = send;
     fill();
   };
-  const rowHtml = p => `<tr><td><input class="num" inputmode="numeric" value="${esc(p.no)}" aria-label="Shirt number"></td><td><input value="${esc(p.name)}" aria-label="Player name"></td><td class="r"><input class="pts" inputmode="numeric" value="${esc(p.pts)}" aria-label="Points"></td></tr>`;
-  const readLines = () => $$('#sRows tr').map(tr => { const [a,b,c] = $$('input', tr).map(i => i.value.trim()); return { no:a, name:b, pts: c === '' ? null : parseInt(c,10) } }).filter(l => l.no || l.name || l.pts !== null);
+  const rowHtml = p => p.pid
+    ? `<tr data-pid="${esc(p.pid)}" data-last="${esc(p.last ?? '')}" data-name="${esc(p.name)}"><td><input class="num" inputmode="numeric" value="${esc(p.no)}" aria-label="Number ${esc(p.name)} wore today"></td><td><b style="font-weight:600">${esc(p.name)}</b>${p.from ? ` <span class="pill p-nv">${esc(p.from)}</span>` : ''}<span class="nchg pill p-warn" hidden>New no.</span></td><td class="r"><input class="pts" inputmode="numeric" value="${esc(p.pts)}" aria-label="Points"></td></tr>`
+    : `<tr><td><input class="num" inputmode="numeric" value="${esc(p.no)}" aria-label="Shirt number"></td><td><input value="${esc(p.name)}" aria-label="Player name"></td><td class="r"><input class="pts" inputmode="numeric" value="${esc(p.pts)}" aria-label="Points"></td></tr>`;
+  const readLines = () => $$('#sRows tr').map(tr => { const ins = $$('input', tr), pid = tr.dataset.pid; const no = ins[0].value.trim(), c = ins[ins.length-1].value.trim();
+      return pid ? { pid, no, name: tr.dataset.name, pts: c === '' ? null : parseInt(c,10), roster: true } : { no, name: ins[1].value.trim(), pts: c === '' ? null : parseInt(c,10) } })
+    .filter(l => l.roster ? l.pts !== null : (l.no || l.name || l.pts !== null));
   function potgOpts(){ const sel = $('#sPotg'); if(!sel) return; const cur = sel.value; const ls_ = readLines().filter(l => l.name);
-    sel.innerHTML = '<option value="">No pick</option>' + ls_.map(l => `<option value="${esc(l.no)}|${esc(l.name)}" ${(l.no+'|'+l.name)===cur?'selected':''}>${esc(l.no)} · ${esc(l.name)}</option>`).join('') }
+    sel.innerHTML = '<option value="">No pick</option>' + ls_.map(l => { const v = `${l.pid||''}|${l.no}|${l.name}`; return `<option value="${esc(v)}" ${v===cur?'selected':''}>${esc(l.no)} · ${esc(l.name)}</option>` }).join('') }
   function check(){
     potgOpts();
+    $$('#sRows tr[data-pid]').forEach(tr => { const v = $('input', tr).value.trim(); $('.nchg', tr).hidden = !(tr.dataset.last !== '' && v !== '' && v !== tr.dataset.last) });
     const lines = readLines(), tot = lines.reduce((s,l)=>s+(l.pts||0),0), us = parseInt($('#sUs').value,10);
     const b = $('#sCheck');
     if(!lines.length){ b.className='banner b-pu'; b.textContent='Add each player who played, with their points.'; return }
     if(isNaN(us)){ b.className='banner b-pu'; b.textContent=`Players add up to ${tot}. Enter the Éanna score to check it.`; return }
+    const nos = lines.map(l => String(l.no)).filter(Boolean), dup = nos.find((n,i) => nos.indexOf(n) !== i);
+    if(dup){ b.className='banner b-warn'; b.innerHTML=`Two players are down as <b>#${esc(dup)}</b>. Check today's numbers.`; return }
     if(tot === us){ b.className='banner b-ok'; b.innerHTML=`Players add up to <b>${tot}</b>, which matches the score ✓` }
     else { b.className='banner b-warn'; b.innerHTML=`Players add up to <b>${tot}</b> but the Éanna score is <b>${us}</b>. Double-check the sheet. You can still send it.` }
   }
@@ -429,11 +480,11 @@ V.submit = async (preKey) => {
     const f = $('#sPhoto').files[0];
     if(f){ try { photo = await shrinkImage(f, 1100, .62) } catch(e){ photo = '' } }
     const sub = { team: g.team, sex: sexOf(g), gameKey: gameKey(g), d: g.d, o: g.o, comp: g.c, us: parseInt($('#sUs').value,10) || 0, th: parseInt($('#sTh').value,10) || 0,
-      lines: lines.map(l => ({ no: l.no, name: l.name, pts: l.pts || 0 })), by: name, photo };
-    const pv = $('#sPotg').value; if(pv){ const [pno, ...pn] = pv.split('|'); sub.potg = { no: pno, name: pn.join('|'), note: $('#sNote').value.trim() } }
+      lines: lines.map(l => ({ ...(l.pid ? { pid: l.pid } : {}), no: l.no, name: l.name, pts: l.pts || 0 })), by: name, photo };
+    const pv = $('#sPotg').value; if(pv){ const [ppid, pno, ...pn] = pv.split('|'); sub.potg = { ...(ppid ? { pid: ppid } : {}), no: pno, name: pn.join('|'), note: $('#sNote').value.trim() } }
     try {
       await S.submitSheet(sub);
-      me.name = name; me.team = g.team; me.names = me.names || {}; me.names[g.team] = lines.map(l => ({ no:l.no, name:l.name })); lsSet(SUB_KEY, me);
+      me.name = name; me.team = g.team; me.names = me.names || {}; me.names[g.team] = lines.filter(l => !l.pid).map(l => ({ no:l.no, name:l.name })); lsSet(SUB_KEY, me);
       $('#view').innerHTML = `<div class="cd" style="text-align:center;padding:28px 16px"><div class="ball" style="width:72px;height:72px;margin:0 auto;font-size:28px">✓</div><div class="h2" style="margin-top:12px"><span class="gt">Sent for checking</span></div><p class="mut">${esc(g.team)} v ${esc(oname(g.o))}. A moderator will check it, usually within a day. Player names are saved on this phone for next time.</p><a class="btn g" href="#submit">Send another</a></div>`;
     } catch(e){
       btn.disabled = false; btn.textContent = 'Send for checking';
@@ -449,7 +500,9 @@ function shrinkImage(file, max, q){
 }
 
 /* ---------- admin ---------- */
+let movedOver = false;
 V.admin = async (sub, arg) => {
+  if(!movedOver && can('approveSheets') && Object.values(BOXES).some(b => (b.lines||[]).some(l => !l.pid))){ movedOver = true; republishAll().catch(e => console.warn('move-over', e)) }
   setHead('Admin', AUTH.admin ? (S.mode==='demo' ? 'Demo admin' : (AUTH.name || AUTH.email)) : 'Moderators only', '#more');
   if(!AUTH.admin){
     $('#view').innerHTML = `<div class="cd" style="text-align:center;padding:26px 16px"><img src="assets/crest.png" alt="" style="width:80px"><div class="h2">Club tools</div>
@@ -478,33 +531,39 @@ V.admin = async (sub, arg) => {
     const s = await S.getSubmission(arg);
     if(!s){ $('#view').innerHTML = nav + '<div class="empty"><b>Not found</b></div>'; return }
     const roster = await S.getRoster(s.team);
-    const hiddenNos = new Set((roster.players||[]).filter(p=>p.hidden).map(p=>String(p.no)));
+    const rps = roster.players || [];
+    const isHid = l => { const m = matchPlayer(rps, l); return !!(m && m.hidden) };
+    const wasNo = l => { const m = l.pid && rps.find(p => p.pid === l.pid); return m && m.no !== '' && String(m.no) !== String(l.no) ? m.no : null };
     $('#view').innerHTML = nav + `
       <div class="cd"><div class="row sp"><div><b style="font-family:var(--display);font-size:17px">${esc(s.team)} v ${esc(oname(s.o))}</b><div class="sm mut">${s.d?fmtDate(s.d,{weekday:'long',day:'numeric',month:'long'}):''} · ${esc(s.comp||'')}</div><div class="sm mut">Sent by ${esc(s.by)} · ${s.created?new Date(s.created).toLocaleString('en-IE'):''}</div></div><span class="pill ${s.status==='pending'?'p-warn':s.status==='approved'?'p-ok':'p-no'}">${s.status}</span></div></div>
       <div class="grid2"><label class="fld"><span>Éanna score</span><input id="eUs" value="${esc(s.us)}" inputmode="numeric"></label><label class="fld"><span>${esc(oname(s.o))}</span><input id="eTh" value="${esc(s.th)}" inputmode="numeric"></label></div>
-      <div class="cd"><div class="lbl" style="margin-bottom:6px">Players · edit anything before approving</div><div class="tscroll"><table class="bx"><thead><tr><th>No.</th><th>Name</th><th class="r">Pts</th><th class="r">Hide</th></tr></thead><tbody id="eRows">${(s.lines||[]).map(l=>`<tr><td><input class="num" value="${esc(l.no)}"></td><td><input value="${esc(l.name)}"></td><td class="r"><input class="pts" value="${esc(l.pts)}" inputmode="numeric"></td><td class="r"><button class="tog ${l.hidden||hiddenNos.has(String(l.no))?'on':''}" aria-label="Hide this player"></button></td></tr>`).join('')}</tbody></table></div>
+      <div class="cd"><div class="lbl" style="margin-bottom:6px">Players · edit anything before approving</div><div class="tscroll"><table class="bx"><thead><tr><th>No.</th><th>Name</th><th class="r">Pts</th><th class="r">Hide</th></tr></thead><tbody id="eRows">${(s.lines||[]).map(l=>`<tr data-pid="${esc(l.pid||'')}"><td><input class="num" value="${esc(l.no)}"></td><td><input value="${esc(l.name)}">${wasNo(l)?`<div class="sm mut">Usually #${esc(wasNo(l))}</div>`:''}${l.pid && !rps.some(p => p.pid === l.pid)?'<div class="sm mut">Playing up from another team</div>':''}</td><td class="r"><input class="pts" value="${esc(l.pts)}" inputmode="numeric"></td><td class="r"><button class="tog ${l.hidden||isHid(l)?'on':''}" aria-label="Hide this player"></button></td></tr>`).join('')}</tbody></table></div>
         <button class="btn g sm" id="eAdd" style="margin-top:8px">+ Add player</button><div id="eCheck" class="banner" style="margin-top:10px"></div>
         <div class="sm mut" style="margin-top:8px">Public view for this team: <b>${({full:'full names and points',first:'first names and points',results:'result only, no player points',hidden:'team hidden'})[modeFor(s.team)]}</b> (Admin › Underage).${!isSenior(s.team)?' Players on 0 are never shown for underage teams.':''}</div></div>
       <div class="cd"><div class="lbl" style="margin-bottom:6px">Player of the game · coach's pick</div>
-        <label class="fld"><span>Player</span><select id="eP"><option value="">None</option>${(s.lines||[]).map(l=>`<option value="${esc(l.no)}|${esc(l.name)}" ${s.potg&&String(s.potg.no)===String(l.no)?'selected':''}>${esc(l.no)} · ${esc(l.name)}</option>`).join('')}</select></label>
+        <label class="fld"><span>Player</span><select id="eP"><option value="">None</option>${(s.lines||[]).map((l,i)=>`<option value="${i}" ${s.potg&&(s.potg.pid?s.potg.pid===l.pid:String(s.potg.no)===String(l.no))?'selected':''}>${esc(l.no)} · ${esc(l.name)}</option>`).join('')}</select></label>
         <label class="fld" style="margin-top:8px"><span>Coach's note (you can edit or clear it)</span><input id="eN" maxlength="160" value="${esc(s.potg?s.potg.note:'')}"></label></div>
       ${s.photo ? `<div class="cd"><div class="lbl" style="margin-bottom:6px">Score-sheet photo</div><img class="photo" src="${s.photo}" alt="Score-sheet photo"></div>` : '<div class="sm mut">No photo was attached.</div>'}
       <div class="btns"><button class="btn" id="eOk">${s.status==='approved'?'Save & republish':'Approve & publish'}</button><button class="btn r" id="eNo">${s.status==='approved'?'Unpublish':'Reject'}</button></div>
       <button class="btn g block" id="eDel">Delete this score-sheet</button>`;
-    const read = () => $$('#eRows tr').map(tr => { const ins = $$('input', tr); return { no: ins[0].value.trim(), name: ins[1].value.trim(), pts: parseInt(ins[2].value,10) || 0, hidden: $('.tog', tr).classList.contains('on') } }).filter(l => l.no || l.name);
+    const readAll = () => $$('#eRows tr').map(tr => { const ins = $$('input', tr); return { ...(tr.dataset.pid ? { pid: tr.dataset.pid } : {}), no: ins[0].value.trim(), name: ins[1].value.trim(), pts: parseInt(ins[2].value,10) || 0, hidden: $('.tog', tr).classList.contains('on') } });
+    const read = () => readAll().filter(l => l.no || l.name);
     const chk = () => { const t = read().reduce((a,l)=>a+l.pts,0), u = parseInt($('#eUs').value,10); const b = $('#eCheck'); b.className = 'banner ' + (t===u?'b-ok':'b-warn'); b.innerHTML = t===u ? `Adds up to <b>${t}</b> ✓` : `Players add up to <b>${t}</b>, Éanna score is <b>${u}</b>` };
     $('#eRows').oninput = chk; $('#eUs').oninput = chk; chk();
     $('#eRows').onclick = e => { const t = e.target.closest('.tog'); if(t){ t.classList.toggle('on') } };
     $('#eAdd').onclick = () => { $('#eRows').insertAdjacentHTML('beforeend', '<tr><td><input class="num"></td><td><input></td><td class="r"><input class="pts" inputmode="numeric"></td><td class="r"><button class="tog" aria-label="Hide this player"></button></td></tr>') };
     $('#eOk').onclick = async () => {
-      const lines = read(); const pv = $('#eP').value; const [pno, ...pn] = pv.split('|');
-      const potg = pv ? { no: pno, name: (lines.find(l => String(l.no) === String(pno)) || {}).name || pn.join('|'), note: $('#eN').value.trim() } : null;
+      const all = readAll(), lines = all.filter(l => l.no || l.name), pv = $('#eP').value;
+      // update the roster: last number worn, names, hide flags. New players get their own ID.
+      const r = await S.getRoster(s.team); const ps = r.players || []; ensurePids(ps);
+      lines.forEach(l => { const ex = matchPlayer(ps, l);
+        if(ex){ ex.no = l.no; ex.name = l.name; ex.hidden = !!l.hidden; l.pid = ex.pid }
+        else if(!l.pid){ const np = { pid: newPid(), no: l.no, name: l.name, hidden: !!l.hidden }; ps.push(np); l.pid = np.pid } });
+      await S.saveRoster(s.team, ps);
+      const pl = pv !== '' && all[+pv] && (all[+pv].no || all[+pv].name) ? all[+pv] : null;
+      const potg = pl ? { pid: pl.pid, no: pl.no, name: pl.name, note: $('#eN').value.trim() } : null;
       const patch = { potg, lines, us: parseInt($('#eUs').value,10)||0, th: parseInt($('#eTh').value,10)||0, status:'approved', checkedBy: AUTH.name || AUTH.email || 'admin', checked: new Date().toISOString() };
       await S.updateSubmission(s.id, patch);
-      // remember names in the roster (keeps hidden flags)
-      const r = await S.getRoster(s.team); const ps = r.players || [];
-      lines.forEach(l => { const ex = ps.find(p => String(p.no) === String(l.no)); if(ex){ ex.name = l.name; if(l.hidden) ex.hidden = true } else ps.push({ no:l.no, name:l.name, hidden: !!l.hidden }) });
-      await S.saveRoster(s.team, ps);
       const box = publicBox({ ...s, ...patch }, { players: ps });
       if(box.mode === 'hidden') await S.deleteBoxscore(s.gameKey); else await S.putBoxscore(s.gameKey, box);
       await loadBoxes(); toast('Approved and published'); location.hash = '#admin/queue';
@@ -609,14 +668,52 @@ V.admin = async (sub, arg) => {
     $('#view').innerHTML = nav + `
       <label class="fld"><span>Team</span><select id="rTeam">${teams.map(n=>`<option ${n===cur?'selected':''}>${esc(n)}</option>`).join('')}</select></label>
       <div class="cd"><div class="lbl" style="margin-bottom:6px">Players · ${(r.players||[]).length}</div>
-      <div class="tscroll"><table class="bx"><thead><tr><th>No.</th><th>Name</th><th class="r">Hide stats</th><th></th></tr></thead><tbody id="rRows">${(r.players||[]).map(p=>rRow(p)).join('')}</tbody></table></div>
-      <button class="btn g sm" id="rAdd" style="margin-top:8px">+ Add player</button>
-      <div class="sm mut" style="margin-top:8px">"Hide stats" keeps a player off every public page, for example if a parent asks. Moderators still see them. Names fill in automatically when you approve score-sheets.</div></div>
-      <button class="btn block" id="rSave">Save roster &amp; update public pages</button>`;
+      <div class="tscroll"><table class="bx"><thead><tr><th>Usual no.</th><th>Name</th><th class="r">Hide stats</th><th></th></tr></thead><tbody id="rRows">${(r.players||[]).map(p=>rRow(p)).join('')}</tbody></table></div>
+      <div class="row wrap" style="margin-top:8px;gap:6px"><button class="btn g sm" id="rAdd">+ New player</button><button class="btn g sm" id="rLink">+ Player already on another team</button></div>
+      <div id="rLinkBox" hidden style="margin-top:8px"></div>
+      <div class="sm mut" style="margin-top:8px">"Hide stats" keeps a player off every public page, for example if a parent asks. Moderators still see them. Names fill in automatically when you approve score-sheets. Numbers can change from game to game: points always stay with the player, and the usual number updates to whatever they wore last.</div></div>
+      <button class="btn block" id="rSave">Save roster &amp; update public pages</button>
+      ${can('approveSheets') ? `<details class="cd"><summary class="lbl" style="cursor:pointer">Merge two players ▾</summary>
+        <p class="sm" style="margin:8px 0">If the same person ended up as two players (say once on ${esc(cur)} and once on another team), merge them. All their games join up on one player page. Nothing is deleted from the score-sheets.</p>
+        <label class="fld"><span>Keep this player (${esc(cur)})</span><select id="mA"><option value="">Pick a player</option>${(r.players||[]).filter(p => p.pid).map(p => `<option value="${esc(p.pid)}">${esc(p.name)}${p.no!==''?' · #'+esc(p.no):''}</option>`).join('')}</select></label>
+        <label class="fld" style="margin-top:8px"><span>Merge in this one (any team)</span><select id="mB"><option value="">Loading…</option></select></label>
+        <button class="btn g block" id="mGo" style="margin-top:8px">Merge into one player</button></details>` : ''}`;
+    const others = async () => { let rs = []; try { rs = await within(S.listRosters(), 6000, []) } catch(e){} return rs.flatMap(x => (x.players||[]).filter(p => p.pid && p.name).map(p => ({ ...p, team: x.team }))).sort((a,b) => a.name.localeCompare(b.name) || a.team.localeCompare(b.team)) };
+    $('#rLink').onclick = async () => {
+      const box = $('#rLinkBox'); box.hidden = false; box.innerHTML = '<div class="sm mut">Loading the other teams…</div>';
+      const here = new Set($$('#rRows tr').map(tr => tr.dataset.pid).filter(Boolean));
+      const seen = new Set(), opts = (await others()).filter(p => p.team !== cur && !here.has(p.pid) && !seen.has(p.pid) && seen.add(p.pid));
+      if(!opts.length){ box.innerHTML = '<div class="sm mut">No players on other teams yet.</div>'; return }
+      box.innerHTML = `<label class="fld"><span>Add to ${esc(cur)} as the same player</span><select id="rLinkSel"><option value="">Pick a player</option>${opts.map((p,i) => `<option value="${i}">${esc(p.name)} · ${esc(p.team)}</option>`).join('')}</select></label>`;
+      $('#rLinkSel').onchange = e => { const p = opts[+e.target.value]; if(!p) return; $('#rRows').insertAdjacentHTML('beforeend', rRow({ pid: p.pid, no: p.no, name: p.name, hidden: !!p.hidden, also: p.team })); box.hidden = true; toast(`${p.name} added. Save the roster to keep it.`) };
+    };
+    others().then(list => {
+      $$('#rRows tr[data-pid]').forEach(tr => { const t = [...new Set(list.filter(p => p.pid === tr.dataset.pid && p.team !== cur).map(p => p.team))]; if(t.length && !$('.also', tr)) $$('td', tr)[1].insertAdjacentHTML('beforeend', `<div class="sm mut also">Also on ${t.map(esc).join(', ')}</div>`) });
+      if($('#mB')) $('#mB').innerHTML ='<option value="">Pick a player</option>' + list.map(p => `<option value="${esc(p.pid)}">${esc(p.name)} · ${esc(p.team)}${p.no!==''?' · #'+esc(p.no):''}</option>`).join('') });
+    if($('#mGo')) $('#mGo').onclick = async () => {
+      const A = $('#mA').value, B = $('#mB').value;
+      if(!A || !B) return toast('Pick both players', 1);
+      if(A === B) return toast("That's the same player already", 1);
+      const nameA = $('#mA').selectedOptions[0].text.split(' · ')[0], nameB = $('#mB').selectedOptions[0].text.split(' · ')[0];
+      if(!confirm(`Merge ${nameB} into ${nameA}? Their games will show on one player page.`)) return;
+      const btn = $('#mGo'); btn.disabled = true; btn.textContent = 'Merging…';
+      for(const x of await S.listRosters()){
+        const ps = x.players || []; if(!ps.some(p => p.pid === B)) continue;
+        const keep = ps.filter(p => p.pid !== B); const b = ps.find(p => p.pid === B);
+        if(!keep.some(p => p.pid === A)) keep.push({ ...b, pid: A, name: nameA });
+        await S.saveRoster(x.team, keep);
+      }
+      for(const sb of await S.listSubmissions()){
+        const hit = (sb.lines||[]).some(l => l.pid === B) || (sb.potg && sb.potg.pid === B);
+        if(!hit) continue;
+        await S.updateSubmission(sb.id, { lines: sb.lines.map(l => l.pid === B ? { ...l, pid: A } : l), potg: sb.potg && sb.potg.pid === B ? { ...sb.potg, pid: A } : (sb.potg || null) });
+      }
+      await republishAll(); toast('Merged into one player'); route();
+    };
     $('#rTeam').onchange = e => { lsSet('eanna-hub-roster-team', e.target.value); location.hash = '#admin/rosters/' + encodeURIComponent(e.target.value) };
     $('#rAdd').onclick = () => $('#rRows').insertAdjacentHTML('beforeend', rRow({ no:'', name:'', hidden:false }));
     $('#rRows').onclick = e => { const t = e.target.closest('.tog'); if(t) t.classList.toggle('on'); const x = e.target.closest('[data-rm]'); if(x) x.closest('tr').remove() };
-    $('#rSave').onclick = async () => { const ps = $$('#rRows tr').map(tr => { const i = $$('input', tr); return { no: i[0].value.trim(), name: i[1].value.trim(), hidden: $('.tog', tr).classList.contains('on') } }).filter(p => p.no || p.name);
+    $('#rSave').onclick = async () => { const ps = $$('#rRows tr').map(tr => { const i = $$('input', tr); return { pid: tr.dataset.pid || newPid(), no: i[0].value.trim(), name: i[1].value.trim(), hidden: $('.tog', tr).classList.contains('on') } }).filter(p => p.no || p.name);
       await S.saveRoster(cur, ps); await republishAll(); toast('Roster saved') };
     return;
   }
@@ -644,7 +741,7 @@ V.admin = async (sub, arg) => {
     $('#cOut').onclick = async () => { await S.signOut(); location.hash = '#home' };
   }
 };
-const rRow = p => `<tr><td><input class="num" value="${esc(p.no)}"></td><td><input value="${esc(p.name)}"></td><td class="r"><button class="tog ${p.hidden?'on':''}" aria-label="Hide this player's stats"></button></td><td class="r"><button class="btn g sm" data-rm aria-label="Remove">✕</button></td></tr>`;
+const rRow = p => `<tr data-pid="${esc(p.pid||'')}"><td><input class="num" value="${esc(p.no)}"></td><td><input value="${esc(p.name)}">${p.also ? `<div class="sm mut">Also on ${esc(p.also)}</div>` : ''}</td><td class="r"><button class="tog ${p.hidden?'on':''}" aria-label="Hide this player's stats"></button></td><td class="r"><button class="btn g sm" data-rm aria-label="Remove">✕</button></td></tr>`;
 
 /* ---------- carousel ---------- */
 const Carousel = {
@@ -700,7 +797,9 @@ const Carousel = {
     const pg = ctx.createLinearGradient(0,17,0,42); if(women){ pg.addColorStop(0,'#A367AF'); pg.addColorStop(1,'#E0457B') } else { pg.addColorStop(0,'#2B2763'); pg.addColorStop(.6,'#5B4799'); pg.addColorStop(1,'#A367AF') }
     ctx.fillStyle = pg; ctx.fillRect(9,17,3.2,25); ctx.fillRect(27.8,17,3.2,25);
     ctx.strokeStyle = women ? '#A367AF' : '#E0457B'; ctx.lineWidth = 1.8; ctx.beginPath(); ctx.moveTo(12,2); ctx.quadraticCurveTo(20,9.5,28,2); ctx.stroke();
-    ctx.fillStyle = '#fff'; ctx.font = '14px Anton'; ctx.textAlign = 'center'; ctx.fillText(String(num), 20, 33); ctx.restore();
+    const t = String(num ?? ''); let f = jFont(t); ctx.fillStyle = '#fff'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+    ctx.font = f + 'px Anton'; while(f > 6 && ctx.measureText(t).width > 15) { f -= .5; ctx.font = f + 'px Anton' }
+    ctx.fillText(t, 20, 25.5); ctx.restore();
   },
   async build(wk){
     const end = addDays(wk, 6), tp = topPerformers(wk, end), range = `${fmtDate(wk,{day:'numeric',month:'short'})} – ${fmtDate(end,{day:'numeric',month:'short'})}`.toUpperCase();
@@ -775,15 +874,16 @@ async function seedDemo(){
   await S.signIn();
   const sl = G.find(g => g.team === "Men's Super League" && played(g) && g.us === 77 && /Tralee/.test(g.o)) || G.find(g => g.team === "Men's Super League" && played(g));
   const roster = [[0,'Adam McCarthy'],[2,"Cathal O'Sullivan"],[5,'Dean Kiernan'],[7,'Kiki'],[8,'Morgan Taylor'],[9,'Neil Lynch'],[10,'Sean Jenkins'],[11,'David George'],[12,'Nick Hopkins'],[13,'Karl Walsh'],[14,'Ian Lynch'],[17,'Harry Lynch'],[24,'Manou Christal'],[32,'Misha Kucheriavyi'],[36,'Neil Coughlan']];
-  await S.saveRoster("Men's Super League", roster.map(([no,name]) => ({ no:String(no), name, hidden:false })));
+  const rp = roster.map(([no,name]) => ({ pid: newPid(), no:String(no), name, hidden:false }));
+  await S.saveRoster("Men's Super League", rp);
   if(sl){
     const split = [5,2,9,10,8,24,13,14,0]; const w = [.27,.21,.14,.12,.1,.08,.05,.03,0];
     let pts = w.map(x => Math.floor(x*sl.us)); pts[0] += sl.us - pts.reduce((a,b)=>a+b,0);
-    const lines = split.map((no,i) => ({ no:String(no), name: roster.find(r=>r[0]===no)[1], pts: pts[i] }));
-    const sub = { team: sl.team, sex:'m', gameKey: gameKey(sl), d: sl.d, o: sl.o, comp: sl.c, us: sl.us, th: sl.th, lines, by:'Example (demo)', photo:'', example:true, potg:{ no:'5', name:'Dean Kiernan', note:'Example note: set the tone on both ends and hit the big shots late.' } };
+    const lines = split.map((no,i) => { const r = rp.find(r => r.no === String(no)); return { pid: r.pid, no:String(no), name: r.name, pts: pts[i] } });
+    const sub = { team: sl.team, sex:'m', gameKey: gameKey(sl), d: sl.d, o: sl.o, comp: sl.c, us: sl.us, th: sl.th, lines, by:'Example (demo)', photo:'', example:true, potg:{ pid: rp.find(r => r.no === '5').pid, no:'5', name:'Dean Kiernan', note:'Example note: set the tone on both ends and hit the big shots late.' } };
     const id = await S.submitSheet(sub);
     await S.updateSubmission(id, { status:'approved', checked: new Date().toISOString() });
-    await S.putBoxscore(sub.gameKey, publicBox(sub, null));
+    await S.putBoxscore(sub.gameKey, publicBox(sub, { players: rp }));
   }
   const ug = G.filter(g => g.team === 'U18 Boys (1)' && played(g)).sort((a,b)=>b.d.localeCompare(a.d))[0];
   if(ug){
