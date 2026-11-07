@@ -324,6 +324,17 @@ tr.flag td{background:#fff5e8}
 .qitem.report{border-left-color:var(--no)} .qitem.sheet{border-left-color:var(--orange)} .qitem.post{border-left-color:var(--purple)} .qitem.user,.qitem.role{border-left-color:var(--navy)}
 .logi{font-size:11px;padding:6px 0;border-bottom:1px solid var(--a-line)}
 .logi:last-child{border:0}
+.askcard{width:100%;text-align:left;border:1.5px dashed rgba(91,71,153,.45);background:linear-gradient(135deg,#f6f1ff,#fff)}
+.askic{width:30px;height:30px;border-radius:50%;flex:none;display:grid;place-items:center;font-family:var(--display);font-weight:900;color:#fff;background:linear-gradient(135deg,#e07a4e,#c2562b);box-shadow:0 6px 12px -6px rgba(194,86,43,.9)}
+.artimg{position:relative;height:84px;margin:-10px -10px 0;border-radius:14px 14px 0 0;overflow:hidden;background:var(--grad-v);display:flex;align-items:flex-start;padding:8px}
+.artimg::before{content:"";position:absolute;inset:0;background:var(--court) center/160% auto no-repeat;opacity:.9}
+.artimg>*{position:relative}.artimg img{position:absolute;right:10px;bottom:-14px;width:76px;opacity:.9;transform:rotate(-8deg)}
+.pollopt{position:relative;display:flex;justify-content:space-between;width:100%;text-align:left;border:1px solid var(--a-line);border-radius:10px;padding:7px 9px;font-size:11.5px;font-weight:700;overflow:hidden;background:#fff}
+.pollopt i{position:absolute;inset:0 auto 0 0;background:rgba(91,71,153,.14);transition:width .45s cubic-bezier(.2,.8,.2,1)}
+.pollopt span{position:relative}.pollopt.me{border-color:var(--purple)}
+.req{display:grid;gap:5px}.req .rep{border-left:3px solid var(--purple);padding:4px 8px;background:#f6f1ff;border-radius:0 8px 8px 0}
+.qitem.help{border-left-color:#e07a4e}
+.pfpic{width:40px;height:40px;font-size:13px;background-size:cover!important;background-position:center!important}
 .empty{text-align:center;color:var(--a-mut);padding:16px 6px}
 .empty b{display:block;font-family:var(--display);color:var(--a-ink);font-size:13px;margin-bottom:3px}
 
@@ -536,8 +547,8 @@ body{margin:0}
           <div class="bd">
             <button class="tc" data-go="top" style="text-align:left">
               <div class="row sp"><span class="lbl">Top performers · Week 10</span><span class="pill p-gr">See all ›</span></div>
-              <div class="perf"><svg class="jy"><use href="#jsy"/><text x="20" y="33" text-anchor="middle" font-family="Anton" font-size="14" fill="#fff">5</text></svg><div class="f"><b>Dean Kiernan</b><span>Super League Men · v Killester</span></div><div class="n">27<small>PTS</small></div></div>
-              <div class="perf"><svg class="jy"><use href="#jsyw"/><text x="20" y="33" text-anchor="middle" font-family="Anton" font-size="14" fill="#fff">11</text></svg><div class="f"><b>Aoife M.</b><span>Women's BIDL · v Brunell</span></div><div class="n">22<small>PTS</small></div></div>
+              <div class="perf"><svg class="jy" viewBox="0 0 40 44"><use href="#jsy" width="40" height="44"/><text x="20" y="25.5" dominant-baseline="central" text-anchor="middle" font-family="Anton" font-size="14" fill="#fff">5</text></svg><div class="f"><b>Dean Kiernan</b><span>Super League Men · v Killester</span></div><div class="n">27<small>PTS</small></div></div>
+              <div class="perf"><svg class="jy" viewBox="0 0 40 44"><use href="#jsyw" width="40" height="44"/><text x="20" y="25.5" dominant-baseline="central" text-anchor="middle" font-family="Anton" font-size="14" fill="#fff">11</text></svg><div class="f"><b>Aoife M.</b><span>Women's BIDL · v Brunell</span></div><div class="n">22<small>PTS</small></div></div>
             </button>
             <div class="cd">
               <div class="row sp"><span class="lbl">Results this week</span><button class="sm" style="color:var(--purple);font-weight:700" data-ph="p2" data-go="week" data-scroll="s2">All 6 ›</button></div>
@@ -646,9 +657,9 @@ body{margin:0}
             <div class="cd row sp"><span class="lbl">Last 5</span><span class="form"><span class="W">W</span><span class="W">W</span><span class="L">L</span><span class="W">W</span><span class="W">W</span></span></div>
             <div class="cd">
               <div class="lbl">Top scorers · pts per game</div>
-              <button class="row" style="width:100%;padding:6px 0;border-bottom:1px solid var(--a-line)" data-go="player"><svg class="jy"><use href="#jsy"/><text x="20" y="33" text-anchor="middle" font-family="Anton" font-size="14" fill="#fff">5</text></svg><b class="f" style="text-align:left">Dean Kiernan</b><span class="n" style="font-size:16px">20.5</span><span class="chev">›</span></button>
-              <div class="row" style="padding:6px 0;border-bottom:1px solid var(--a-line)"><svg class="jy"><use href="#jsy"/><text x="20" y="33" text-anchor="middle" font-family="Anton" font-size="14" fill="#fff">2</text></svg><b class="f">Cathal O'Sullivan</b><span class="n" style="font-size:16px">17.6</span></div>
-              <div class="row" style="padding:6px 0"><svg class="jy"><use href="#jsy"/><text x="20" y="33" text-anchor="middle" font-family="Anton" font-size="14" fill="#fff">9</text></svg><b class="f">Neil Lynch</b><span class="n" style="font-size:16px">14.6</span></div>
+              <button class="row" style="width:100%;padding:6px 0;border-bottom:1px solid var(--a-line)" data-go="player"><svg class="jy" viewBox="0 0 40 44"><use href="#jsy" width="40" height="44"/><text x="20" y="25.5" dominant-baseline="central" text-anchor="middle" font-family="Anton" font-size="14" fill="#fff">5</text></svg><b class="f" style="text-align:left">Dean Kiernan</b><span class="n" style="font-size:16px">20.5</span><span class="chev">›</span></button>
+              <div class="row" style="padding:6px 0;border-bottom:1px solid var(--a-line)"><svg class="jy" viewBox="0 0 40 44"><use href="#jsy" width="40" height="44"/><text x="20" y="25.5" dominant-baseline="central" text-anchor="middle" font-family="Anton" font-size="14" fill="#fff">2</text></svg><b class="f">Cathal O'Sullivan</b><span class="n" style="font-size:16px">17.6</span></div>
+              <div class="row" style="padding:6px 0"><svg class="jy" viewBox="0 0 40 44"><use href="#jsy" width="40" height="44"/><text x="20" y="25.5" dominant-baseline="central" text-anchor="middle" font-family="Anton" font-size="14" fill="#fff">9</text></svg><b class="f">Neil Lynch</b><span class="n" style="font-size:16px">14.6</span></div>
             </div>
             <div class="cd"><div class="lbl">Next game</div><div class="row" style="margin-top:5px"><img class="cr" src="assets/crest.png" alt=""><span class="vs">VS</span><img class="cr" src="assets/ucd-marian.png" alt="UCD Marian"><div class="f"><b>UCD Marian</b><div class="sm mut">Sat 15 Nov · 7:30pm · Away</div></div></div></div>
           </div>
@@ -657,7 +668,7 @@ body{margin:0}
         <div class="scr" data-s="player">
           <div class="top" style="background:radial-gradient(80% 70% at 20% 0%,rgba(163,103,175,.6),transparent 60%),linear-gradient(160deg,#1a1730,#110E12)"><div class="sb"><span>9:41</span><span>5G ▮▮▮</span></div>
             <div class="ah"><button class="back" data-go="team" aria-label="Back">‹</button><div class="t">Player</div></div>
-            <div class="row" style="position:relative;z-index:2;padding:0 16px 16px;gap:12px"><svg style="width:70px;height:77px;filter:drop-shadow(0 8px 12px rgba(0,0,0,.5))"><use href="#jsy"/><text x="20" y="33" text-anchor="middle" font-family="Anton" font-size="14" fill="#fff">5</text></svg><div class="f"><div class="h" style="font-size:19px;font-weight:900;text-transform:uppercase;line-height:1">Dean<br>Kiernan</div><div class="sm" style="opacity:.75;margin-top:4px">Super League Men · Guard</div><span class="badge" style="margin-top:6px;background:rgba(255,255,255,.12);border-color:rgba(255,255,255,.2);color:#fff">Member since 2015</span></div></div>
+            <div class="row" style="position:relative;z-index:2;padding:0 16px 16px;gap:12px"><svg viewBox="0 0 40 44" style="width:70px;height:77px;filter:drop-shadow(0 8px 12px rgba(0,0,0,.5))"><use href="#jsy" width="40" height="44"/><text x="20" y="25.5" dominant-baseline="central" text-anchor="middle" font-family="Anton" font-size="14" fill="#fff">5</text></svg><div class="f"><div class="h" style="font-size:19px;font-weight:900;text-transform:uppercase;line-height:1">Dean<br>Kiernan</div><div class="sm" style="opacity:.75;margin-top:4px">Super League Men · Guard</div><span class="badge" style="margin-top:6px;background:rgba(255,255,255,.12);border-color:rgba(255,255,255,.2);color:#fff">Member since 2015</span></div></div>
             <div class="grain w"></div></div>
           <div class="bd">
             <div class="stat3"><div><span class="n">8</span><span>Games</span></div><div><span class="n">20.5</span><span>Pts/game</span></div><div><span class="n">31</span><span>Season high</span></div></div>
@@ -694,8 +705,8 @@ body{margin:0}
             <div class="banner b-pu"><b>Results only.</b> This age group shows team results, not individual stats.</div>
             <div class="stat3"><div><span class="n">4–3</span><span>Record</span></div><div><span class="n">7</span><span>Games</span></div><div><span class="n">2</span><span>Blitzes</span></div></div>
             <div class="cd"><div class="lbl">Results</div>
-              <div class="mt"><img class="cr" src="assets/crest.png" alt=""><span class="vs">VS</span><span class="oi">LU</span><div class="who"><b>Lucan</b><span>1 Nov · Home</span></div><div class="sc w">24–18<small>WIN</small></div></div>
-              <div class="mt"><img class="cr" src="assets/crest.png" alt=""><span class="vs">VS</span><span class="oi">TE</span><div class="who"><b>Templeogue</b><span>25 Oct · Away</span></div><div class="sc l">16–22<small>LOSS</small></div></div>
+              <div class="mt"><img class="cr" src="assets/crest.png" alt=""><span class="vs">VS</span><img class="cr" src="assets/malahide.png" alt="Malahide"><div class="who"><b>Malahide</b><span>1 Nov · Home</span></div><div class="sc w">24–18<small>WIN</small></div></div>
+              <div class="mt"><img class="cr" src="assets/crest.png" alt=""><span class="vs">VS</span><img class="cr" src="assets/templeogue.png" alt="Templeogue"><div class="who"><b>Templeogue</b><span>25 Oct · Away</span></div><div class="sc l">16–22<small>LOSS</small></div></div>
             </div>
             <div class="cd row"><div class="ph-img m cr" style="width:46px;height:46px;flex:none"></div><div class="f"><div class="lbl">Team news · members only</div><b>Great effort at the Swords blitz</b></div></div>
           </div>
@@ -714,8 +725,8 @@ body{margin:0}
   <div class="notes">
     <div class="kick"><span class="n">04</span>Section</div>
     <h2>Score-sheet upload</h2>
-    <p>Coaches and managers only. It takes about 30 seconds.</p>
-    <ul><li>Pick the game, snap the sheet, add the final score</li><li>The hub reads it and checks the points add up</li><li>Unclear numbers show in orange to fix</li><li>Then it waits for a moderator</li></ul>
+    <p>Coaches and managers only. About a minute after the game.</p>
+    <ul><li>Pick the game and add the final score</li><li><b>Today's numbers:</b> the team is filled in with last game's numbers. Change anyone who wore a different kit.</li><li>Type each player's points from the sheet. The hub checks they add up to the final score.</li><li>Points always stay with the player, whatever number they wore. Players playing up from another team can be added.</li><li>A photo of the sheet can go with it, for the moderator only. Then it waits for a moderator.</li></ul>
     <div class="qs"><h3>Your answers</h3>
       <label><span>Should the coach check the points, or only the moderator?</span><textarea class="ans" id="q4a" data-q="4 Score-sheets · Who checks the points?"></textarea></label>
       <label><span>Add a "player of the game" pick here?</span><textarea class="ans" id="q4b" data-q="4 Score-sheets · Player of the game pick?"></textarea></label>
@@ -726,49 +737,50 @@ body{margin:0}
       <div class="ph" id="p4"><div class="scrn"><div class="island"></div>
         <div class="scr on" data-s="snap">
           <div class="top"><div class="sb"><span>9:41</span><span>5G ▮▮▮</span></div>
-            <div class="ah"><img class="crest" src="assets/crest-dark.png" alt=""><div class="t">Upload score-sheet<small>Step 1 of 2</small></div></div><div class="grain w"></div></div>
+            <div class="ah"><img class="crest" src="assets/crest-dark.png" alt=""><div class="t">Send a score-sheet<small>Step 1 of 3</small></div></div><div class="grain w"></div></div>
           <div class="bd">
             <label class="fld"><span>Team</span><select id="upTeam"><option>U18 Boys</option><option>Super League Men</option><option>U16 Girls</option></select></label>
             <div class="cd row" style="padding:8px"><img class="cr" src="assets/crest.png" alt=""><span class="vs">VS</span><img class="cr" src="assets/st-vincents.png" alt="St Vincent's"><div class="f"><b>St Vincent's</b><div class="sm mut">Sat 8 Nov · Home</div></div></div>
-            <div class="sheetimg"><div class="cols"><div></div><div></div></div><span class="ink" style="left:24px;top:40px">7 · 4 · 12 · 9</span><span class="ink" style="left:150px;top:60px">70 – 58</span><span class="ink" style="left:30px;top:96px">15 · 5 · 4 · 7</span></div>
             <div class="row" style="gap:6px"><label class="fld f"><span>Éanna</span><input id="usA" value="70" inputmode="numeric"></label><label class="fld f"><span>St Vincent's</span><input id="usB" value="58" inputmode="numeric"></label></div>
-            <div class="cd row sm"><div class="ph-img k" style="width:30px;height:30px;flex:none"></div><span class="f">Team photos (optional)</span><span class="pill p-pu">2 added</span></div>
-            <button class="btn" data-go="scan">Read score-sheet</button>
+            <div class="cd row sm"><div class="ph-img k" style="width:30px;height:30px;flex:none"></div><span class="f">Photo of the score-sheet (optional, moderators only)</span><span class="pill p-pu">Added</span></div>
+            <button class="btn" data-go="nums">Next: today's numbers</button>
           </div>
         </div>
-        <div class="scr" data-s="scan">
+        <div class="scr" data-s="nums">
           <div class="top"><div class="sb"><span>9:41</span><span>5G ▮▮▮</span></div>
-            <div class="ah"><img class="crest" src="assets/crest-dark.png" alt=""><div class="t">Reading…<small>Usually 5 seconds</small></div></div><div class="grain w"></div></div>
-          <div class="bd" style="justify-content:center">
-            <div class="sheetimg" style="transform:none"><div class="cols"><div></div><div></div></div><span class="ink" style="left:24px;top:40px">7 · 4 · 12 · 9</span><span class="ink" style="left:150px;top:60px">70 – 58</span><div class="scanline"></div></div>
-            <div style="text-align:center"><b class="h">Matching shirt numbers to the U18 Boys roster</b><div class="sm mut">Counting baskets in the running score</div></div>
+            <div class="ah"><button class="back" data-go="snap" aria-label="Back">‹</button><div class="t">Today's numbers<small>Step 2 of 3</small></div></div><div class="grain w"></div></div>
+          <div class="bd">
+            <div class="banner b-pu">Filled in from last game. Change anyone who wore a different number today.</div>
+            <div class="cd" id="numRows" style="display:grid;gap:0"></div>
+            <button class="btn g" data-act="playUp" id="upBtn">+ Playing up from another team</button>
+            <button class="btn" data-go="check">Next: points</button>
           </div>
         </div>
         <div class="scr" data-s="check">
           <div class="top"><div class="sb"><span>9:41</span><span>5G ▮▮▮</span></div>
-            <div class="ah"><button class="back" data-go="snap" aria-label="Back">‹</button><div class="t">Check the points<small>Step 2 of 2</small></div></div><div class="grain w"></div></div>
+            <div class="ah"><button class="back" data-go="nums" aria-label="Back">‹</button><div class="t">Points<small>Step 3 of 3</small></div></div><div class="grain w"></div></div>
           <div class="bd">
             <div id="chkBanner" class="banner"></div>
             <div class="cd"><table class="bx"><thead><tr><th>#</th><th>Player</th><th class="r">Pts</th></tr></thead><tbody id="chkRows"></tbody></table></div>
-            <div class="sm mut">Orange means the handwriting was unclear. Use − and + to fix it.</div>
+            <div class="sm mut">Type the points from the sheet. Leave blank if they didn't play.</div>
             <button class="btn" id="chkSend" data-act="sendSheet">Send for checking</button>
           </div>
         </div>
         <div class="scr" data-s="sent">
           <div class="top"><div class="sb"><span>9:41</span><span>5G ▮▮▮</span></div>
-            <div class="ah"><img class="crest" src="assets/crest-dark.png" alt=""><div class="t">Upload score-sheet</div></div><div class="grain w"></div></div>
+            <div class="ah"><img class="crest" src="assets/crest-dark.png" alt=""><div class="t">Send a score-sheet<small>Done</small></div></div><div class="grain w"></div></div>
           <div class="bd" style="justify-content:center;text-align:center;gap:12px">
             <div class="ball" style="width:66px;height:66px;margin:0 auto;font-size:26px">✓</div>
             <div class="h" style="font-size:17px;text-transform:uppercase;font-weight:900"><span class="gt">Sent for checking</span></div>
             <p class="mut" style="margin:0">A moderator will check it, usually within a day. You'll get a notification when it's live.</p>
             <div class="cd" style="text-align:left"><div class="row sp"><b>U18 Boys v St Vincent's</b><span class="pill p-warn">Waiting</span></div><div class="sm mut">Sent by Coach Mark ✓ · it's now in the moderation queue (section 10)</div></div>
-            <button class="btn g" data-go="snap">Upload another</button>
+            <button class="btn g" data-go="snap">Send another</button>
           </div>
         </div>
         <div class="toast"></div>
       </div></div>
-      <div class="chips" data-for="p4"><button class="on" data-go="snap">1 · Snap</button><button data-go="scan">Reading</button><button data-go="check">2 · Check</button><button data-go="sent">Done</button></div>
-      <div class="tip">Press Read, then fix the orange number until it adds up to 70</div>
+      <div class="chips" data-for="p4"><button class="on" data-go="snap">1 · Game</button><button data-go="nums">2 · Numbers</button><button data-go="check">3 · Points</button><button data-go="sent">Done</button></div>
+      <div class="tip">Change Seán's number, then fix Oisín's points (10, not 12) so they add up to 70</div>
     </div>
   </div>
 </section>
@@ -852,55 +864,106 @@ body{margin:0}
   <div class="notes">
     <div class="kick"><span class="n">06</span>Section</div>
     <h2>Community</h2>
-    <ul><li>You set one question a week</li><li>Adults board: answers and replies</li><li>Under-18 board: answers only, held for approval, open 8am–10pm</li><li>Supporters (non-members) can use the adults board</li><li>Badges show team and role</li></ul>
+    <ul><li>One feed for the whole club: questions, club news articles, tech updates and polls</li><li>Moderators post questions any time, not only once a week. A question can be pinned to the top.</li><li><b>Ask the moderators:</b> anyone can send a question, a tech problem or a suggestion. Only moderators see it, and the reply comes back to the person who asked.</li><li>Under-18 board: answers only, checked before they appear, open 8am–10pm</li><li>Supporters (non-members) can use the adults board</li></ul>
     <div class="qs"><h3>Your answers</h3>
-      <label><span>More than one question a week?</span><textarea class="ans" id="q6a" data-q="6 Community · More than one question a week?"></textarea></label>
-      <label><span>Best answer each week goes on socials?</span><textarea class="ans" id="q6b" data-q="6 Community · Best answer on socials?"></textarea></label>
+      <label><span>Who can post articles and tech updates: moderators only, or the media team too?</span><textarea class="ans" id="q6a" data-q="6 Community · Who posts articles and updates?"></textarea></label>
+      <label><span>Should good suggestions be shared on the feed (with the person's OK)?</span><textarea class="ans" id="q6b" data-q="6 Community · Share suggestions on the feed?"></textarea></label>
     </div>
   </div>
   <div class="stage">
     <div class="unit">
       <div class="ph" id="p6"><div class="scrn"><div class="island"></div>
-        <div class="scr on" data-s="adult">
+        <div class="scr on" data-s="feed">
           <div class="top"><div class="sb"><span>9:41</span><span>5G ▮▮▮</span></div>
             <div class="ah"><img class="crest" src="assets/crest-dark.png" alt=""><div class="t">Community<small>Adults board</small></div></div><div class="grain w"></div></div>
           <div class="bd">
-            <div class="qhero"><div class="lbl">Question of the week</div><div class="h">What's the hardest part about underage basketball?</div><div class="row sm" style="opacity:.85"><img src="assets/crest-dark.png" alt="" style="width:16px;height:16px;object-fit:contain">Asked by Milo · Moderator</div></div>
-            <div class="compose"><label class="fld"><span>Your answer</span><input id="ansA" placeholder="Write an answer…"></label><button class="send" data-act="answer" data-b="a" aria-label="Post answer">↑</button></div>
-            <div id="ansListA" style="display:grid;gap:9px">
-              <div class="cd" style="display:grid;gap:6px">
-                <div class="row"><div class="ava o">TK</div><div class="f"><b>tom_k</b> <span class="badge">Parent · U12 Boys</span></div><span class="pill p-pu">Pinned</span></div>
-                <div>Early Saturday games in January. Getting them out of bed is the real workout.</div>
-                <div class="row sp"><div class="rxs"><button class="rx" data-c="31">👏 <b>31</b></button><button class="rx" data-c="6">🏀 <b>6</b></button></div><button class="sm" style="color:var(--purple);font-weight:700" data-act="reps">2 replies</button></div>
-                <div class="reps" hidden><div class="sm"><b>coach_rob</b> <span class="pill p-ok">Coach ✓</span> Ha, the coaches too.</div><div class="sm"><b>sineadk</b> <span class="badge">Supporter</span> Every single week!</div></div>
+            <div class="seg" data-seg="cf"><button class="on" data-v="all">All</button><button data-v="q">Questions</button><button data-v="news">News</button><button data-v="tech">Updates</button><button data-v="poll">Polls</button></div>
+            <button class="cd row askcard" data-go="ask"><span class="askic">?</span><div class="f"><b>Ask the moderators</b><div class="sm mut">A question, a tech problem or an idea. Only moderators see it.</div></div><span class="mut">›</span></button>
+            <div id="feedList" style="display:grid;gap:9px">
+              <div class="fi" data-k="q">
+                <div class="qhero"><div class="row sp"><span class="lbl">Question · pinned</span><span class="lbl">2 days ago</span></div><div class="h">What's the hardest part about underage basketball?</div><div class="row sm" style="opacity:.85"><img src="assets/crest-dark.png" alt="" style="width:16px;height:16px;object-fit:contain">Asked by Milo · Moderator</div></div>
+                <div class="compose" style="margin-top:7px"><label class="fld"><span>Your answer</span><input id="ansA" placeholder="Write an answer…"></label><button class="send" data-act="answer" data-b="a" aria-label="Post answer">↑</button></div>
+                <div id="ansListA" style="display:grid;gap:7px;margin-top:7px">
+                  <div class="cd" style="display:grid;gap:6px">
+                    <div class="row"><div class="ava o">TK</div><div class="f"><b>tom_k</b> <span class="badge">Parent · U12 Boys</span></div><span class="pill p-pu">Top answer</span></div>
+                    <div>Early Saturday games in January. Getting them out of bed is the real workout.</div>
+                    <div class="row sp"><div class="rxs"><button class="rx" data-c="31">👏 <b>31</b></button><button class="rx" data-c="6">🏀 <b>6</b></button></div><button class="sm" style="color:var(--purple);font-weight:700" data-act="reps">2 replies</button></div>
+                    <div class="reps" hidden><div class="sm"><b>coach_rob</b> <span class="pill p-ok">Coach ✓</span> Ha, the coaches too.</div><div class="sm"><b>sineadk</b> <span class="badge">Supporter</span> Every single week!</div></div>
+                  </div>
+                  <button class="sm" style="color:var(--purple);font-weight:700;text-align:left" data-act="toast" data-msg="All 14 answers would open here">See all 14 answers ›</button>
+                </div>
               </div>
-              <div class="cd" style="display:grid;gap:6px">
-                <div class="row"><div class="ava">CR</div><div class="f"><b>coach_rob</b> <span class="pill p-ok">Coach ✓ · U14 Boys</span></div></div>
-                <div>Getting minutes for everyone while still trying to win.</div>
-                <div class="rxs"><button class="rx" data-c="18">👏 <b>18</b></button></div>
+              <div class="cd fi art" data-k="news">
+                <div class="artimg"><span class="pill p-or">Club news</span><img src="assets/crest-dark.png" alt=""></div>
+                <div class="lbl" style="margin-top:8px">Committee · 5 hours ago</div>
+                <b class="h" style="font-size:14px;display:block;margin:2px 0 4px">Christmas camp is back: 22–23 December</b>
+                <div class="sm">Two mornings at the club for U8–U14, all levels welcome. Coaches from the Super League squads will be helping out.</div>
+                <div class="more sm" hidden>Places are €25 and booking opens on the Events page this Friday. We also need parent volunteers for the registration desk: sign up for a slot on the camp page.</div>
+                <div class="row sp" style="margin-top:6px"><div class="rxs"><button class="rx" data-c="22">🎉 <b>22</b></button><button class="rx" data-c="9">❤️ <b>9</b></button></div><button class="sm" style="color:var(--purple);font-weight:700" data-act="readMore">Read more</button></div>
+              </div>
+              <div class="cd fi" data-k="poll">
+                <div class="row"><span class="pill p-pu">Poll</span><span class="sm mut f">Milo · Moderator · closes Sunday</span></div>
+                <b class="h" style="font-size:13.5px;display:block;margin:6px 0">Which jersey should we wear for the cup final?</b>
+                <div id="pollOpts" style="display:grid;gap:5px"></div>
+                <div class="sm mut" id="pollN" style="margin-top:5px"></div>
+              </div>
+              <div class="cd fi" data-k="tech">
+                <div class="row"><span class="pill p-nv">Tech update</span><span class="sm mut f">Hub team · yesterday</span><span class="pill p-gr">v1.3</span></div>
+                <b class="h" style="font-size:13.5px;display:block;margin:6px 0 4px">Favourites are here ★</b>
+                <ul class="sm" style="margin:0;padding-left:16px;display:grid;gap:3px"><li>Tap ☆ on any team or player and they show first on Home</li><li>Coaches can type in a final score when DMBB is slow</li><li>Fixed: some cup games showing the wrong date</li></ul>
+                <div class="sm mut" style="margin-top:6px">Something not working? <button style="color:var(--purple);font-weight:700" data-go="ask">Tell us</button></div>
+              </div>
+              <div class="cd fi" data-k="q">
+                <div class="row"><span class="pill p-pu">Question</span><span class="sm mut f">Anna · Media team · 3 days ago</span></div>
+                <b class="h" style="font-size:13.5px;display:block;margin:6px 0 4px">What song should be on the Super League warm-up playlist?</b>
+                <div class="row sp"><span class="sm mut">27 answers</span><button class="sm" style="color:var(--purple);font-weight:700" data-act="toast" data-msg="The answers would open here">Answer ›</button></div>
               </div>
             </div>
           </div>
+          <div class="tb" data-tab="3"></div>
+        </div>
+        <div class="scr" data-s="ask">
+          <div class="top"><div class="sb"><span>9:41</span><span>5G ▮▮▮</span></div>
+            <div class="ah"><img class="crest" src="assets/crest-dark.png" alt=""><div class="t">Ask the moderators<small>Only moderators see this</small></div></div><div class="grain w"></div></div>
+          <div class="bd">
+            <div class="lbl">What is it?</div>
+            <div style="display:grid;gap:6px">
+              <button class="choice on" data-act="askType" data-v="Question"><b>❓ A question</b><span class="sm mut">About the club, the hub, a team, anything</span></button>
+              <button class="choice" data-act="askType" data-v="Tech problem"><b>🛠 Something isn't working</b><span class="sm mut">A bug, a wrong score, can't sign in</span></button>
+              <button class="choice" data-act="askType" data-v="Suggestion"><b>💡 An idea or suggestion</b><span class="sm mut">Something you'd like the hub or club to do</span></button>
+            </div>
+            <label class="fld"><span id="askLbl">Your question</span><textarea id="askText" rows="3" placeholder="Write it here…">When do U12 Girls trials start this year?</textarea></label>
+            <div class="banner b-pu" id="askDev" hidden>We'll add your phone and browser (iPhone · Safari) so the problem is easier to fix. No other information is sent.</div>
+            <button class="btn" data-act="askSend">Send to moderators</button>
+            <button class="btn g" data-go="mine">My requests</button>
+          </div>
+          <div class="tb" data-tab="3"></div>
+        </div>
+        <div class="scr" data-s="mine">
+          <div class="top"><div class="sb"><span>9:41</span><span>5G ▮▮▮</span></div>
+            <div class="ah"><img class="crest" src="assets/crest-dark.png" alt=""><div class="t">My requests<small>Replies from the moderators</small></div></div><div class="grain w"></div></div>
+          <div class="bd"><div id="mineList" style="display:grid;gap:8px"></div><button class="btn g" data-go="feed">Back to the community</button></div>
           <div class="tb" data-tab="3"></div>
         </div>
         <div class="scr" data-s="u18">
           <div class="top"><div class="sb"><span>9:41</span><span>5G ▮▮▮</span></div>
             <div class="ah"><img class="crest" src="assets/crest-dark.png" alt=""><div class="t">Community<small>Under-18 board</small></div><span class="pill p-gr">Open till 10pm</span></div><div class="grain w"></div></div>
           <div class="bd">
-            <div class="qhero"><div class="lbl">Question of the week</div><div class="h">What's your pre-game ritual?</div></div>
+            <div class="qhero"><div class="lbl">Question</div><div class="h">What's your pre-game ritual?</div></div>
             <div class="banner b-pu">Answers are checked before they appear. You can react, but replies are off on this board.</div>
             <div class="compose"><label class="fld"><span>Your answer</span><input id="ansU" placeholder="Write an answer…"></label><button class="send" data-act="answer" data-b="u" aria-label="Post answer">↑</button></div>
             <div id="ansListU" style="display:grid;gap:9px">
               <div class="cd" style="display:grid;gap:5px"><div class="row"><div class="ava c">HQ</div><b class="f">hoopsqueen</b><span class="badge">U16 Girls</span></div><div>Same playlist every time, no changes allowed.</div><div class="rxs"><button class="rx" data-c="12">🎉 <b>12</b></button></div></div>
               <div class="cd" style="display:grid;gap:5px"><div class="row"><div class="ava k">B7</div><b class="f">baller_07</b><span class="badge">U14 Boys</span></div><div>Left shoe on first. Always.</div><div class="rxs"><button class="rx" data-c="8">🏀 <b>8</b></button></div></div>
             </div>
+            <button class="cd row askcard" data-go="ask"><span class="askic">?</span><div class="f"><b>Ask the moderators</b><div class="sm mut">Under-18s can ask too</div></div><span class="mut">›</span></button>
           </div>
           <div class="tb" data-tab="3"></div>
         </div>
         <div class="toast"></div>
       </div></div>
-      <div class="chips" data-for="p6"><button class="on" data-go="adult">Adults board</button><button data-go="u18">Under-18 board</button></div>
-      <div class="tip">Post an answer on each board and see what happens</div>
+      <div class="chips" data-for="p6"><button class="on" data-go="feed">Feed</button><button data-go="ask">Ask the moderators</button><button data-go="mine">My requests</button><button data-go="u18">Under-18 board</button></div>
+      <div class="tip">Filter the feed, vote in the poll, then send the moderators a question and answer it in section 10</div>
     </div>
   </div>
 </section>
@@ -955,7 +1018,7 @@ body{margin:0}
   <div class="notes">
     <div class="kick"><span class="n">08</span>Section</div>
     <h2>Sign-up &amp; profile</h2>
-    <ul><li>Members join with the club code (try <b>EANNA26</b>). Supporters join without one.</li><li>Google, Apple or email link, with no passwords</li><li>Profile: username, role, team, section, member since, favourite player, interests</li><li>Under-16s need a parent to approve. Parents control their child's stats.</li></ul>
+    <ul><li>Members join with the club code (try <b>EANNA26</b>). Supporters join without one.</li><li>Google, Apple or email link, with no passwords</li><li>Profile: username, role, team(s), section, member since, favourite player, interests</li><li><b>More than one team?</b> Tap them all: a player on U18 and Men's D1, a parent with kids on two teams, a coach of two teams. Each team's coach or a moderator confirms it.</li><li>A player's account links to their player record, so their profile shows their own stats from every team</li><li>Under-16s need a parent to approve. Parents control their child's stats.</li><li><b>Profile photos for over-18s only.</b> Each new photo is checked by a moderator before it shows. Under-18s get initials or a club icon.</li></ul>
     <div class="qs"><h3>Your answers</h3>
       <label><span>Should supporters get a different badge colour?</span><textarea class="ans" id="q8a" data-q="8 Sign-up · Supporter badge colour?"></textarea></label>
       <label><span>Anything missing from the profile?</span><textarea class="ans" id="q8b" data-q="8 Sign-up · Anything missing from profile?"></textarea></label>
@@ -980,9 +1043,11 @@ body{margin:0}
           <div class="top"><div class="sb"><span>9:41</span><span>5G ▮▮▮</span></div>
             <div class="ah"><button class="back" data-go="join" aria-label="Back">‹</button><div class="t">Your profile<small id="profStep">Member · Step 2 of 3</small></div></div><div class="grain w"></div></div>
           <div class="bd" style="gap:6px">
+            <div class="cd row" id="pfPhoto" style="padding:8px 10px"><div class="ava o pfpic" id="pfPic">TK</div><div class="f"><b style="font-size:12px">Profile photo</b><div class="sm mut">18+ only · checked by a moderator first</div></div><label class="btn g" style="width:auto;padding:6px 11px;cursor:pointer">Add photo<input type="file" accept="image/*" id="pfFile" hidden></label></div>
+            <div class="banner b-pu" id="pfNoPhoto" hidden>Under-18s don't have photos. Pick a club icon instead: 🏀 ⭐ 🔥 🦅</div>
             <label class="fld"><span>Username</span><input id="pfUser" value="tom_k"></label>
             <label class="fld" id="pfRoleF"><span>Role</span><select id="pfRole"><option>Parent / Guardian</option><option>Player</option><option>Coach</option><option>Team manager</option><option>Committee</option><option>Volunteer</option><option>Table official</option><option>Former player</option></select></label>
-            <label class="fld"><span>Team(s)</span><select id="pfTeam"><option>U12 Boys, U16 Girls</option><option>Super League Men</option><option>Women's BIDL</option><option>U14 Boys</option></select></label>
+            <div class="fld"><span>Team(s) · tap every team you're on</span><div class="tags" id="pfTeams" style="margin-top:4px"><button class="on" data-act="tag">U12 Boys</button><button class="on" data-act="tag">U16 Girls</button><button data-act="tag">U14 Boys</button><button data-act="tag">U18 Boys</button><button data-act="tag">Men's D1</button><button data-act="tag">Super League Men</button><button data-act="tag">Women's BIDL</button><button data-act="tag">U16 Boys</button></div><div class="sm mut" style="margin-top:4px">Each team's coach or a moderator confirms you're on it.</div></div>
             <label class="fld"><span>Section</span><select id="pfSec"><option>Boys' &amp; girls' underage</option><option>Men's</option><option>Women's</option></select></label>
             <div class="seg" data-seg="age"><button data-v="u">Under 18</button><button class="on" data-v="a">18+</button></div>
             <div class="row" style="gap:6px"><label class="fld f"><span>Member since</span><input id="pfSince" value="2019" inputmode="numeric"></label><label class="fld f"><span>Favourite player/team</span><input id="pfFav" value="Boston Celtics"></label></div>
@@ -1096,7 +1161,7 @@ body{margin:0}
     <div class="kick"><span class="n">10</span>Section</div>
     <h2>Moderation</h2>
     <div class="rulebox"><div class="grain w"></div><b>New rule</b><p>Moderators can edit everything: posts, answers, photos, score-sheets, stats, results, rosters, team pages and profiles. Every change is logged.</p></div>
-    <ul><li>One queue for everything waiting</li><li>Approve, edit, hide, warn, mute, ban</li><li>Edit any game's stats after it's live</li><li>Posts you send in sections 4–6 land here</li></ul>
+    <ul><li>One queue for everything waiting</li><li>Approve, edit, hide, warn, mute, ban</li><li>Edit any game's stats after it's live</li><li>Posts you send in sections 4–6 land here</li><li><b>Inbox:</b> questions, tech problems and suggestions from Ask the moderators. Reply privately, or post it on the feed.</li></ul>
     <div class="qs"><h3>Your answers</h3>
       <label><span>Can moderators ban, or only you?</span><textarea class="ans" id="q10a" data-q="10 Moderation · Who can ban?"></textarea></label>
       <label><span>Should moderators see stats hidden by parents (needed to fix mistakes)?</span><textarea class="ans" id="q10b" data-q="10 Moderation · Mods see hidden stats?"></textarea></label>
@@ -1109,16 +1174,17 @@ body{margin:0}
           <div class="top"><div class="sb"><span>9:41</span><span>5G ▮▮▮</span></div>
             <div class="ah"><img class="crest" src="assets/crest-dark.png" alt=""><div class="t">Moderation<small id="qCount">5 waiting</small></div></div><div class="grain w"></div></div>
           <div class="bd">
-            <div class="seg" data-seg="qf"><button class="on" data-v="all">All</button><button data-v="sheet">Sheets</button><button data-v="post">Posts</button><button data-v="report">Reports</button></div>
+            <div class="seg" data-seg="qf"><button class="on" data-v="all">All</button><button data-v="sheet">Sheets</button><button data-v="post">Posts</button><button data-v="report">Reports</button><button data-v="help">Inbox</button></div>
             <div id="qList" style="display:grid;gap:8px"></div>
           </div>
           <div class="dim" data-act="closeSheet"></div>
           <div class="sheet" id="modSheet">
             <div class="row"><div class="ava k" id="msAva">RW</div><div class="f"><div class="h" id="msTitle">Item</div><div class="sm mut" id="msWho"></div></div></div>
             <div class="banner b-pu" id="msText"></div>
-            <div class="btns"><button class="btn g" data-act="mod" data-a="Approved">Approve</button><button class="btn g" data-act="mod" data-a="Edited and approved">Edit</button></div>
-            <div class="btns"><button class="btn g" data-act="mod" data-a="Hidden">Hide</button><button class="btn g" data-act="mod" data-a="Hidden and warned">Warn</button></div>
-            <div class="btns"><button class="btn g" data-act="mod" data-a="Muted for 7 days">Mute 7 days</button><button class="btn r" data-act="mod" data-a="Banned">Ban</button></div>
+            <div id="msReply" hidden><label class="fld"><span>Your reply (only they see it)</span><textarea id="msReplyTxt" rows="2"></textarea></label><div class="btns"><button class="btn" data-act="modReply">Send reply</button><button class="btn g" data-act="modShare">Post on the feed</button></div></div>
+            <div class="btns mb"><button class="btn g" data-act="mod" data-a="Approved">Approve</button><button class="btn g" data-act="mod" data-a="Edited and approved">Edit</button></div>
+            <div class="btns mb"><button class="btn g" data-act="mod" data-a="Hidden">Hide</button><button class="btn g" data-act="mod" data-a="Hidden and warned">Warn</button></div>
+            <div class="btns mb"><button class="btn g" data-act="mod" data-a="Muted for 7 days">Mute 7 days</button><button class="btn r" data-act="mod" data-a="Banned">Ban</button></div>
             <label class="fld"><span>Reason (saved to the log)</span><input id="msReason" value="Criticising referees, second time"></label>
           </div>
         </div>
@@ -1490,7 +1556,7 @@ body{margin:0}
 (function(){
 const $=(s,r=document)=>r.querySelector(s), $$=(s,r=document)=>[...r.querySelectorAll(s)];
 const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
-const jsy=(n,w)=>`<svg class="jy"><use href="#${w?'jsyw':'jsy'}"/><text x="20" y="33" text-anchor="middle" font-family="Anton" font-size="14" fill="#fff">${n}</text></svg>`;
+const jsy=(n,w)=>`<svg class="jy" viewBox="0 0 40 44"><use href="#${w?'jsyw':'jsy'}" width="40" height="44"/><text x="20" y="25.5" dominant-baseline="central" text-anchor="middle" font-family="Anton" font-size="${String(n).length>1?13:15.5}" fill="#fff">${n}</text></svg>`;
 const crestImg=k=>k?`<img class="cr" src="assets/${k}.png" alt="">`:'';
 const opp=(g)=>g.crest?crestImg(g.crest):`<span class="oi">${g.opp.slice(0,2).toUpperCase()}</span>`;
 
@@ -1512,9 +1578,9 @@ function toast(ph,msg){const t=$('.toast',ph);t.textContent=msg;t.classList.add(
 
 /* data */
 const weeks=[
- {label:'Week 8 · 20–26 Oct',sec:[['Senior',[{t:'Super League Men',opp:'Tralee Warriors',crest:'tralee-warriors',a:81,b:86,d:'Sat 25 Oct · Away'},{t:"Women's BIDL",opp:'Ballincollig',crest:'ballincollig',a:66,b:58,d:'Sat 25 Oct · Home'}]],['Underage',[{t:'U18 Boys',opp:'Neptune',crest:'neptune',a:74,b:61,d:'Sun 26 Oct'},{t:'U16 Girls',opp:'Lucan',a:38,b:35,d:'Sun 26 Oct'},{t:'U14 Boys',opp:'Templeogue',a:33,b:40,d:'Sat 25 Oct'}]]]},
- {label:'Week 9 · 27 Oct–2 Nov',sec:[['Senior',[{t:'Super League Men',opp:'Neptune',crest:'neptune',a:90,b:77,d:'Sat 1 Nov · Home'},{t:"Women's BIDL",opp:'UCD Marian',crest:'ucd-marian',a:59,b:63,d:'Sat 1 Nov · Away'}]],['Underage',[{t:'U18 Boys',opp:'Killester',crest:'killester',a:66,b:60,d:'Sun 2 Nov'},{t:'U16 Girls',opp:'Kilcock',a:44,b:39,d:'Sun 2 Nov'},{t:'U12 Mixed',opp:'Lucan',hide:true,d:'Sat 1 Nov'}]]]},
- {label:'Week 10 · 3–9 Nov',sec:[['Senior',[{id:'sl10',t:'Super League Men',opp:'Killester',crest:'killester',a:88,b:79,d:'Sat 8 Nov · Home'},{t:"Women's BIDL",opp:'Brunell',crest:'brunell',a:71,b:64,d:'Sat 8 Nov · Home'},{t:"Men's D2",opp:'Ballina',a:60,b:66,d:'Fri 7 Nov · Away'}]],['Underage',[{id:'u1810',t:'U18 Boys',opp:"St Vincent's",crest:'st-vincents',a:70,b:58,d:'Sat 8 Nov · Home'},{t:'U16 Girls',opp:'Templeogue',a:41,b:54,d:'Sun 9 Nov'},{t:'U12 Mixed',opp:'Lucan',hide:true,d:'Sat 8 Nov'}]]]}
+ {label:'Week 8 · 20–26 Oct',sec:[['Senior',[{t:'Super League Men',opp:'Tralee Warriors',crest:'tralee-warriors',a:81,b:86,d:'Sat 25 Oct · Away'},{t:"Women's BIDL",opp:'Ballincollig',crest:'ballincollig',a:66,b:58,d:'Sat 25 Oct · Home'}]],['Underage',[{t:'U18 Boys',opp:'Neptune',crest:'neptune',a:74,b:61,d:'Sun 26 Oct'},{t:'U16 Girls',opp:'Malahide',crest:'malahide',a:38,b:35,d:'Sun 26 Oct'},{t:'U14 Boys',opp:'Templeogue',crest:'templeogue',a:33,b:40,d:'Sat 25 Oct'}]]]},
+ {label:'Week 9 · 27 Oct–2 Nov',sec:[['Senior',[{t:'Super League Men',opp:'Neptune',crest:'neptune',a:90,b:77,d:'Sat 1 Nov · Home'},{t:"Women's BIDL",opp:'UCD Marian',crest:'ucd-marian',a:59,b:63,d:'Sat 1 Nov · Away'}]],['Underage',[{t:'U18 Boys',opp:'Killester',crest:'killester',a:66,b:60,d:'Sun 2 Nov'},{t:'U16 Girls',opp:'Kilcock Tigers',crest:'kilcock-tigers',a:44,b:39,d:'Sun 2 Nov'},{t:'U12 Mixed',opp:'Malahide',crest:'malahide',hide:true,d:'Sat 1 Nov'}]]]},
+ {label:'Week 10 · 3–9 Nov',sec:[['Senior',[{id:'sl10',t:'Super League Men',opp:'Killester',crest:'killester',a:88,b:79,d:'Sat 8 Nov · Home'},{t:"Women's BIDL",opp:'Brunell',crest:'brunell',a:71,b:64,d:'Sat 8 Nov · Home'},{t:"Men's D2",opp:'Ongar Chasers',crest:'ongar-chasers',a:60,b:66,d:'Fri 7 Nov · Away'}]],['Underage',[{id:'u1810',t:'U18 Boys',opp:"St Vincent's",crest:'st-vincents',a:70,b:58,d:'Sat 8 Nov · Home'},{t:'U16 Girls',opp:'Templeogue',crest:'templeogue',a:41,b:54,d:'Sun 9 Nov'},{t:'U12 Mixed',opp:'Malahide',crest:'malahide',hide:true,d:'Sat 8 Nov'}]]]}
 ];
 const boxes={
  sl10:{senior:true,q:'22–19 · 20–24 · 25–17 · 21–19',rows:[[5,'Dean Kiernan',27],[2,"Cathal O'Sullivan",19],[9,'Neil Lynch',12],[10,'Sean Jenkins',9],[8,'Morgan Taylor',8],[24,'Manou Christal',7],[13,'Karl Walsh',4],[14,'Ian Lynch',2],[0,'Adam McCarthy',0]]},
@@ -1557,31 +1623,55 @@ const slides=[
  ()=>perfSlide(tops.w[0],"WOMEN'S TOP PERFORMER"),
  ()=>`<div class="slide"><div class="sw"></div><div class="sw2"></div><div class="gr"></div><div class="sbar"><img src="assets/griffith-college-black.png" alt=""><img class="c" src="assets/crest.png" alt=""><img src="assets/upmc-ssc-colour.png" alt=""></div><div class="body"><div class="tt" style="font-size:17px">Shout-outs</div><div class="wd">UNDERAGE · WEEK 10</div><div style="display:grid;gap:5px;margin-top:10px;font-size:10.5px;max-width:62%"><div><b>U18 Boys</b> · Seán R. 18 pts in a win v St Vincent's</div><div><b>U16 Girls</b> · Ciara O. 15 pts</div><div><b>U14 Boys</b> · 48–30 win v Kilcock</div></div></div></div>`
 ];
-function perfSlide(r,lab){return `<div class="slide"><div class="sw"></div><div class="sw2"></div><div class="gr"></div><div class="sbar"><img src="assets/griffith-college-black.png" alt=""><img class="c" src="assets/crest.png" alt=""><img src="assets/upmc-ssc-colour.png" alt=""></div><div class="body"><div class="tt" style="font-size:16px">${lab.split(' TOP')[0]}<br>Top Performer</div><div class="wd">WEEK 10</div></div><svg class="jbig"><use href="#${r[6]?'jsyw':'jsy'}"/><text x="20" y="33" text-anchor="middle" font-family="Anton" font-size="14" fill="#fff">${r[0]}</text></svg><div class="match"><img src="assets/crest.png" alt=""><span class="vs">VS</span>${r[3]?`<img src="assets/${r[3]}.png" alt="">`:''}</div><div class="who"><b>${esc(r[1])}</b><span>${esc(r[2])} · v ${esc(r[4])}</span></div><div class="big"><span class="n">${r[5]}</span><small>POINTS</small></div></div>`}
+function perfSlide(r,lab){return `<div class="slide"><div class="sw"></div><div class="sw2"></div><div class="gr"></div><div class="sbar"><img src="assets/griffith-college-black.png" alt=""><img class="c" src="assets/crest.png" alt=""><img src="assets/upmc-ssc-colour.png" alt=""></div><div class="body"><div class="tt" style="font-size:16px">${lab.split(' TOP')[0]}<br>Top Performer</div><div class="wd">WEEK 10</div></div><svg class="jbig"><use href="#${r[6]?'jsyw':'jsy'}"/><text x="20" y="25.5" dominant-baseline="central" text-anchor="middle" font-family="Anton" font-size="14" fill="#fff">${r[0]}</text></svg><div class="match"><img src="assets/crest.png" alt=""><span class="vs">VS</span>${r[3]?`<img src="assets/${r[3]}.png" alt="">`:''}</div><div class="who"><b>${esc(r[1])}</b><span>${esc(r[2])} · v ${esc(r[4])}</span></div><div class="big"><span class="n">${r[5]}</span><small>POINTS</small></div></div>`}
 function renderSlide(){$('#slide').innerHTML=slides[si]();$('#dots').innerHTML=slides.map((_,i)=>`<i class="${i===si?'on':''}"></i>`).join('')}
 
 /* upload check */
-let chk=[[7,'Seán R.',18],[12,'Liam K.',14],[9,'Cian F.',12],[4,'Oisín B.',12,1],[15,'Darragh M.',9],[5,'Evan T.',7],[10,'Rory P.',0]];
+let chk=[[7,'Seán R.',18],[12,'Liam K.',14],[9,'Cian F.',12],[4,'Oisín B.',12],[15,'Darragh M.',9],[5,'Evan T.',7],[10,'Rory P.',0]];chk.forEach(r=>r[4]=r[0]);
+function renderNums(){
+  $('#numRows').innerHTML=chk.map((r,i)=>`<div class="row" style="padding:5px 0;border-bottom:1px solid var(--a-line)">${jsy(r[4]||'?',0)}<div class="f"><b style="font-size:12px">${esc(r[1])}</b>${r[5]?`<span class="pill p-nv" style="margin-left:4px">${esc(r[5])}</span>`:''}<div class="sm mut">${String(r[4])!==String(r[0])?`<span class="pill p-warn">New no.</span> usually #${r[0]}`:'Same as last game'}</div></div><input class="numin" data-i="${i}" value="${r[4]}" inputmode="numeric" aria-label="Number ${esc(r[1])} wore today" style="width:42px;text-align:center;border:1px solid var(--a-line);border-radius:8px;padding:5px 2px;font:inherit;font-weight:800;background:var(--a-soft)"></div>`).join('');
+}
 function renderChk(){
-  const tot=chk.reduce((a,r)=>a+r[2],0), target=+($('#usA').value||0);
-  $('#chkRows').innerHTML=chk.map((r,i)=>`<tr class="${r[3]?'flag':''}"><td>${r[0]}</td><td>${esc(r[1])} ${r[3]?'<span class="pill p-warn">Check</span>':''}</td><td class="r">${r[3]?`<span class="step"><button data-act="chkStep" data-i="${i}" data-d="-1" aria-label="Minus">−</button><span class="n">${r[2]}</span><button data-act="chkStep" data-i="${i}" data-d="1" aria-label="Plus">+</button></span>`:`<span class="nn">${r[2]}</span>`}</td></tr>`).join('');
-  const b=$('#chkBanner'), ok=tot===target;
+  const tot=chk.reduce((a,r)=>a+(+r[2]||0),0), target=+($('#usA').value||0);
+  $('#chkRows').innerHTML=chk.map((r,i)=>`<tr><td>${jsy(r[4],0)}</td><td>${esc(r[1])}${String(r[4])!==String(r[0])?' <span class="pill p-warn">#'+r[4]+' today</span>':''}</td><td class="r"><input class="ptsin" data-i="${i}" value="${r[2]}" inputmode="numeric" aria-label="Points for ${esc(r[1])}" style="width:40px;text-align:center;border:1px solid var(--a-line);border-radius:8px;padding:4px 2px;font:inherit;font-weight:800;background:var(--a-soft)"></td></tr>`).join('');
+  chkBanner();
+}
+function chkBanner(){
+  const tot=chk.reduce((a,r)=>a+(+r[2]||0),0), target=+($('#usA').value||0), b=$('#chkBanner'), ok=tot===target;
   b.className='banner '+(ok?'b-ok':'b-warn');
-  b.innerHTML=ok?`Points add up to <b>${tot}</b>, which matches the final score ✓`:`Points add up to <b>${tot}</b> but the final score is <b>${target}</b>. Check the orange number.`;
+  b.innerHTML=ok?`Points add up to <b>${tot}</b>, which matches the final score ✓`:`Points add up to <b>${tot}</b> but the final score is <b>${target}</b>. Check the sheet again.`;
   $('#chkSend').style.opacity=ok?1:.5;
 }
-hooks['p4:scan']=()=>{const ph=$('#p4');clearTimeout(ph._t);ph._t=setTimeout(()=>{if($('.scr[data-s="scan"]',ph).classList.contains('on'))show(ph,'check')},1900)};
-hooks['p4:check']=renderChk;
+document.addEventListener('input',e=>{
+  if(e.target.classList.contains('numin')){const r=chk[+e.target.dataset.i];r[4]=e.target.value.trim();const row=e.target.closest('.row');row.querySelector('text').textContent=r[4]||'?';row.querySelector('.sm').innerHTML=String(r[4])!==String(r[0])?`<span class="pill p-warn">New no.</span> usually #${r[0]}`:'Same as last game'}
+  if(e.target.classList.contains('ptsin')){chk[+e.target.dataset.i][2]=e.target.value===''?'':parseInt(e.target.value,10)||0;chkBanner()}
+});
+
+hooks['p4:check']=renderChk;hooks['p4:nums']=renderNums;
+
+/* community feed */
+let askType='Question',myVote=null;
+const poll=[['Orange home kit',41],['Navy away kit',28],['Throwback purple',57]];
+function renderPoll(){const tot=poll.reduce((a,o)=>a+o[1],0);$('#pollOpts').innerHTML=poll.map((o,i)=>`<button class="pollopt ${myVote===i?'me':''}" data-act="vote" data-i="${i}"><i style="width:${myVote==null?0:Math.round(o[1]/tot*100)}%"></i><span>${myVote===i?'✓ ':''}${esc(o[0])}</span><span>${myVote==null?'':Math.round(o[1]/tot*100)+'%'}</span></button>`).join('');$('#pollN').textContent=myVote==null?`${tot} votes · tap to vote`:`${tot} votes · you voted`}
+const reqs=[
+ {type:'Tech problem',text:"I can't see my son's points on the U12 Boys page",status:'Answered',when:'Tuesday',reply:{by:'Milo · Moderator',t:"U12 shows results only, no points, so the kids who don't score don't see zeros. The coach still sees everything."}},
+ {type:'Suggestion',text:'Could the hub show which games are being livestreamed?',status:'In progress',when:'Last week',reply:{by:'Anna · Moderator',t:"Good idea, we're looking at adding a 'Watch' link on game day pages."}}
+];
+const stCls={Sent:'p-warn','In progress':'p-pu',Answered:'p-ok'};
+function renderMine(){$('#mineList').innerHTML=reqs.map(r=>`<div class="cd req"><div class="row sp"><span class="pill p-nv">${esc(r.type)}</span><span class="pill ${stCls[r.status]}">${r.status}</span></div><div>${esc(r.text)}</div><div class="sm mut">${esc(r.when)}</div>${r.reply?`<div class="rep sm"><b>${esc(r.reply.by)}</b><br>${esc(r.reply.t)}</div>`:''}</div>`).join('')}
+
 
 /* moderation */
 let queue=[
+ {type:'help',tag:'Inbox · Tech problem',title:'Can\'t sign in on my Samsung',who:'aoife_m · Parent · U10 Girls · Android · Chrome',text:'"It says sign-in was cancelled every time I try"',ava:'AM'},
  {type:'report',tag:'Reported ×2',title:'Answer on adults board',who:'ref_watch · Supporter · joined 2 weeks ago · 1 earlier warning',text:'"Refs in that game were a joke…"',ava:'RW'},
  {type:'sheet',tag:'Score-sheet',title:"U18 Boys v St Vincent's",who:'Coach Mark ✓ · 1 number flagged',text:'Points checked by the coach. Final score 70–58.',ava:'CM'},
  {type:'post',tag:'Post · photo',title:'U14 Boys Junior Cert congrats',who:'coach_rob · members only · consent ticked',text:'"Huge congrats to the lads who passed…"',ava:'RB'},
  {type:'user',tag:'New member',title:'hoopsqueen · U16 Girls',who:'Parent approved ✓',text:'Under 18. Goes to the under-18 board.',ava:'HQ'},
+ {type:'user',tag:'Profile photo',title:'sineadk · new profile photo',who:'Supporter · 18+ · first photo',text:'Check the photo is of them, clear, and fine for a family club.',ava:'SK'},
  {type:'role',tag:'Role request',title:'coach_rob wants the Coach role',who:'Says: U14 Boys coach',text:'Only Milo can approve staff roles.',ava:'RB'}
 ];
-const tagCls={report:'p-no',sheet:'p-warn',post:'p-pu',user:'p-nv',role:'p-nv'};
+const tagCls={help:'p-or',report:'p-no',sheet:'p-warn',post:'p-pu',user:'p-nv',role:'p-nv'};
 let qf='all',cur=null;
 let log=[['Anna','Approved','U16 Girls birthday post','Today 18:02'],['Milo','Approved role','Gráinne → Coach','Today 12:40'],['Anna','Hidden','Answer with a phone number','Yesterday']];
 function renderQ(){
@@ -1610,17 +1700,20 @@ function renderAges(){$('#ageList').innerHTML=ageGroups.map((g,i)=>`<div class="
 
 /* signup */
 let joinType='member';
+let pfImg=null;
+document.addEventListener('change',e=>{if(e.target.id!=='pfFile'||!e.target.files[0])return;const r=new FileReader();r.onload=()=>{pfImg=r.result;const a=$('#pfPic');a.style.background=`url(${pfImg})`;a.textContent='';toast($('#p8'),'Photo added. A moderator checks it before others see it')};r.readAsDataURL(e.target.files[0])});
+const pfAge=v=>{$('#pfPhoto').hidden=v==='u';$('#pfNoPhoto').hidden=v!=='u';if(v==='u')pfImg=null};
 function finishProfile(){
   const u=$('#pfUser').value.trim()||'member', sup=joinType==='supporter';
-  $('#meName').textContent=u; $('#meAva').textContent=u.replace(/[^a-z]/gi,'').slice(0,2).toUpperCase()||'ME';
+  $('#meName').textContent=u; const ma=$('#meAva'); if(typeof pfImg==='string'&&pfImg){ma.style.background=`url(${pfImg}) center/cover`;ma.textContent='';if(!$('#mePend'))ma.insertAdjacentHTML('afterend','<div id="mePend" class="sm" style="opacity:.8;margin-top:4px">Photo waiting for a moderator</div>')}else{ma.style.background='';ma.textContent=u.replace(/[^a-z]/gi,'').slice(0,2).toUpperCase()||'ME'}
   const role=sup?'Supporter':$('#pfRole').value, staff=/Coach|manager|Committee/.test(role);
   $('#meBadges').innerHTML=`<span class="badge" style="background:rgba(255,255,255,.15);border-color:rgba(255,255,255,.25);color:#fff">${esc(role)}${staff?' · pending ✓':''}</span><span class="badge" style="background:rgba(255,255,255,.15);border-color:rgba(255,255,255,.25);color:#fff">Member since ${esc($('#pfSince').value)}</span>`;
-  $('#meInfo').innerHTML=[['Team(s)',sup?'Following: '+$('#pfInt').value:$('#pfTeam').value],['Section',$('#pfSec').value],['Favourite',$('#pfFav').value],['Notifications',$('#pfInt').value]].map(r=>`<div class="row sp sm"><span class="mut">${r[0]}</span><b style="text-align:right">${esc(r[1])}</b></div>`).join('')+(staff?'<div class="banner b-warn">Staff roles stay pending until Milo approves them.</div>':'');
+  $('#meInfo').innerHTML=[['Team(s)',sup?'Following: '+$('#pfInt').value:([...document.querySelectorAll('#pfTeams button.on')].map(b=>b.textContent).join(', ')||'None picked')+(document.querySelector('#pfTeams button.on')?' · waiting for coach ✓':'')],['Section',$('#pfSec').value],['Favourite',$('#pfFav').value],['Notifications',$('#pfInt').value]].map(r=>`<div class="row sp sm"><span class="mut">${r[0]}</span><b style="text-align:right">${esc(r[1])}</b></div>`).join('')+(staff?'<div class="banner b-warn">Staff roles stay pending until Milo approves them.</div>':'');
   $('#meParent').hidden=sup||!/Parent/.test(role);
 }
 
 /* segs */
-const segHooks={tp:renderTop,lg:v=>{lg=v;renderLead()},lm:v=>{lm=v;renderLead()},qf:v=>{qf=v;renderQ()}};
+const segHooks={tp:renderTop,lg:v=>{lg=v;renderLead()},lm:v=>{lm=v;renderLead()},qf:v=>{qf=v;renderQ()},age:v=>pfAge(v)};
 /* toggles */
 const togHooks={kidpts:on=>{$('#kidPrev').innerHTML=on?'Public sees: <b>Ciara O. · 12 pts</b> in U16 Girls v Templeogue':'Public sees: <b>U16 Girls lost 41–54</b>, with no player points.'}};
 
@@ -1637,13 +1730,21 @@ const acts={
  wk:el=>{wk=Math.max(0,Math.min(weeks.length-1,wk+ +el.dataset.d));renderWeek()},
  openGame:el=>{openGame(el.dataset.g);show($('#p2'),'game')},
  chkStep:el=>{const r=chk[+el.dataset.i];r[2]=Math.max(0,r[2]+ +el.dataset.d);renderChk()},
- sendSheet:el=>{const ph=$('#p4');if(chk.reduce((a,r)=>a+r[2],0)!==+$('#usA').value){toast(ph,'Fix the orange number first');return}addQ({type:'sheet',tag:'Score-sheet · new',title:$('#upTeam').value+" v St Vincent's",who:'Coach Mark ✓ · just now',text:'Points match the final score.',ava:'CM'});show(ph,'sent')},
+ sendSheet:el=>{const ph=$('#p4');if(chk.reduce((a,r)=>a+(+r[2]||0),0)!==+$('#usA').value){toast(ph,'The points need to add up to the final score');return}addQ({type:'sheet',tag:'Score-sheet · new',title:$('#upTeam').value+" v St Vincent's",who:'Coach Mark ✓ · just now',text:'Points match the final score.',ava:'CM'});show(ph,'sent')},
  tag:el=>{const g=el.parentElement;if(g.id==='npTags')$$('button',g).forEach(b=>b.classList.toggle('on',b===el));else el.classList.toggle('on')},
  post:el=>{const t=$('#npText').value.trim()||'New post';addQ({type:'post',tag:'Post · new',title:t.slice(0,46)+(t.length>46?'…':''),who:'You · '+$('#npTeam').value+($('[data-t="mo"]').classList.contains('on')?' · members only':''),text:'"'+t+'"',ava:'ME'});show($('#p5'),'posted')},
  answer:el=>{const b=el.dataset.b,inp=$(b==='a'?'#ansA':'#ansU'),t=inp.value.trim(),ph=$('#p6');if(!t){toast(ph,'Write an answer first');return}
    const card=document.createElement('div');card.className='cd';card.style.cssText='display:grid;gap:5px;border-style:dashed';
    card.innerHTML=`<div class="row"><div class="ava o">ME</div><b class="f">you</b><span class="pill p-warn">Waiting for approval</span></div><div>${esc(t)}</div><div class="sm mut">${b==='a'?'Your first posts are checked. After 3 approved posts, yours go live straight away.':'Every under-18 answer is checked before it appears.'}</div>`;
    $(b==='a'?'#ansListA':'#ansListU').prepend(card);inp.value='';addQ({type:'post',tag:b==='a'?'Answer · adults':'Answer · under-18',title:t.slice(0,46),who:'you · just now',text:'"'+t+'"',ava:'ME'});toast(ph,'Sent to moderators')},
+ readMore:el=>{const m=el.closest('.cd').querySelector('.more');m.hidden=!m.hidden;el.textContent=m.hidden?'Read more':'Show less'},
+ vote:el=>{if(myVote==null){myVote=+el.dataset.i;poll[myVote][1]++;renderPoll();toast($('#p6'),'Vote counted')}},
+ askType:el=>{askType=el.dataset.v;$$('#p6 [data-act="askType"]').forEach(c=>c.classList.toggle('on',c===el));$('#askLbl').textContent={Question:'Your question','Tech problem':"What's going wrong?",Suggestion:'Your idea'}[askType];$('#askDev').hidden=askType!=='Tech problem';$('#askText').value={Question:'When do U12 Girls trials start this year?','Tech problem':"The U14 Boys game on Saturday shows the wrong time",Suggestion:'Could we have a page with all the referees and table officials for each weekend?'}[askType]},
+ askSend:el=>{const t=$('#askText').value.trim(),ph=$('#p6');if(!t){toast(ph,'Write something first');return}
+   const r={type:askType,text:t,status:'Sent',when:'Just now'};reqs.unshift(r);
+   addQ({type:'help',tag:'Inbox · '+askType,title:t.slice(0,46)+(t.length>46?'…':''),who:'you · just now'+(askType==='Tech problem'?' · iPhone · Safari':''),text:'"'+t+'"',ava:'ME',req:r});
+   renderMine();show(ph,'mine');toast(ph,'Sent. You\'ll get a notification when a moderator replies')},
+ playUp:el=>{if(chk.some(r=>r[5])){toast($('#p4'),'Already added');return}chk.push([23,'Jack D.','',0,23,'From U16 Boys']);renderNums();el.textContent='✓ Jack D. added from U16 Boys';toast($('#p4'),'Points go to Jack\'s own player page')},
  reps:el=>{const r=el.closest('.cd').querySelector('.reps');r.hidden=!r.hidden},
  chat:el=>{const v=$('#msg').value.trim();if(!v)return;const d=document.createElement('div');d.className='bub me';d.innerHTML='<b>You</b>'+esc(v);$('#chat').appendChild(d);$('#msg').value='';$('#chat').scrollTop=9999},
  pick:el=>{joinType=el.dataset.v;$$('#p8 .choice').forEach(c=>c.classList.toggle('on',c===el));$('#codeFld').hidden=joinType!=='member';$('#codeErr').hidden=true},
@@ -1651,7 +1752,9 @@ const acts={
  finish:el=>{finishProfile();show($('#p8'),'me')},
  approveKid:el=>toast($('#p8'),"Approved. hoopsqueen can now use the under-18 board"),
  ping:el=>{const p=$('#push');const msgs=['Super League Men won 88–79 v Killester','New photos from U16 Girls v Templeogue','This week\'s Top Performers are out','New question of the week is up'];$('#pushTxt').textContent=msgs[Math.floor(Math.random()*msgs.length)];p.classList.add('show');clearTimeout(p._t);p._t=setTimeout(()=>p.classList.remove('show'),3200)},
- openQ:el=>{cur=+el.dataset.i;const q=queue[cur];$('#msAva').textContent=q.ava;$('#msTitle').textContent=q.title;$('#msWho').textContent=q.who;$('#msText').textContent=q.text;$('#msReason').value=q.type==='report'?'Criticising referees, second time':'';$('#p10 .scrn').classList.add('open')},
+ openQ:el=>{cur=+el.dataset.i;const q=queue[cur];$('#msAva').textContent=q.ava;$('#msTitle').textContent=q.title;$('#msWho').textContent=q.who;$('#msText').textContent=q.text;$('#msReason').value=q.type==='report'?'Criticising referees, second time':'';const h=q.type==='help';$('#msReply').hidden=!h;$$('#modSheet .mb').forEach(b=>b.hidden=h);$('#msReason').closest('.fld').hidden=h;$('#msReplyTxt').value=h?(/sign in|sign-in/i.test(q.text)?"Sorry about that! Try opening the hub in Chrome rather than inside Instagram or Facebook, then tap Sign in again.":'Thanks for this, we\'ll look into it.'):'';$('#p10 .scrn').classList.add('open')},
+ modReply:el=>{if(cur==null)return;const q=queue.splice(cur,1)[0],t=$('#msReplyTxt').value.trim()||'Thanks, sorted.';if(q.req){q.req.status='Answered';q.req.when='Just now';q.req.reply={by:'Milo · Moderator',t};renderMine()}log.unshift(['Milo','Replied',q.title,'Just now']);cur=null;$('#p10 .scrn').classList.remove('open');renderQ();toast($('#p10'),q.req?'Reply sent. See it in section 6, My requests':'Reply sent to '+q.who.split(' · ')[0])},
+ modShare:el=>{toast($('#p10'),'Asks them first, then posts it on the feed without their name')},
  closeSheet:el=>$('#p10 .scrn').classList.remove('open'),
  mod:el=>{if(cur==null)return;const q=queue.splice(cur,1)[0];log.unshift(['Milo',el.dataset.a,q.title+($('#msReason').value?' · '+$('#msReason').value:''),'Just now']);cur=null;$('#p10 .scrn').classList.remove('open');renderQ();toast($('#p10'),el.dataset.a+' · saved to the log')},
  edStep:el=>{const r=ed[+el.dataset.i];r[2]=Math.max(0,r[2]+ +el.dataset.d);renderEd()},
@@ -1685,7 +1788,7 @@ document.addEventListener('click',e=>{
 $('#usA').addEventListener('input',()=>{});
 
 /* init */
-homeRes();renderTop('m');renderSlide();renderWeek();openGame('sl10');renderLead();renderQ();renderLog();renderEd();renderMods();renderAges();countAns();finishProfile();
+homeRes();renderTop('m');renderSlide();renderWeek();openGame('sl10');renderLead();renderQ();renderLog();renderPoll();renderMine();segHooks.cf=v=>$$('#feedList .fi').forEach(c=>c.hidden=!(v==='all'||c.dataset.k===v));renderEd();renderMods();renderAges();countAns();finishProfile();
 window.hub={show,toast,acts,segHooks,togHooks,hooks,esc,jsy};
 })();
 </script>
@@ -1775,7 +1878,7 @@ renderKpis();renderChart('8');renderFol();renderUps();
 const H=window.hub,esc=H.esc,$=(s,r=document)=>r.querySelector(s),$$=(s,r=document)=>[...r.querySelectorAll(s)];
 const TODAY='2026-11-06';
 let G=[],T=[],TB={};
-const crestMap=[['Limerick Celtics','limerick-celtics'],['Limerick Eagles','limerick-sport-eagles'],['Sligo All','sligo-all-stars'],['UCC Demons','ucc-demons'],['Killester','killester'],['St. Vincent','st-vincents'],['St Vincent','st-vincents'],['UCD Marian','ucd-marian'],['Neptune','neptune'],['Tralee','tralee-warriors'],['Belfast Star','belfast-star'],['Brunell','brunell'],['Ballincollig','ballincollig']];
+const crestMap=[['Limerick Celtics','limerick-celtics'],['Limerick Eagles','limerick-sport-eagles'],['Sligo All','sligo-all-stars'],['UCC Demons','ucc-demons'],['Killester','killester'],['St. Vincent','st-vincents'],['St Vincent','st-vincents'],['UCD','ucd-marian'],['Neptune','neptune'],['Tralee','tralee-warriors'],['Belfast Star','belfast-star'],['Brunell','brunell'],['Ballincollig','ballincollig'],['KUBS','kubs'],['Templeogue','templeogue'],['Malahide','malahide'],['Raiders','dublin-raiders'],['Swords','swords'],['Tolka','tolka-rovers'],['Ongar','ongar-chasers'],['Dublin Lions','dublin-lions'],['Meteors','meteors'],['Tridents','tridents'],['Kilcock','kilcock-tigers'],['Tigers','kilcock-tigers'],['Oblate','oblate'],['Liffey Celtics','liffey-celtics'],['Naas','naas-serpents'],['Sonics','dublin-sonics'],['Greystones','greystones-sharks'],['Lusk','lusk-ravens'],['Glasnevin','glasnevin'],['NEIC','neic-trojans'],['Kevin','st-kevins-knights'],['Wicklow','wicklow-gators'],['Balbriggan','balbriggan'],['Bray','bray-bullets'],['Rathmines','rathmines'],['Luttrellstown','luttrellstown'],['Adamstown','adamstown-grafters'],['Aer Lingus','aer-lingus'],['Leixlip','leixlip'],['Lietkabelis','lietkabelis'],['Inchicore','inchicore'],['Nets','nets-ladies'],['Pegasus','pegasus'],['St. Mark','st-marks'],['St Mark','st-marks'],['Waterford','waterford-vikings'],['Boyne','boyne-warriors'],['Glanmire','glanmire'],['Tullamore','tullamore']];
 const oname=o=>o.replace(/\s+BC\b/,'').trim();
 const ini=o=>oname(o).replace(/[^A-Za-zÀ-ÿ ]/g,'').split(' ').filter(Boolean).map(w=>w[0]).join('').slice(0,2).toUpperCase()||'?';
 const ocrest=(o,big)=>{const m=crestMap.find(c=>o.includes(c[0]));const st=big?' style="width:52px;height:52px"':'';return m?`<img class="cr" src="assets/${m[1]}.png" alt=""${st}>`:`<span class="oi"${big?' style="width:52px;height:52px;font-size:16px"':''}>${esc(ini(o))}</span>`};
